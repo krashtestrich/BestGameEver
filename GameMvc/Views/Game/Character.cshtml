@@ -1,0 +1,91 @@
+﻿@using GameLogic.Equipment
+@model GameLogic.Characters.Player.Player
+@{
+    ViewBag.Title = "Character Screen";
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+@*        <script type="text/javascript" src="@Url.Content("~/Scripts/Game/_character.js")"></script>*@
+        <title>Character</title>
+    </head>
+    <body>
+        <h2>Character Details</h2>
+        <div>
+            @Html.LabelFor(m => m.Name)
+            @Html.ValueFor(m => m.Name)
+
+            @Html.LabelFor(m => m.Cash)
+            @Html.ValueFor(m => m.Cash)
+
+            @Html.LabelFor(m => m.Health)
+            @Html.ValueFor(m => m.Health)
+        </div>
+        <div>
+            <h2><a class="test" href="#" title="Test">Current Loadout</a></h2>
+            <div id="charEquipContainer">
+                <div class="charEquipRow">
+                    <div id="charEquipHead" class="charEquipCell charEquipSingleCell">
+                        <span class="charEquipTitle">Head</span>
+                    </div>
+                </div>
+                <div class="charEquipRow">
+                    <div id="charEquipLeftHand" class="charEquipCell charEquipMultCell">
+                        <span class="charEquipTitle">Left Hand</span>
+                        <div class="charEquipCellContent" data-tip="#handTip">
+                            
+                            @foreach (var w in Model.CharacterEquipment.Where(i => i != null && i.Slots.Exists(j => j.SlotType == "Hand")).Cast<Weapon>())
+                            {
+                                @w.Name
+                                <div id="handTip">
+                                    <h3>@w.Name</h3>
+                                    <ul>
+                                        <li>Cost: @w.Price</li>
+                                        <li>Base Damage: @w.BaseDamage</li>
+                                        <li>Bonus Damage: @w.BonusDamage</li>
+                                    </ul>
+                                </div>
+                                break;
+                            }
+                            
+
+                        </div>
+
+                    </div>
+                    <div id="charEquipChest" class="charEquipCell charEquipMultCell">
+                        <span class="charEquipTitle">Chest</span>
+                        <div class="charEquipCellContent">
+                        </div>
+                    </div>
+                    <div id="charEquipRightHand" class="charEquipCell charEquipMultCell">
+                        <span class="charEquipTitle">Right Hand</span>
+                        <div class="charEquipCellContent">
+                            
+                            @foreach (var first in Model.CharacterEquipment.Where(i => i.Slots.Count(j => j.SlotType == "Hand") > 1))
+                            {
+                                @first.Name
+                                break;
+                            }
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="charEquipRow">
+                    <div id="charEquipFeet" class="charEquipCell charEquipSingleCell">
+                        <span class="charEquipTitle">Feet</span>
+                        <div class="charEquipCellContent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            @Html.ActionLink("Get geared up at the shop!", "Shop", "Game")
+            ||
+            @Html.ActionLink("Wanna fight? Head to the arena!", "Arena", "Game")
+        </div>
+    </body>
+</html>

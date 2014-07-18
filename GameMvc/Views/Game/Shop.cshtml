@@ -1,0 +1,67 @@
+﻿@using GameLogic.Equipment
+@model GameLogic.Shop.Shop
+@{
+    ViewBag.Title = "Shop";
+    var weapons = Model.Equipment.FindAll(i => i.EquipmentType == "Weapon");
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Shop</title>
+</head>
+<body>
+    <h2>Welcome to the Shop!</h2>
+    <div>
+        You have <strong>@Html.ValueFor(m => m.PlayerAtShop.Cash)</strong> to spend.
+    </div>
+    <div>
+        <h3>Current Equipment</h3>
+        <ul>
+            @foreach (var equipment in @Model.PlayerAtShop.CharacterEquipment)
+            {
+                var w = (Weapon) equipment;
+                <li>
+                @using (Html.BeginForm("SellEquipment", "Game", new {@w.Name }))
+                {
+                     <button type="submit">Sell</button><span> @w.Name </span><span>@w.EquipmentType </span><span>Hits for @w.BaseDamage</span><span> and @w.BonusDamage bonus damage.</span>
+                }
+                </li> 
+            }
+            @if (@Model.PlayerAtShop.CharacterEquipment.Count == 0)
+            {
+                <li>None</li> 
+            }
+        </ul>
+    </div>
+    <div><h3>Weapons</h3>
+        <table>
+            <tr>
+                <td>Weapon Name</td><td>Weapon Cost</td><td>Buy</td>
+            </tr>
+        @foreach (var i in weapons)
+        {
+            <tr>
+                <td>@i.Name</td>
+                <td>@i.Price</td>
+                <td>
+                    @using (Html.BeginForm("PurchaseEquipment", "Game", new {@i.Name }))
+                    {
+                        if (@Model.PlayerAtShop.CanAffordEquipment(i) && @Model.PlayerAtShop.CanEquipEquipment(i))
+                        {
+                            <button type='submit'>Buy</button>
+                        }
+                        else
+                        {
+                            <span>Need more $$</span>
+                        }                  
+                    }
+                    </td>
+            </tr>
+        }
+        </table>
+    </div>
+</body>
+</html>

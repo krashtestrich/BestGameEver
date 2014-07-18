@@ -1,0 +1,4 @@
+G:\Websites\Game\GameLogic\bin\Debug\GameLogic.dll
+G:\Websites\Game\GameLogic\bin\Debug\GameLogic.pdb
+G:\Websites\Game\GameLogic\obj\Debug\GameLogic.dll
+G:\Websites\Game\GameLogic\obj\Debug\GameLogic.pdb
