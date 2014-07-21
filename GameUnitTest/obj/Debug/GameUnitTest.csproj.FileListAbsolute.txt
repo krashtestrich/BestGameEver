@@ -5,3 +5,10 @@ G:\Websites\Game\GameUnitTest\bin\Debug\GameLogic.dll
 G:\Websites\Game\GameUnitTest\bin\Debug\GameLogic.pdb
 G:\Websites\Game\GameUnitTest\obj\Debug\GameUnitTest.dll
 G:\Websites\Game\GameUnitTest\obj\Debug\GameUnitTest.pdb
+G:\Websites\Game\BestGameEver\GameUnitTest\obj\Debug\GameUnitTest.csprojResolveAssemblyReference.cache
+G:\Websites\Game\BestGameEver\GameUnitTest\obj\Debug\GameUnitTest.dll
+G:\Websites\Game\BestGameEver\GameUnitTest\bin\Debug\GameUnitTest.dll
+G:\Websites\Game\BestGameEver\GameUnitTest\bin\Debug\GameUnitTest.pdb
+G:\Websites\Game\BestGameEver\GameUnitTest\bin\Debug\GameLogic.dll
+G:\Websites\Game\BestGameEver\GameUnitTest\bin\Debug\GameLogic.pdb
+G:\Websites\Game\BestGameEver\GameUnitTest\obj\Debug\GameUnitTest.pdb

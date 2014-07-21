@@ -2,6 +2,7 @@
 using GameLogic;
 using GameLogic.Actions;
 using GameLogic.Characters;
+using GameLogic.Enums;
 using GameLogic.Equipment;
 
 namespace GameUnitTest
@@ -18,12 +19,12 @@ namespace GameUnitTest
                 get { return "Test Attack"; }
             }
 
-            public override int BaseDamageModifier
+            public override int DamageFromModifier
             {
                 get { return 1; }
             }
 
-            public override int BonusDamageModifier
+            public override int DamageToModifier
             {
                 get { return 0; }
             }
@@ -51,12 +52,12 @@ namespace GameUnitTest
                 get { return "Test Attack2"; }
             }
 
-            public override int BaseDamageModifier
+            public override int DamageFromModifier
             {
                 get { return 0; }
             }
 
-            public override int BonusDamageModifier
+            public override int DamageToModifier
             {
                 get { return 0; }
             }
@@ -163,8 +164,8 @@ namespace GameUnitTest
         #region Characters
         public class TestCharacter : Character
         {
-           public TestCharacter()
-            {
+           public TestCharacter() : base(Alliance.Neutral)
+           {
                 SetName("Test Character");
             }
         }

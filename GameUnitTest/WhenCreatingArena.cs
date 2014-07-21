@@ -1,7 +1,7 @@
 ﻿using System;
-using GameLogic.Battle;
 using GameLogic.Characters;
 using GameLogic.Characters.Player;
+using GameLogic.Enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GameLogic.Arena;
 
@@ -13,9 +13,9 @@ namespace GameUnitTest
         [TestMethod]
         public void ShouldAddCharacterToArena()
         {
-            var a = new Arena(new Battle());
+            var a = new Arena();
             a.BuildArenaFloor(5);
-            var c = new Character();
+            var c = new Character(Alliance.Neutral);
             c.SetName("YoMomma");
             a.AddCharacterToArena(c);
 
@@ -26,8 +26,8 @@ namespace GameUnitTest
         [ExpectedException(typeof (Exception))]
         public void ShouldNotAddCharacterToArenaWhenFloorNotBuilt()
         {
-            var a = new Arena(new Battle());
-            var c = new Character();
+            var a = new Arena();
+            var c = new Character(Alliance.Neutral);
             c.SetName("YoMomma");
             a.AddCharacterToArena(c);
         }
@@ -36,7 +36,7 @@ namespace GameUnitTest
         public void ShouldAddPlayerToArena()
         {
             var p = new Player();
-            var a = new Arena(new Battle());
+            var a = new Arena();
             a.BuildArenaFloor(5);
             a.AddCharacterToArena(p);
             Assert.IsTrue(a.Player == p);
@@ -47,7 +47,7 @@ namespace GameUnitTest
         public void ShouldNotAddPlayerToArenaWhenFloorNotBuilt()
         {
             var p = new Player();
-            var a = new Arena(new Battle());
+            var a = new Arena();
             a.AddCharacterToArena(p);
         }
 
@@ -55,20 +55,20 @@ namespace GameUnitTest
         public void ShouldAddPlayerToDefaultBottomCentreOfArenaForOddWidth()
         {
             var p = new Player();
-            var a = new Arena(new Battle());
+            var a = new Arena();
             a.BuildArenaFloor(5);
             a.AddCharacterToArena(p);
-            Assert.IsTrue(p.ArenaLocation.XCoord == a.ArenaFloor.GetLength(0) - 1 && p.ArenaLocation.YCoord == 2);
+            Assert.IsTrue(p.ArenaLocation.GetTileLocation().XCoord == a.ArenaFloor.GetLength(0) - 1 && p.ArenaLocation.GetTileLocation().YCoord == 2);
         }
 
         [TestMethod]
         public void ShouldAddPlayerToDefaultBottomLeftCentreOfArenaForEvenWidth()
         {
             var p = new Player();
-            var a = new Arena(new Battle());
+            var a = new Arena();
             a.BuildArenaFloor(8);
             a.AddCharacterToArena(p);
-            Assert.IsTrue(p.ArenaLocation.XCoord == a.ArenaFloor.GetLength(0) - 1 && p.ArenaLocation.YCoord == 3);
+            Assert.IsTrue(p.ArenaLocation.GetTileLocation().XCoord == a.ArenaFloor.GetLength(0) - 1 && p.ArenaLocation.GetTileLocation().YCoord == 3);
         }
 
         [TestMethod]
@@ -76,14 +76,14 @@ namespace GameUnitTest
         public void ShouldNotSetPlayerLocationIfArenaFloorNull()
         {
             var p = new Player();
-            var a = new Arena(new Battle());
+            var a = new Arena();
             a.AddCharacterToArena(p);
         }
 
         [TestMethod]
         public void ShouldCreateArenaFloor()
         {
-            var a = new Arena(new Battle());
+            var a = new Arena();
             a.BuildArenaFloor(5);
 
             Assert.IsTrue(a.ArenaFloor.Length == 25);
@@ -95,7 +95,7 @@ namespace GameUnitTest
             var p1 = new ArenaFloorPosition(0, 0);
             var p2 = new ArenaFloorPosition(1, 2);
             var d = ArenaHelper.GetDistanceBetweenFloorPositions(p1, p2);
-            Assert.IsTrue(d == 1);
+            Assert.IsTrue(d == 2);
         }
 
         [TestMethod]
@@ -104,7 +104,7 @@ namespace GameUnitTest
             var p1 = new ArenaFloorPosition(0, 1);
             var p2 = new ArenaFloorPosition(10, 25);
             var d = ArenaHelper.GetDistanceBetweenFloorPositions(p1, p2);
-            Assert.IsTrue(d == 10);
+            Assert.IsTrue(d == 26);
         }
     }
 }

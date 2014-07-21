@@ -4,6 +4,7 @@ using System.Linq;
 using GameLogic.Actions;
 using GameLogic.Actions.Movements;
 using GameLogic.Arena;
+using GameLogic.Enums;
 using GameLogic.Slots;
 using MoreLinq;
 
@@ -28,6 +29,7 @@ namespace GameLogic.Characters
 
         public void SetHealth(int health)
         {
+            Health = health;
         }
 
         public void LoseHealth(int amount)
@@ -61,11 +63,12 @@ namespace GameLogic.Characters
 
         #region Position
 
-        public ArenaFloorPosition ArenaLocation { get; private set; }
+        public ArenaFloorTile ArenaLocation { get; private set; }
+        public ArenaFloorTile TargettedTile { get; private set; }
 
-        public void SetCharacterLocation(int x, int y)
+        public void SetEntityLocation(ArenaFloorTile tile)
         {
-            ArenaLocation = new ArenaFloorPosition(x, y);
+            ArenaLocation = tile;
         }
         #endregion
 
@@ -121,40 +124,53 @@ namespace GameLogic.Characters
 
         #endregion    
 
-        #region Target
+        #region Alliance
+        private Alliance _alliance;
 
-        private ArenaFloorPosition _targettedFloorPosition;
+        public void ChangeAlliance(Alliance a)
+        {
+            _alliance = a;
+        }
+
+        public Alliance GetAlliance()
+        {
+            return _alliance;
+        }
         #endregion
 
         #region Actions
 
         private readonly List<IAction> _nativeActions;
 
-        public void ChooseAction(IAction a)
+        public List<IAction> TargetTileAndSelectActions(ArenaFloorTile tile)
         {
-            
+            TargetTile(tile);
+            return GetActions(true);
         }
 
-        public void PerformAction(IAction a)
+        public List<IAction> GetActions(bool canPerform)
         {
-            
+            return _nativeActions.Concat(CharacterEquipment.SelectMany(i => i.Actions).ToList().DistinctBy(i => i.Name)).ToList().Where(i => !canPerform || i.CanBePerformed(this)).ToList();
         }
 
-        public List<IAction> SelectActionsFromTargetTile(ArenaFloorTile tile)
+        public void UntargetTile()
         {
-            return _nativeActions.Concat(CharacterEquipment.SelectMany(i => i.Actions).ToList().DistinctBy(i => i.Name)).ToList().Where(i => i.CanBePerformed(this, tile)).ToList();
+            TargettedTile = null;
+        }
+
+        public void TargetTile(ArenaFloorTile tile)
+        {
+            TargettedTile = tile;
         }
 
         #endregion
 
         #region Battle
-
-        public List<IAction> ChosenActions { get; set; }
-
         #endregion
 
-        public Character()
+        public Character(Alliance alliance)
         {
+            _alliance = alliance;
             _characterEquipment = new List<Equipment.Equipment>();
 
             _slots = new List<Slot>();
@@ -164,8 +180,6 @@ namespace GameLogic.Characters
 
             var h2 = new Hand();
             _slots.Add(h2);
-
-            ChosenActions = new List<IAction>();
 
             _nativeActions = new List<IAction>
             {

@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using GameLogic;
 using GameLogic.Arena;
-using GameLogic.Battle;
 using GameLogic.Characters.Player;
 using GameLogic.Shop;
 using GameMvc.Models;
@@ -55,7 +54,7 @@ namespace GameMvc.Controllers
                 return View("Index");
             }
 
-            var a = new Arena(new Battle());
+            var a = new Arena();
             a.BuildArenaFloor(5);
             a.AddCharacterToArena(p);
             Session["Arena"] = a;

@@ -9,7 +9,7 @@ namespace GameLogic
 
         protected void CreateArena()
         {
-            Arena = new Arena.Arena(new Battle.Battle());
+            Arena = new Arena.Arena();
             Player = new Player();
         }
     }

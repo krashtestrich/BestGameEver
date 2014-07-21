@@ -4,6 +4,8 @@ namespace GameLogic
 {
     public interface IGameEntity
     {
-        ArenaFloorPosition ArenaLocation { get; }
+        ArenaFloorTile ArenaLocation { get; }
+        void SetEntityLocation(ArenaFloorTile tile);
+        ArenaFloorTile TargettedTile { get; }
     }
 }

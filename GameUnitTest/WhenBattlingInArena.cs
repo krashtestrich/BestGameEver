@@ -1,5 +1,4 @@
 ﻿using GameLogic.Arena;
-using GameLogic.Battle;
 using GameLogic.Characters.Bots;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
@@ -14,7 +13,7 @@ namespace GameUnitTest
         [TestMethod]
         public void ShouldAddDumbassBotToArena()
         {
-            var arena = new Arena(new Battle());
+            var arena = new Arena();
             arena.BuildArenaFloor(5);
             var p = new Player();
             p.EquipEquipment(new Sword());

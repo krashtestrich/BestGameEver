@@ -7,9 +7,16 @@ namespace GameLogic.Actions.Movements
         public abstract int Distance
         { get; }
 
-        public virtual bool CanBePerformed(IGameEntity source, ArenaFloorTile tile)
+        public virtual bool CanBePerformed(IGameEntity source)
         {
-            return ArenaHelper.GetDistanceBetweenFloorPositions(source.ArenaLocation, tile.GetTileLocation()) <= Distance;
+            return source.TargettedTile.GetTileEntity() == null 
+                && ArenaHelper.GetDistanceBetweenFloorPositions(source.ArenaLocation.GetTileLocation(), source.TargettedTile.GetTileLocation()) > Distance;
+        }
+
+        public virtual void PerformAction(IGameEntity source)
+        {
+            source.ArenaLocation.RemoveEntityFromTile(source);
+            source.TargettedTile.AddEntityToTile(source);
         }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using GameLogic.Actions;
 using GameLogic.Arena;
+using GameLogic.Enums;
 
 namespace GameLogic.Characters
 {
     public interface ICharacter
     {
+        Alliance GetAlliance();
+        ArenaFloorTile ArenaLocation { get; }
         #region Basic - Name, etc.
         string Name
         { get; }
@@ -44,9 +47,11 @@ namespace GameLogic.Characters
 
         #region Actions
 
-        List<IAction> SelectActionsFromTargetTile(ArenaFloorTile tile);
-        void SetCharacterLocation(int x, int y);
-        void PerformAction(IAction a);
+        void TargetTile(ArenaFloorTile tile);
+        List<IAction> TargetTileAndSelectActions(ArenaFloorTile tile);
+        List<IAction> GetActions(bool canPerform);
+        void UntargetTile();
+
         #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using GameLogic.Enums;
 
 namespace GameLogic.Characters.Player
 {
@@ -42,7 +43,7 @@ namespace GameLogic.Characters.Player
         }
         #endregion
 
-        public Player()
+        public Player() : base(Alliance.Player)
         {
             SetHealth(100);
             SetCash(100);

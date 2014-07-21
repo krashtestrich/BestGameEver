@@ -1,16 +1,17 @@
 ﻿using GameLogic.Arena;
 using GameLogic.Characters;
+using GameLogic.Equipment;
 
 namespace GameLogic.Actions
 {
     public abstract class Attack : Action
     {
-        public abstract int BaseDamageModifier
+        public abstract int DamageFromModifier
         {
             get;           
         }
 
-        public abstract int BonusDamageModifier
+        public abstract int DamageToModifier
         {
             get;            
         }
@@ -25,13 +26,29 @@ namespace GameLogic.Actions
             get;
         }
 
-        public virtual bool CanBePerformed(IGameEntity c, ArenaFloorTile f)
+        private bool InRange(int distance)
         {
-            if (f.GetTileEntity().GetType() != typeof(Character) && c.GetType() != typeof(Character))
-                return false;
-            var distance = ArenaHelper.GetDistanceBetweenFloorPositions(c.ArenaLocation, f.GetTileLocation());
             return distance <= MaxRange
                 && distance >= MinRange;
+        }
+
+        public virtual void PerformAction(IGameEntity source)
+        {
+            var weaponDamage = ((Weapon) PerformedWith).GetDamage();
+            var modifier = R.Next(DamageFromModifier, DamageToModifier);
+            var damage = modifier > 0 ? weaponDamage*modifier : weaponDamage;
+            ((Character)source.TargettedTile.GetTileEntity()).LoseHealth(damage);
+        }
+
+        public virtual bool CanBePerformed(IGameEntity source)
+        {
+            if (!(source.TargettedTile.GetTileEntity() is ICharacter))
+                return false;
+            if (((Character)source).GetAlliance() == ((Character)source.TargettedTile.GetTileEntity()).GetAlliance())
+                return false;
+
+            var distance = ArenaHelper.GetDistanceBetweenFloorPositions(source.ArenaLocation.GetTileLocation(), source.TargettedTile.GetTileLocation());
+            return InRange(distance);
         }
     } 
 }

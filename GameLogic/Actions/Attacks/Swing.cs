@@ -7,12 +7,12 @@
 			get { return "Swing"; }
 		}
 
-		public override int BaseDamageModifier
+        public override int DamageFromModifier
 		{
 			get { return 0; }
 		}
 
-        public override int BonusDamageModifier
+        public override int DamageToModifier
 		{
 			get { return 0; }
 		}

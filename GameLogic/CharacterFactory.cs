@@ -1,4 +1,5 @@
 ﻿using GameLogic.Characters;
+using GameLogic.Enums;
 
 namespace GameLogic
 {
@@ -8,7 +9,7 @@ namespace GameLogic
         {
             get
             {
-                return _character ?? new Character();
+                return _character ?? new Character(Alliance.Player);
             }
             set
             {

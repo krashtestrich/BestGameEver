@@ -13,6 +13,12 @@
         public void AddEntityToTile(IGameEntity entity)
         {
             _entity = entity;
+            entity.SetEntityLocation(this);
+        }
+
+        public void RemoveEntityFromTile(IGameEntity entity)
+        {
+            _entity = null;
         }
 
         public IGameEntity GetTileEntity()
