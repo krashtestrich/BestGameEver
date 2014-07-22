@@ -9,20 +9,21 @@ namespace GameLogic.Arena
             return Convert.ToInt32(Math.Floor(Maths.MathematicalFunctions.PythagorusGetHypotenusLengthFromRightAngledLengths(p1.XCoord - p2.XCoord, p1.YCoord - p2.YCoord)));
         }
 
-        public static ArenaFloorPosition MovePositionDistanceCloser(ArenaFloorPosition p1, ArenaFloorPosition p2, int distance)
+        public static ArenaFloorPosition GetClosestMovablePosition(ArenaFloorPosition p1, ArenaFloorPosition p2, int distance)
         {
+            var position = new ArenaFloorPosition(p1.XCoord,p1.YCoord);
             for (var i = 0; i < distance; i++)
             {
                 if (p1.XCoord != p2.XCoord)
                 {
-                    p1.SetXCoord(p1.XCoord > p2.XCoord ? p1.XCoord - 1 : p1.XCoord + 1);
+                    position.SetXCoord(position.XCoord > p2.XCoord ? position.XCoord - 1 : position.XCoord + 1);
                 }
 
                 if (p1.YCoord == p2.YCoord) continue;
-                p1.SetYCoord(p1.YCoord > p2.YCoord ? p1.YCoord - 1 : p1.YCoord + 1);
+                position.SetYCoord(position.YCoord > p2.YCoord ? position.YCoord - 1 : position.YCoord + 1);
                 
             }
-            return p1;
+            return position;
         }
     }
 }

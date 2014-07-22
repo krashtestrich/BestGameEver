@@ -10,7 +10,7 @@ namespace GameUnitTest.Actions
     [TestClass]
     public class WhenPerformingActions
     {
-        [TestMethod, Ignore]
+        [TestMethod]
         public void ShouldPerformRunAction()
         {
             var a = new Arena();

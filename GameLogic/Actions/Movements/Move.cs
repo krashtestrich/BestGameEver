@@ -10,7 +10,7 @@ namespace GameLogic.Actions.Movements
         public virtual bool CanBePerformed(IGameEntity source)
         {
             return source.TargettedTile.GetTileEntity() == null 
-                && ArenaHelper.GetDistanceBetweenFloorPositions(source.ArenaLocation.GetTileLocation(), source.TargettedTile.GetTileLocation()) > Distance;
+                && ArenaHelper.GetDistanceBetweenFloorPositions(source.ArenaLocation.GetTileLocation(), source.TargettedTile.GetTileLocation()) <= Distance;
         }
 
         public virtual void PerformAction(IGameEntity source)

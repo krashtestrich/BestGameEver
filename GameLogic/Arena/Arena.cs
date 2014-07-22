@@ -104,7 +104,14 @@ namespace GameLogic.Arena
             //TODO: Implement logic where bot decides what best thing to do here is...
             var attackAction = c.TargetTileAndSelectActions(tile).FirstOrDefault(a => a is Attack) as Attack;
             if (attackAction != null)
+            {
                 attackAction.PerformAction((Character)c);
+            }
+            else
+            {
+                //TODO: Change this - if bot cannot attack, then move closer to opponent.
+                BotPerformMove(c, tile);
+            }
         }
 
         private void BotPerformMove(ICharacter c, ArenaFloorTile tile)
@@ -118,7 +125,7 @@ namespace GameLogic.Arena
             if (moveAction == null) return;
             // Get as close to player as possible - find movement that does this.
             var d = moveAction.Distance;
-            var newPosition = ArenaHelper.MovePositionDistanceCloser(c.ArenaLocation.GetTileLocation(), tile.GetTileLocation(), d);
+            var newPosition = ArenaHelper.GetClosestMovablePosition(c.ArenaLocation.GetTileLocation(), tile.GetTileLocation(), d);
             var newTile = ArenaFloor[newPosition.XCoord, newPosition.YCoord];
             c.TargetTile(newTile);
             moveAction.PerformAction((Character)c);
