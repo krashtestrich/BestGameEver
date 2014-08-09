@@ -86,6 +86,8 @@ G:\Websites\Game\GameMvc\obj\Debug\GameMvc.csprojResolveAssemblyReference.cache
 G:\Websites\Game\GameMvc\obj\Debug\GameMvc.dll
 G:\Websites\Game\GameMvc\obj\Debug\GameMvc.pdb
 G:\Websites\Game\GameMvc\bin\GameMvc.dll.config
+G:\Websites\Game\BestGameEver\GameMvc\bin\v8\Noesis.Javascript.x64.dll
+G:\Websites\Game\BestGameEver\GameMvc\bin\v8\Noesis.Javascript.x86.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\GameMvc.dll.config
 G:\Websites\Game\BestGameEver\GameMvc\bin\GameMvc.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\GameMvc.pdb
@@ -116,6 +118,7 @@ G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Razor.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.WebPages.Deployment.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.WebPages.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.WebPages.Razor.dll
+G:\Websites\Game\BestGameEver\GameMvc\bin\TypeScriptBundleTransform.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\WebGrease.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\WebMatrix.Data.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\WebMatrix.WebData.dll
@@ -174,6 +177,3 @@ G:\Websites\Game\BestGameEver\GameMvc\bin\zh-Hant\System.Spatial.resources.dll
 G:\Websites\Game\BestGameEver\GameMvc\obj\Debug\GameMvc.csprojResolveAssemblyReference.cache
 G:\Websites\Game\BestGameEver\GameMvc\obj\Debug\GameMvc.dll
 G:\Websites\Game\BestGameEver\GameMvc\obj\Debug\GameMvc.pdb
-G:\Websites\Game\BestGameEver\GameMvc\bin\v8\Noesis.Javascript.x64.dll
-G:\Websites\Game\BestGameEver\GameMvc\bin\v8\Noesis.Javascript.x86.dll
-G:\Websites\Game\BestGameEver\GameMvc\bin\TypeScriptBundleTransform.dll

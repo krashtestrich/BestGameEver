@@ -1,5 +1,7 @@
-﻿@using GameLogic.Enums
-@model GameLogic.Arena.Arena
+﻿@using GameLogic.Arena
+@using GameLogic.Characters
+@using GameLogic.Enums
+@model GameLogic.Game.Game
 @{
     ViewBag.Title = "Arena";
 }
@@ -21,15 +23,16 @@
     <div id="playerInfo">
         Player Information
         <div>
-            <span>Player Health: @Model.Player.Health</span>
+            <span>Player Health: @Model.Arena.Player.Health</span>
         </div>
     </div>
     <div id="enemyInfo">
         Enemy information
         @{
-            foreach (var c in Model.Characters.Where(i => i.GetAlliance() == Alliance.Opponent))
+            foreach (var c in Model.Arena.Characters.Where(i => i.GetAlliance() == Alliance.Opponent))
             {
                 <div>
+                    <span>Enemy Name: @c.Name</span>
                     <span>Enemy Health: @c.Health</span>
                 </div>
             }
@@ -37,14 +40,16 @@
     </div>
     <div id="arenaFloor">
         @{
-            for (var i = 0; i < Model.ArenaFloor.GetLength(0); i++)
+            var playerLoc = Model.Arena.Player.ArenaLocation.GetTileLocation();
+            var characterLocations = Model.Arena.Characters.Select(i => i.ArenaLocation.GetTileLocation());
+            for (var i = 0; i < Model.Arena.ArenaFloor.GetLength(0); i++)
             {
                 <div class="arenaFloorRow">
-                    @for (var j = 0; j < Model.ArenaFloor.GetLength(1); j++)
+                    @for (var j = 0; j < Model.Arena.ArenaFloor.GetLength(1); j++)
                     {
                         <div class="arenaFloorTile" data-xcoord="@i" data-ycoord="@j">
-                            @if (Model.Player.ArenaLocation.GetTileLocation().XCoord == @i &&
-                                 Model.Player.ArenaLocation.GetTileLocation().YCoord == @j)
+                            @if (playerLoc.XCoord == @i &&
+                                 playerLoc.YCoord == @j)
                             {
 
                                 <span>P</span>
@@ -53,6 +58,9 @@
                     }
                 </div>
             }
+
+
+            
         }
     </div>
 

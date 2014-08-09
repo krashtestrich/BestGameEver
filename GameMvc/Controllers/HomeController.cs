@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
-using GameLogic.Arena;
 using GameLogic.Characters.Player;
+using GameLogic.Game;
 using GameLogic.Shop;
 
 namespace GameMvc.Controllers
@@ -15,12 +15,12 @@ namespace GameMvc.Controllers
         public ActionResult Character()
         {
             var p = (Player)Session["Player"];
-            if (p == null)
+            if (p != null)
             {
-                ModelState.AddModelError(string.Empty, "You must create a character first.");
-                return View("Index");
+                return View("Character", p);
             }
-            return View("Character", p);
+            ModelState.AddModelError(string.Empty, "You must create a character first.");
+            return View("Index");
         }
 
         public ActionResult Arena()
@@ -32,12 +32,11 @@ namespace GameMvc.Controllers
                 return View("Index");
             }
 
-            var a = new Arena();
-            a.BuildArenaFloor(5);
-            a.AddCharacterToArena(p);
-            Session["Arena"] = a;
+            var game = (Game) Session["Game"];
+            game.Arena.AddCharacterToArena(p);
+            Session["Game"] = game;
 
-            return View("Arena", a);
+            return View("Arena", game);
         }
 
         public ActionResult Shop()

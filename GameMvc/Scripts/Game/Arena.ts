@@ -10,10 +10,11 @@ module Arena {
     }
 
     export function initialize(): void {
+        $.blockUI();
         $('div.arenaFloorTile').off('click').on('click', function () {
             Arena.targetTile($(this));
         });
-        $('#chooseOpponent').dialog();
+        Game.checkChooseOpponent();
     }
 
     export function targetTile($tile: JQuery) {

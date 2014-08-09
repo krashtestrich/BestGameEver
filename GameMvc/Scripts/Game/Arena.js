@@ -4,10 +4,11 @@
     var targettedClassName = "targetted";
 
     function initialize() {
+        $.blockUI();
         $('div.arenaFloorTile').off('click').on('click', function () {
             Arena.targetTile($(this));
         });
-        $('#chooseOpponent').dialog();
+        Game.checkChooseOpponent();
     }
     Arena.initialize = initialize;
 

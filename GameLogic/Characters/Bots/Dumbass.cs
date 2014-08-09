@@ -6,6 +6,7 @@ namespace GameLogic.Characters.Bots
     {
         public Dumbass(Alliance alliance) : base(alliance)
         {
+            SetName("Dumbass");
         }
     }
 }
