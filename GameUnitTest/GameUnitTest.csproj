@@ -61,6 +61,7 @@
     <Compile Include="WhenEquippingCharacter.cs" />
     <Compile Include="Actions\WhenChoosingActions.cs" />
     <Compile Include="Actions\WhenPerformingActions.cs" />
+    <Compile Include="WhenPlayingGame.cs" />
     <Compile Include="WhenTargettingEntities.cs" />
     <Compile Include="WhenUsingBots.cs" />
     <Compile Include="WhenUsingMaths.cs" />

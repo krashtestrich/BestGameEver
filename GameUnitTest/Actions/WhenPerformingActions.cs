@@ -11,13 +11,13 @@ namespace GameUnitTest.Actions
     public class WhenPerformingActions
     {
         [TestMethod]
-        public void ShouldPerformRunAction()
+        public void ShouldPerformMoveAction()
         {
             var a = new Arena();
             a.BuildArenaFloor(10);
             var c = new Player();
             a.AddCharacterToArena(c, 0, 0);
-            var tile = a.SelectFloorTile(new ArenaFloorPosition(1,2));
+            var tile = a.SelectFloorTile(new ArenaFloorPosition(0,1));
             var actions = c.TargetTileAndSelectActions(tile);
             a.PerformPlayerAction(actions.Find(i => i.Name == "Run"));
             Assert.IsTrue(c.ArenaLocation == tile);

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using GameLogic.Arena;
+using GameLogic.Characters.Player;
+using GameLogic.Shop;
 
 namespace GameMvc.Controllers
 {
@@ -10,23 +9,49 @@ namespace GameMvc.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
-
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Character()
         {
-            ViewBag.Message = "Your app description page.";
-
-            return View();
+            var p = (Player)Session["Player"];
+            if (p == null)
+            {
+                ModelState.AddModelError(string.Empty, "You must create a character first.");
+                return View("Index");
+            }
+            return View("Character", p);
         }
 
-        public ActionResult Contact()
+        public ActionResult Arena()
         {
-            ViewBag.Message = "Your contact page.";
+            var p = (Player)Session["Player"];
+            if (p == null)
+            {
+                ModelState.AddModelError(string.Empty, "You must create a character first.");
+                return View("Index");
+            }
 
-            return View();
+            var a = new Arena();
+            a.BuildArenaFloor(5);
+            a.AddCharacterToArena(p);
+            Session["Arena"] = a;
+
+            return View("Arena", a);
+        }
+
+        public ActionResult Shop()
+        {
+            var p = (Player)Session["Player"];
+            if (p == null)
+            {
+                ModelState.AddModelError(string.Empty, "You must create a character first.");
+                return View("Index");
+            }
+            var s = new Shop();
+            s.AddPlayerToShop(p);
+
+            return View("Shop", s);
         }
     }
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"Game.js","sourceRoot":"","sources":["Game.ts"],"names":["Game","Game.showChooseOpponentDialog"],"mappings":"AACA,IAAO,IAAI;AAMV,CAND,UAAO,IAAI;IAEPA,IAAIA,4BAA4BA,GAAWA,iBAAiBA;IAC5DA,SAAgBA,wBAAwBA;QACpCC,CAACA,CAACA,4BAA4BA,CAACA,CAACA,MAAMA,CAACA,MAAMA,CAACA;IAClDA,CAACA;IAFDD,yDAECA;AACLA,CAACA,uBAAA"}

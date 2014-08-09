@@ -77,7 +77,6 @@ namespace GameLogic.Arena
             else
             {
                 ArenaFloor[(int)xLoc, (int)yLoc].AddEntityToTile((Character)c);
-                //c.SetCharacterLocation(ArenaFloor[(int)xLoc, (int)yLoc]);
             }
         }
 
@@ -86,7 +85,6 @@ namespace GameLogic.Arena
             var xLoc = ArenaFloor.GetLength(0) - 1;
             var yLoc = (int)Math.Floor((double)((ArenaFloor.GetLength(1) - 1) / 2));
             ArenaFloor[xLoc, yLoc].AddEntityToTile((Character)c);
-            //c.SetCharacterLocation(ArenaFloor[xLoc,yLoc]);
         }
 
         #endregion

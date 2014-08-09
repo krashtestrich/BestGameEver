@@ -29,6 +29,8 @@ span.charEquipTitle {
     border: 1px solid #000000;
     width: 350px;
     height: 350px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 div.arenaFloorRow {
@@ -48,5 +50,32 @@ div.arenaFloorTile {
 div.arenaFloorTile:hover {
     border: 2px solid #000000;
     background-color: #bdb76b;
-    padding: 0px;
+    padding: 0;
 }
+
+div.arenaFloorTile.targetted {
+    border: 2px solid #000000;
+    background-color: #a52a2a;
+    padding: 0;
+}
+
+img.player {
+    position: relative;
+    bottom: 155px;
+    right: 155px;
+    pointer-events: none;
+}
+
+#playerInfo {
+    float: left;   
+}
+
+#enemyInfo {
+    float: right;
+}
+
+#playerActions {
+    margin-left: auto;
+    margin-right: auto;
+}
+

@@ -1,0 +1,33 @@
+﻿@model GameMvc.Models.UiActionModel
+
+@section scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+}
+
+@{
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    Available Actions:
+    @if (Model != null)
+    {
+        <ul>
+            @if (Model.Actions.Count == 0)
+            {
+                <li>No actions available.</li>
+            }
+            @foreach (var a in Model.Actions)
+            {
+                <li>
+                    <a href="#">
+                        @a.Name @if (a.PerformedWith != null)
+                        {
+                            <text>>with</text> @a.PerformedWith.Name
+                        }
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+</div>

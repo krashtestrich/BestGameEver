@@ -1,0 +1,66 @@
+﻿@using GameLogic.Enums
+@model GameLogic.Arena.Arena
+@{
+    ViewBag.Title = "Arena";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title </title>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Arena.initialize();
+        });    
+    </script>
+</head>
+<body>
+    <h2>Welcome to the Arena!</h2>
+    <div id="playerInfo">
+        Player Information
+        <div>
+            <span>Player Health: @Model.Player.Health</span>
+        </div>
+    </div>
+    <div id="enemyInfo">
+        Enemy information
+        @{
+            foreach (var c in Model.Characters.Where(i => i.GetAlliance() == Alliance.Opponent))
+            {
+                <div>
+                    <span>Enemy Health: @c.Health</span>
+                </div>
+            }
+        }
+    </div>
+    <div id="arenaFloor">
+        @{
+            for (var i = 0; i < Model.ArenaFloor.GetLength(0); i++)
+            {
+                <div class="arenaFloorRow">
+                    @for (var j = 0; j < Model.ArenaFloor.GetLength(1); j++)
+                    {
+                        <div class="arenaFloorTile" data-xcoord="@i" data-ycoord="@j">
+                            @if (Model.Player.ArenaLocation.GetTileLocation().XCoord == @i &&
+                                 Model.Player.ArenaLocation.GetTileLocation().YCoord == @j)
+                            {
+
+                                <span>P</span>
+                            } 
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+
+    <div id="playerActions">
+
+    </div>
+    <div id="chooseOpponent">
+        
+    </div>
+</body>
+</html>

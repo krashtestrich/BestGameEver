@@ -9,7 +9,7 @@
 
         public override int Distance
         {
-            get { return 3; }
+            get { return 1; }
         }
     }
 }

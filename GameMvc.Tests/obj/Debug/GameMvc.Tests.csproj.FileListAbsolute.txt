@@ -166,3 +166,5 @@ G:\Websites\Game\BestGameEver\GameMvc.Tests\bin\Debug\zh-Hant\System.Spatial.res
 G:\Websites\Game\BestGameEver\GameMvc.Tests\obj\Debug\GameMvc.Tests.csprojResolveAssemblyReference.cache
 G:\Websites\Game\BestGameEver\GameMvc.Tests\obj\Debug\GameMvc.Tests.dll
 G:\Websites\Game\BestGameEver\GameMvc.Tests\obj\Debug\GameMvc.Tests.pdb
+G:\Websites\Game\BestGameEver\GameMvc.Tests\bin\Debug\v8\Noesis.Javascript.x64.dll
+G:\Websites\Game\BestGameEver\GameMvc.Tests\bin\Debug\v8\Noesis.Javascript.x86.dll
