@@ -2,7 +2,8 @@
 @model GameLogic.Shop.Shop
 @{
     ViewBag.Title = "Shop";
-    var weapons = Model.Equipment.FindAll(i => i.EquipmentType == "Weapon");
+    var weapons = Model.Equipment.FindAll(i => i is Weapon).ConvertAll(w => (Weapon)w);
+    var shields = Model.Equipment.FindAll(i => i is Shield).ConvertAll(s => (Shield)s);
 }
 
 <!DOCTYPE html>
@@ -20,13 +21,12 @@
     <div>
         <h3>Current Equipment</h3>
         <ul>
-            @foreach (var equipment in @Model.PlayerAtShop.CharacterEquipment)
+            @foreach (var e in @Model.PlayerAtShop.CharacterEquipment)
             {
-                var w = (Weapon) equipment;
                 <li>
-                @using (Html.BeginForm("SellEquipment", "Shop", new {@w.Name }))
+                @using (Html.BeginForm("SellEquipment", "Shop", new {@e.Name }))
                 {
-                     <button type="submit">Sell</button><span> @w.Name </span><span>@w.EquipmentType </span><span>Hits for @w.BaseDamage</span><span> and @w.BonusDamage bonus damage.</span>
+                     <button type="submit">Sell</button><span> @e.Name </span>
                 }
                 </li> 
             }
@@ -39,28 +39,68 @@
     <div><h3>Weapons</h3>
         <table>
             <tr>
-                <td>Weapon Name</td><td>Weapon Cost</td><td>Buy</td>
+                <td>Weapon Name</td>
+                <td>Weapon Cost</td>
+                <td>Base Damage</td>
+                <td>Bonus Damage</td>
+                <td>Buy</td>
             </tr>
-        @foreach (var i in weapons)
-        {
-            <tr>
-                <td>@i.Name</td>
-                <td>@i.Price</td>
-                <td>
-                    @using (Html.BeginForm("PurchaseEquipment", "Shop", new {@i.Name }))
-                    {
-                        if (@Model.PlayerAtShop.CanAffordEquipment(i) && @Model.PlayerAtShop.CanEquipEquipment(i))
+            @foreach (var i in weapons)
+            {
+                <tr>
+                    <td>@i.Name</td>
+                    <td>@i.Price</td>
+                    <td>@i.BaseDamage</td>
+                    <td>@i.BonusDamage</td>
+                    <td>
+                        @using (Html.BeginForm("PurchaseEquipment", "Shop", new {@i.Name }))
                         {
-                            <button type='submit'>Buy</button>
+                            if (@Model.PlayerAtShop.CanAffordEquipment(i) && @Model.PlayerAtShop.CanEquipEquipment(i))
+                            {
+                                <button type='submit'>Buy</button>
+                            }
+                            else
+                            {
+                                <span>Need more $$</span>
+                            }                  
                         }
-                        else
-                        {
-                            <span>Need more $$</span>
-                        }                  
-                    }
                     </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div>
+        <h3>Shields</h3>
+        <table>
+            <tr>
+                <td>Shield Name</td>
+                <td>Shield Cost</td>
+                <td>Base Block %</td>
+                <td>Bonus Block %</td>
+                <td>Buy</td>
             </tr>
-        }
+            @foreach (var s in shields)
+            {
+                <tr>
+                    <td>@s.Name</td>
+                    <td>@s.Price</td>
+                    <td>@s.BaseBlock</td>
+                    <td>@s.BonusBlock</td>
+                    <td>
+                        @using (Html.BeginForm("PurchaseEquipment", "Shop", new { @s.Name }))
+                        {
+                            if (@Model.PlayerAtShop.CanAffordEquipment(s) && @Model.PlayerAtShop.CanEquipEquipment(s))
+                            {
+                                <button type='submit'>Buy</button>
+                            }
+                            else
+                            {
+                                <span>Need more $$</span>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
         </table>
     </div>
 </body>

@@ -1,5 +1,6 @@
 ﻿@using GameLogic.Arena
-@using GameLogic.Characters
+@using GameLogic.Characters.Bots
+@using GameLogic.Characters.Player
 @using GameLogic.Enums
 @model GameLogic.Game.Game
 @{
@@ -23,7 +24,7 @@
     <div id="playerInfo">
         Player Information
         <div>
-            <span>Player Health: @Model.Arena.Player.Health</span>
+            <span>Player Health: @Model.Player.Health</span>
         </div>
     </div>
     <div id="enemyInfo">
@@ -32,43 +33,44 @@
             foreach (var c in Model.Arena.Characters.Where(i => i.GetAlliance() == Alliance.Opponent))
             {
                 <div>
-                    <span>Enemy Name: @c.Name</span>
-                    <span>Enemy Health: @c.Health</span>
+                    <div>
+                        <span>Enemy Name: @c.Name</span>
+                    </div>
+                    <div>
+                        <span>Enemy Health: @c.Health</span>
+                    </div>
                 </div>
             }
         }
     </div>
     <div id="arenaFloor">
         @{
-            var playerLoc = Model.Arena.Player.ArenaLocation.GetTileLocation();
-            var characterLocations = Model.Arena.Characters.Select(i => i.ArenaLocation.GetTileLocation());
             for (var i = 0; i < Model.Arena.ArenaFloor.GetLength(0); i++)
             {
                 <div class="arenaFloorRow">
                     @for (var j = 0; j < Model.Arena.ArenaFloor.GetLength(1); j++)
                     {
+                        var entity = (from ArenaFloorTile tile in Model.Arena.ArenaFloor
+                                        where tile.GetTileEntity() != null &&  tile.GetTileLocation().XCoord == i && tile.GetTileLocation().YCoord == j
+                                        select tile.GetTileEntity()).FirstOrDefault();
                         <div class="arenaFloorTile" data-xcoord="@i" data-ycoord="@j">
-                            @if (playerLoc.XCoord == @i &&
-                                 playerLoc.YCoord == @j)
+                            @if (entity is Player)
                             {
-
                                 <span>P</span>
                             } 
+                            @if (entity is Bot)
+                            {
+                                <span>B</span>
+                            }
                         </div>
                     }
                 </div>
             }
-
-
-            
         }
     </div>
 
-    <div id="playerActions">
-
-    </div>
-    <div id="chooseOpponent">
-        
-    </div>
+    <div id="playerActions"></div>
+    <div id="chooseOpponent"></div>
+    <div id="battleOver"></div>
 </body>
 </html>

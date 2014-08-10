@@ -5,6 +5,7 @@ using GameLogic.Actions;
 using GameLogic.Actions.Movements;
 using GameLogic.Arena;
 using GameLogic.Enums;
+using GameLogic.Equipment;
 using GameLogic.Slots;
 using MoreLinq;
 
@@ -42,6 +43,15 @@ namespace GameLogic.Characters
             Health = Health + amount;
         }
 
+        #endregion
+
+        #region Cash
+        public int Cash { get; protected set; }
+
+        public void SetCash(int amount)
+        {
+            Cash = amount;
+        }
         #endregion
 
         #region Slots
@@ -114,6 +124,8 @@ namespace GameLogic.Characters
             }
         }
 
+        public List<IAction> CurrentAvailableActions { get; private set; }
+
         public List<Equipment.Equipment> CharacterEquipment
         {
             get
@@ -145,7 +157,8 @@ namespace GameLogic.Characters
         public List<IAction> TargetTileAndSelectActions(ArenaFloorTile tile)
         {
             TargetTile(tile);
-            return GetActions(true);
+            CurrentAvailableActions = GetActions(true);
+            return CurrentAvailableActions;
         }
 
         public List<IAction> GetActions(bool canPerform)
@@ -156,6 +169,7 @@ namespace GameLogic.Characters
         public void UntargetTile()
         {
             TargettedTile = null;
+            CurrentAvailableActions = null;
         }
 
         public void TargetTile(ArenaFloorTile tile)
@@ -165,12 +179,49 @@ namespace GameLogic.Characters
 
         #endregion
 
-        #region Battle
+        #region Damage/Block Calculations
+
+        private IEnumerable<int> GetBlockModifiers()
+        {
+            return CharacterEquipment.Where(i => i is Shield).Select(i => ((Shield) i).GetBlock());
+        }
+
+        private int CalculateDamageTaken(int damage)
+        {
+            var blockModifiers = GetBlockModifiers();
+            blockModifiers.ToList().ForEach(i => damage = damage - (damage * i/100));
+            return damage;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            LoseHealth(CalculateDamageTaken(damage));
+        }
         #endregion
 
-        public Character(Alliance alliance)
+        #region Level
+        private int _level;
+
+        public int GetLevel()
+        {
+            return _level;
+        }
+
+        public void SetLevel(int level)
+        {
+            _level = level;
+        }
+
+        public void LevelUp()
+        {
+            _level++;
+        }
+        #endregion
+
+        public Character(Alliance alliance, int level)
         {
             _alliance = alliance;
+            _level = level;
             _characterEquipment = new List<Equipment.Equipment>();
 
             _slots = new List<Slot>();

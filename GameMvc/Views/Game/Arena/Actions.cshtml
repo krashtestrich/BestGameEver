@@ -19,13 +19,9 @@
             }
             @foreach (var a in Model.Actions)
             {
+                var displayName = a.Name + (a.PerformedWith == null ? "" : " with " + a.PerformedWith.Name);
                 <li>
-                    <a href="#">
-                        @a.Name @if (a.PerformedWith != null)
-                        {
-                            <text>>with</text> @a.PerformedWith.Name
-                        }
-                    </a>
+                    @Html.ActionLink(displayName, "PerformPlayerAction", "Game", new { actionName = a.Name }, null)
                 </li>
             }
         </ul>

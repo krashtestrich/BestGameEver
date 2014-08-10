@@ -1,0 +1,26 @@
+﻿@using GameLogic.Enums
+@model GameLogic.Game.BattleReport
+
+@section scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+}
+
+@{
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@if (Model.BattleStatus == BattleStatus.BattleOver)
+{
+    <text>The battle is over!</text>
+    if (Model.PlayerWins)
+    {
+        <text>YOU WIN!</text>
+    }
+    else
+    {
+        <text>YOU LOSE!</text>
+    }
+
+    <input id="btnBattleOver" type="button" value="OK"/>
+}

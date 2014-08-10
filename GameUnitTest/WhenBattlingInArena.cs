@@ -19,7 +19,7 @@ namespace GameUnitTest
             p.EquipEquipment(new Sword());
             arena.AddCharacterToArena(p);
 
-            var b = new Dumbass(Alliance.Opponent);
+            var b = new Dumbass(Alliance.Opponent, 1);
             b.SetName("Dumbass Bot");
             b.EquipEquipment(new Sword());
             arena.AddCharacterToArena(b);

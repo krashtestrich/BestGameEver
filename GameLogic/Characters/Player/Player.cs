@@ -5,16 +5,15 @@ namespace GameLogic.Characters.Player
 {
     public class Player : Character
     {
-        public int Cash { get; private set; }
-
-        public void SetCash(int amount)
-        {
-            Cash = amount;
-        }
-
         public void AddCash(int amount)
         {
             Cash += amount;
+        }
+
+        public void LeaveArena()
+        {
+            SetHealth(100);
+            SetEntityLocation(null);
         }
 
         #region Shop Stuff
@@ -43,7 +42,7 @@ namespace GameLogic.Characters.Player
         }
         #endregion
 
-        public Player() : base(Alliance.Player)
+        public Player() : base(Alliance.Player, 1)
         {
             SetHealth(100);
             SetCash(100);

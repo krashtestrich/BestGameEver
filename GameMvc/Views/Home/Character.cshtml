@@ -1,7 +1,14 @@
 ﻿@using GameLogic.Equipment
+@using GameLogic.Slots
 @model GameLogic.Characters.Player.Player
 @{
     ViewBag.Title = "Character Screen";
+    var handEquip = Model.CharacterEquipment.Where(j => j != null && j.Slots.Exists(k => k is Hand)).OrderByDescending(i => i.EquipmentType).ToList();
+    var twoHandEquip = Model.CharacterEquipment.FirstOrDefault(i => i.Slots.Count(j => j is Hand) == 2);
+    var leftHand = twoHandEquip ?? (handEquip.Count > 0 ? handEquip[0] : null);
+    var secondHandExists = twoHandEquip != null || handEquip.ToList().Count > 1;
+    var rightHand = secondHandExists ?
+        twoHandEquip ?? handEquip[1] : null;
 }
 
 <!DOCTYPE html>
@@ -29,7 +36,7 @@
             @Html.ValueFor(m => m.Health)
         </div>
         <div>
-            <h2><a class="test" href="#" title="Test">Current Loadout</a></h2>
+            <h2>Current Loadout</h2>
             <div id="charEquipContainer">
                 <div class="charEquipRow">
                     <div id="charEquipHead" class="charEquipCell charEquipSingleCell">
@@ -39,25 +46,28 @@
                 <div class="charEquipRow">
                     <div id="charEquipLeftHand" class="charEquipCell charEquipMultCell">
                         <span class="charEquipTitle">Left Hand</span>
-                        <div class="charEquipCellContent" data-tip="#handTip">
-                            
-                            @foreach (var w in Model.CharacterEquipment.Where(i => i != null && i.Slots.Exists(j => j.SlotType == "Hand")).Cast<Weapon>())
+                        <div class="charEquipCellContent" data-tip="#leftHandTip">
+                            @if (leftHand != null)
                             {
-                                @w.Name
-                                <div id="handTip">
-                                    <h3>@w.Name</h3>
+                                @leftHand.Name
+                                <div id="leftHandTip">
+                                    <h3>@leftHand.Name</h3>
                                     <ul>
-                                        <li>Cost: @w.Price</li>
-                                        <li>Base Damage: @w.BaseDamage</li>
-                                        <li>Bonus Damage: @w.BonusDamage</li>
+                                        <li>Cost: @leftHand.Price</li>
+                                        @if (@leftHand is Weapon)
+                                        {
+                                            <li>Base Damage: @(((Weapon)leftHand).BaseDamage)</li>
+                                            <li>Bonus Damage: @(((Weapon)leftHand).BonusDamage)</li>
+                                        }
+                                        else
+                                        {
+                                            <li>Base Block %: @(((Shield)leftHand).BaseBlock)</li>
+                                            <li>Bonus Block %: @(((Shield)leftHand).BonusBlock)</li>
+                                        }
                                     </ul>
                                 </div>
-                                break;
                             }
-                            
-
                         </div>
-
                     </div>
                     <div id="charEquipChest" class="charEquipCell charEquipMultCell">
                         <span class="charEquipTitle">Chest</span>
@@ -66,14 +76,27 @@
                     </div>
                     <div id="charEquipRightHand" class="charEquipCell charEquipMultCell">
                         <span class="charEquipTitle">Right Hand</span>
-                        <div class="charEquipCellContent">
-                            
-                            @foreach (var first in Model.CharacterEquipment.Where(i => i.Slots.Count(j => j.SlotType == "Hand") > 1))
-                            {
-                                @first.Name
-                                break;
-                            }
-                            
+                        <div class="charEquipCellContent" data-tip="#rightHandTip">
+                            @if (rightHand != null)
+                            { 
+                                @rightHand.Name
+                                <div id="rightHandTip">
+                                    <h3>@rightHand.Name</h3>
+                                    <ul>
+                                        <li>Cost: @rightHand.Price</li>
+                                        @if (@rightHand is Weapon)
+                                        {
+                                            <li>Base Damage: @(((Weapon)rightHand).BaseDamage)</li>
+                                            <li>Bonus Damage: @(((Weapon) rightHand).BonusDamage)</li>
+                                        }
+                                        else
+                                        {
+                                            <li>Base Block %: @(((Shield)rightHand).BaseBlock)</li>
+                                            <li>Bonus Block %: @(((Shield)rightHand).BonusBlock)</li>
+                                        }
+                                    </ul>
+                                </div>
+                             }
                         </div>
                     </div>
                 </div>

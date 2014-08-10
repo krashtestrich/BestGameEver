@@ -12,7 +12,7 @@ namespace GameUnitTest
         [TestMethod]
         public void ShouldEquipEquipmentIfCharacterHasFreeSlots()
         {
-            var c = new Character(Alliance.Neutral);
+            var c = new Character(Alliance.Neutral, 1);
             var e = new TestHelpers.TestWeapon();
             Assert.IsTrue(c.CanEquipEquipment(e));
         }
@@ -20,7 +20,7 @@ namespace GameUnitTest
         [TestMethod]
         public void ShouldEquipEquipmentIfCharacterDoesNotHaveEnoughFreeSlots()
         {
-            var c = new Character(Alliance.Neutral);
+            var c = new Character(Alliance.Neutral, 1);
             var e = new TestHelpers.TestWeapon();
             e.AddSlotType(new Hand());
             e.AddSlotType(new Hand());
@@ -31,7 +31,7 @@ namespace GameUnitTest
         [TestMethod]
         public void ShouldAddEquipmentToCharactersEquipment()
         {
-            var c = new Character(Alliance.Neutral);
+            var c = new Character(Alliance.Neutral, 1);
             var e = new TestHelpers.TestWeapon();
             c.EquipEquipment(e);
             Assert.IsTrue(c.CharacterEquipment.Exists(x => x == e));
@@ -40,7 +40,7 @@ namespace GameUnitTest
         [TestMethod]
         public void ShouldUpdatesCharacterEquipmentSlotsToUsed()
         {
-            var c = new Character(Alliance.Neutral);
+            var c = new Character(Alliance.Neutral, 1);
             var e = new TestHelpers.TestWeapon();
             e.AddSlotType(new Hand());
             c.EquipEquipment(e);
@@ -51,7 +51,7 @@ namespace GameUnitTest
         [ExpectedException(typeof (Exception))]
         public void ShouldThrowExceptionWhenCharacterDoesNotHaveEnoughFreeSlots()
         {
-            var c = new Character(Alliance.Neutral);
+            var c = new Character(Alliance.Neutral, 1);
             var e = new TestHelpers.TestWeapon();
             e.AddSlotType(new Hand());
             e.AddSlotType(new Hand());
@@ -62,7 +62,7 @@ namespace GameUnitTest
         [TestMethod]
         public void ShouldRemovesEquipmentFromCharactersEquipment()
         {
-            var c = new Character(Alliance.Neutral);
+            var c = new Character(Alliance.Neutral, 1);
             var e = new TestHelpers.TestWeapon();
             c.EquipEquipment(e);
             c.UnEquipEquipment(e);
@@ -72,7 +72,7 @@ namespace GameUnitTest
         [TestMethod]
         public void ShouldFreesCharactersEquipmentSlots()
         {
-            var c = new Character(Alliance.Neutral);
+            var c = new Character(Alliance.Neutral, 1);
             var e = new TestHelpers.TestWeapon();
             c.EquipEquipment(e);
             c.UnEquipEquipment(e);

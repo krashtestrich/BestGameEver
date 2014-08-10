@@ -9,7 +9,7 @@ namespace GameLogic
         {
             get
             {
-                return _character ?? new Character(Alliance.Player);
+                return _character ?? new Character(Alliance.Player, 1);
             }
             set
             {

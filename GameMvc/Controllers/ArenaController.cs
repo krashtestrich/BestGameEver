@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using GameLogic.Arena;
-using GameLogic.Characters.Player;
 using GameLogic.Game;
 using GameMvc.Models;
 
@@ -11,10 +10,9 @@ namespace GameMvc.Controllers
         [HttpPost]
         public ActionResult TargetTile(UiTileSelectModel model)
         {
-            var p = (Player)Session["Player"];
-            var a = ((Game)Session["Game"]).Arena;
-            var actions = p.TargetTileAndSelectActions(a.SelectFloorTile(new ArenaFloorPosition(model.XCoord, model.YCoord)));
-            Session["Player"] = p;
+            var g = (Game) Session["Game"];
+            var actions = g.Player.TargetTileAndSelectActions(g.Arena.SelectFloorTile(new ArenaFloorPosition(model.XCoord, model.YCoord)));
+            Session["Game"] = g;
             return View("~/Views/Game/Arena/Actions.cshtml", new UiActionModel
             {
                 Actions = actions

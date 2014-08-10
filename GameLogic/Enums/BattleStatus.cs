@@ -1,6 +1,6 @@
 ﻿namespace GameLogic.Enums
 {
-    public enum GameStatus
+    public enum BattleStatus
     {
         NotStarted = 0,
         InBattle = 1,

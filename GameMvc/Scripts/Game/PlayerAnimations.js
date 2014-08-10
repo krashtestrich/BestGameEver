@@ -21,4 +21,3 @@
         $img.attr('src', path);
     }
 })(Animations || (Animations = {}));
-//# sourceMappingURL=PlayerAnimations.js.map

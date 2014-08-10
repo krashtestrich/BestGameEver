@@ -6,4 +6,3 @@
     }
     Character.initialize = initialize;
 })(Character || (Character = {}));
-//# sourceMappingURL=Character.js.map

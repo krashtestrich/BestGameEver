@@ -16,7 +16,7 @@ namespace GameLogic.Arena
         public void ResetArena()
         {
             Characters = new List<ICharacter>();
-            ArenaFloor = null;
+            BuildArenaFloor(5);
         }
 
         #region Arena Floor
@@ -53,22 +53,13 @@ namespace GameLogic.Arena
 
         public List<ICharacter> Characters { get; private set; }
 
-        public Character Player { get; private set; }
-
         public void AddCharacterToArena(ICharacter c, int? xLoc = null, int? yLoc = null)
         {
             if (ArenaFloor == null)
             {
                 throw new Exception("Arena not been constructed!");
             }
-            if (c.GetType() == typeof(Player))
-            {
-                Player = (Character)c;
-            }
-            else
-            {
-                Characters.Add(c);
-            }
+            Characters.Add(c);
 
             if (xLoc == null || yLoc == null)
             {
@@ -82,20 +73,14 @@ namespace GameLogic.Arena
 
         private void SetDefaultCharacterLocation(ICharacter c)
         {
-            var xLoc = ArenaFloor.GetLength(0) - 1;
-            var yLoc = (int)Math.Floor((double)((ArenaFloor.GetLength(1) - 1) / 2));
+            var xLoc = c.GetAlliance() == Alliance.Player ? 0 : (ArenaFloor.GetLength(0) - 1);
+            var yLoc = c.GetAlliance() == Alliance.Player ? (ArenaFloor.GetLength(1) - 1) : 0;
             ArenaFloor[xLoc, yLoc].AddEntityToTile((Character)c);
         }
 
         #endregion
 
         #region Battle
-
-        public void PerformPlayerAction(IAction a)
-        {
-            a.PerformAction(Player);
-            Player.UntargetTile();
-        }
 
         private void BotPerformAttack(ICharacter c, ArenaFloorTile tile)
         {
@@ -125,11 +110,15 @@ namespace GameLogic.Arena
             var d = moveAction.Distance;
             var newPosition = ArenaHelper.GetClosestMovablePosition(c.ArenaLocation.GetTileLocation(), tile.GetTileLocation(), d);
             var newTile = ArenaFloor[newPosition.XCoord, newPosition.YCoord];
-            c.TargetTile(newTile);
-            moveAction.PerformAction((Character)c);
+            //TODO: Implement logic for bot moving around obstacles? For now don't allow movement onto tiles that have entities
+            var actions = c.TargetTileAndSelectActions(newTile);
+            if (actions.Exists(i => i.Name == moveAction.Name))
+            {
+                moveAction.PerformAction((Character) c);
+            }
         }
 
-        private void BotSelectTile(ICharacter c, ArenaFloorTile tile)
+        protected internal void BotSelectTile(ICharacter c, ArenaFloorTile tile)
         {
             // Have we selected a Tile a player is on?
             var isPlayer = tile.GetTileEntity().GetType() == typeof (Player);
@@ -144,16 +133,6 @@ namespace GameLogic.Arena
                 //TODO: Change this - for now assume all bot will do is attack enemy.
                 BotPerformAttack(c, tile);
             }
-        }
-
-        public void PerformOpponentTurn()
-        {
-            Characters.Where(i => i.GetAlliance() == Alliance.Opponent).ToList().ForEach(
-                i =>
-                {
-                    BotSelectTile(i, Player.ArenaLocation);
-                    i.UntargetTile();
-                });
         }
 
         #endregion

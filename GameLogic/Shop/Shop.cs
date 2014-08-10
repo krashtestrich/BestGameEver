@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GameLogic.Characters.Player;
+using GameLogic.Equipment.Shields;
 using GameLogic.Equipment.Weapons;
 
 namespace GameLogic.Shop
@@ -19,8 +20,16 @@ namespace GameLogic.Shop
 
         private void PopulateShop()
         {
+            //TODO: Implement Structure Map.
+            // Weapons
             _equipment.Add(new Sword());
             _equipment.Add(new BigSword());
+            _equipment.Add(new MegaSwordOfDeath());
+            _equipment.Add(new ReliableTreeBranch());
+
+            // Shields
+            _equipment.Add(new CrappyWoodenShield());
+            _equipment.Add(new PieceofFoil());
         }
         #endregion        
 

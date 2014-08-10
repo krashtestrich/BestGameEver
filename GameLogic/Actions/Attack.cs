@@ -37,7 +37,8 @@ namespace GameLogic.Actions
             var weaponDamage = ((Weapon) PerformedWith).GetDamage();
             var modifier = R.Next(DamageFromModifier, DamageToModifier);
             var damage = modifier > 0 ? weaponDamage*modifier : weaponDamage;
-            ((Character)source.TargettedTile.GetTileEntity()).LoseHealth(damage);
+            //TODO : Make more sophisticated.
+            ((Character)source.TargettedTile.GetTileEntity()).TakeDamage(damage);
         }
 
         public virtual bool CanBePerformed(IGameEntity source)

@@ -164,7 +164,7 @@ namespace GameUnitTest
         #region Characters
         public class TestCharacter : Character
         {
-           public TestCharacter() : base(Alliance.Neutral)
+           public TestCharacter() : base(Alliance.Neutral, 1)
            {
                 SetName("Test Character");
             }

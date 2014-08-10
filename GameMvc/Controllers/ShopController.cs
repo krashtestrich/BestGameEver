@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using GameLogic.Characters.Player;
+using GameLogic.Game;
 using GameLogic.Shop;
 
 namespace GameMvc.Controllers
@@ -10,16 +10,16 @@ namespace GameMvc.Controllers
         [HttpPost]
         public ActionResult PurchaseEquipment(string name)
         {
-            var p = (Player)Session["Player"];
+            var g = (Game)Session["Game"];
             var s = new Shop();
             var e = s.Equipment.First(i => i.Name == name);
             if (e == null)
             {
                 // TODO - Exception
             }
-            p.PurchaseEquipment(e);
-            s.AddPlayerToShop(p);
-            Session["Player"] = p;
+            g.Player.PurchaseEquipment(e);
+            s.AddPlayerToShop(g.Player);
+            Session["Game"] = g;
 
             return View("~/Views/Home/Shop.cshtml", s);
         }
@@ -27,16 +27,16 @@ namespace GameMvc.Controllers
         [HttpPost]
         public ActionResult SellEquipment(string name)
         {
-            var p = (Player)Session["Player"];
+            var g = (Game)Session["Game"];
             var s = new Shop();
-            var e = p.CharacterEquipment.First(i => i.Name == name);
+            var e = g.Player.CharacterEquipment.First(i => i.Name == name);
             if (e == null)
             {
                 // TODO - Exception
             }
-            p.SellEquipment(e);
-            s.AddPlayerToShop(p);
-            Session["Player"] = p;
+            g.Player.SellEquipment(e);
+            s.AddPlayerToShop(g.Player);
+            Session["Game"] = g;
 
             return View("~/Views/Home/Shop.cshtml", s);
         }

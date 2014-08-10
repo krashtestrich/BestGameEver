@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using GameLogic.Actions;
 using GameLogic.Characters.Bots;
+using GameLogic.Characters.Player;
 using GameLogic.Enums;
 
 namespace GameLogic.Game
 {
     public class Game
     {
-        private GameStatus _gameStatus;
+        private BattleStatus _battleStatus;
 
         public Bot ChosenOpponent;
         public Arena.Arena Arena;
@@ -15,24 +19,89 @@ namespace GameLogic.Game
         {
             Arena = new Arena.Arena();
             Arena.BuildArenaFloor(5);
-            _gameStatus = GameStatus.NotStarted;
+            _battleStatus = BattleStatus.NotStarted;
+        }
+
+        public Player Player
+        {
+            get; set;
         }
 
         #region Battle Status
         public void StartBattle()
         {
-            _gameStatus = GameStatus.InBattle;
+            _battleStatus = BattleStatus.InBattle;
         }
 
         public void EndBattle()
         {
-            _gameStatus = GameStatus.BattleOver;
+            _battleStatus = BattleStatus.BattleOver;
         }
 
-        public GameStatus GetGameStatus()
+        public void ResetBattle()
         {
-            return _gameStatus;
+            _battleStatus = BattleStatus.NotStarted;
         }
+
+        public BattleStatus GetBattleStatus()
+        {
+            return _battleStatus;
+        }
+
+        public void UpdateBattleStatus()
+        {
+            if (Player.Health <= 0
+                || !(Arena.Characters.Exists(i => i.GetAlliance() == Alliance.Opponent && i.Health > 0)))
+            {
+                EndBattle();
+            }
+        }
+        #endregion
+
+        #region Perform Actions/Turns
+        public void PerformPlayerAction(IAction a)
+        {
+            if (_battleStatus != BattleStatus.InBattle)
+            {
+                throw new Exception("The battle is over what the FUCK are you doing!?");
+            }
+            a.PerformAction(Player);
+            Player.UntargetTile();
+            UpdateBattleStatus();
+        }
+
+        public void PerformOpponentTurn()
+        {
+            Arena.Characters.Where(i => i.GetAlliance() == Alliance.Opponent).ToList().ForEach(
+                i =>
+                {
+                    if (_battleStatus != BattleStatus.InBattle)
+                    {
+                        return;
+                    }
+                    Arena.BotSelectTile(i, Player.ArenaLocation);
+                    i.UntargetTile();
+                    UpdateBattleStatus();
+                });
+        }
+
+        public void ProcessBattleOver()
+        {
+            if (GetBattleStatus() != BattleStatus.BattleOver)
+            {
+                throw new Exception("Uhh, the battle isn't over?");
+            }
+            if (Player.Health > 0)
+            {
+                var cash = Arena.Characters.Where(i => i is Bot).Sum(i => ((Bot) i).Worth);
+                Player.AddCash(cash);
+                Player.LevelUp();
+                Player.LeaveArena();
+            }
+            ResetBattle();            
+            Arena.ResetArena();
+        }
+
         #endregion
 
         #region Assign Opponent(s)
@@ -40,7 +109,7 @@ namespace GameLogic.Game
         {
             return new List<Bot>
             {
-                new Dumbass(Alliance.Opponent)
+                new Dumbass(Alliance.Opponent, Player != null ? Player.GetLevel() : 1)
             };
         }
 
@@ -51,5 +120,16 @@ namespace GameLogic.Game
         }
 
         #endregion
+
+
+        public BattleReport BuildBattleReport()
+        {
+            var br = new BattleReport
+            {
+                BattleStatus = _battleStatus,
+                PlayerWins = _battleStatus == BattleStatus.BattleOver && Player.Health > 0
+            };
+            return br;
+        }
     }
 }

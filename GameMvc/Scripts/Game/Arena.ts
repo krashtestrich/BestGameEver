@@ -15,6 +15,7 @@ module Arena {
             Arena.targetTile($(this));
         });
         Game.checkChooseOpponent();
+        Game.checkBattleStatus();
     }
 
     export function targetTile($tile: JQuery) {

@@ -1,18 +1,28 @@
 ﻿  
 module Game {
-
-    interface IChooseOpponent {
-        name: string
-    }
-
-    var chooseOpponentDialogSelector: string = '#chooseOpponent';
+    var chooseOpponentDialogSelector : string = '#chooseOpponent';
+    var battleOverDialogSelector : string = '#battleOver';
     var chooseOpponentDlgOptions: JQueryUI.DialogOptions = {
         modal: true,
-        title: "Choose your opponent"
+        title: "Choose your opponent",
+        close: () => {
+            location.href = '/Home/Character';
+        }
     };
+    var battleOverDialogOptions : JQueryUI.DialogOptions = {
+        modal: true,
+        title: "Battle Over!",
+        close: () => {
+            processBattleOver();
+        }
+    }
 
     function showChooseOpponentDialog() {
         $(chooseOpponentDialogSelector).dialog('open');
+    }
+
+    function showBattleOverDialog() {
+        $(battleOverDialogSelector).dialog('open');
     }
 
     export function checkChooseOpponent() {
@@ -27,10 +37,12 @@ module Game {
     }
 
     function checkChooseOpponentSuccess(result: any) {
-        if (result != null) {
+        if (result != null && result != '') {
             $(chooseOpponentDialogSelector).dialog(chooseOpponentDlgOptions);
             $(chooseOpponentDialogSelector).html(result);
-            $('#opponentList a').off('click').on('click', chooseOpponent);
+            $(chooseOpponentDialogSelector + ' a').on('click', () => {
+                $.blockUI();
+            });
             showChooseOpponentDialog();
         }
         $.unblockUI();
@@ -40,28 +52,51 @@ module Game {
         $.unblockUI();
     }
 
-    function chooseOpponent(): void {
-        $.blockUI();
-        var $this = $(this);
-        var model: IChooseOpponent = { name: ($this.attr('data-opponent')) }
-        var json = { model: model };
+    export function checkBattleStatus() {
         $.ajax({
             type: "POST",
-            url: "/Game/ChooseOpponent",
+            url: "/Game/CheckBattleStatus",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(json),
             dataType: "html",
-            success: chooseOpponentSuccess,
-            error: chooseOpponentError
+            success: checkBattleStatusSuccess,
+            error: checkBattleStatusError
         });
     }
 
-    function chooseOpponentSuccess() {
-        $(chooseOpponentDialogSelector).dialog('close');
+    function checkBattleStatusSuccess(result: any) {
+        if (result != null && result != '') {
+            $(battleOverDialogSelector).dialog(battleOverDialogOptions);
+            $(battleOverDialogSelector).html(result);
+            $('#btnBattleOver').off('click').on('click', () => {
+                $(battleOverDialogSelector).dialog('close');
+            });
+            showBattleOverDialog();
+        }
         $.unblockUI();
     }
 
-    function chooseOpponentError() {
+    function checkBattleStatusError() {
         $.unblockUI();
+    }
+
+    function processBattleOver() {
+        $.blockUI();
+        $.ajax({
+            type: "POST",
+            url: "/Game/ProcessBattleOver",
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: processBattleOverSuccess,
+            error: processBattleOverError
+        });
+    }
+
+    function processBattleOverSuccess() {
+        location.href = '/Home/Character';
+        $.unblockUI();
+    }
+
+    function processBattleOverError() {
+        $.unblockUI();     
     }
 }

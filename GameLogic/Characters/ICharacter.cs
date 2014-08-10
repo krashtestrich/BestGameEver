@@ -9,6 +9,7 @@ namespace GameLogic.Characters
     {
         Alliance GetAlliance();
         ArenaFloorTile ArenaLocation { get; }
+        int GetLevel();
         #region Basic - Name, etc.
         string Name
         { get; }
@@ -46,12 +47,20 @@ namespace GameLogic.Characters
         #endregion
 
         #region Actions
-
+        List<IAction> CurrentAvailableActions { get; } 
         void TargetTile(ArenaFloorTile tile);
         List<IAction> TargetTileAndSelectActions(ArenaFloorTile tile);
         List<IAction> GetActions(bool canPerform);
         void UntargetTile();
 
         #endregion
+
+        #region Cash
+        int Cash { get; }
+
+        void SetCash(int amount);
+
+        #endregion
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using GameLogic.Characters;
+using GameLogic.Characters.Bots;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +16,7 @@ namespace GameUnitTest
         {
             var a = new Arena();
             a.BuildArenaFloor(5);
-            var c = new Character(Alliance.Neutral);
+            var c = new Character(Alliance.Neutral, 1);
             c.SetName("YoMomma");
             a.AddCharacterToArena(c);
 
@@ -27,7 +28,7 @@ namespace GameUnitTest
         public void ShouldNotAddCharacterToArenaWhenFloorNotBuilt()
         {
             var a = new Arena();
-            var c = new Character(Alliance.Neutral);
+            var c = new Character(Alliance.Neutral, 1);
             c.SetName("YoMomma");
             a.AddCharacterToArena(c);
         }
@@ -39,7 +40,7 @@ namespace GameUnitTest
             var a = new Arena();
             a.BuildArenaFloor(5);
             a.AddCharacterToArena(p);
-            Assert.IsTrue(a.Player == p);
+            Assert.IsTrue(a.Characters.Contains(p));
         }
 
         [TestMethod]
@@ -52,23 +53,23 @@ namespace GameUnitTest
         }
 
         [TestMethod]
-        public void ShouldAddPlayerToDefaultBottomCentreOfArenaForOddWidth()
+        public void ShouldAddPlayerToDefaultPosition()
         {
             var p = new Player();
             var a = new Arena();
             a.BuildArenaFloor(5);
             a.AddCharacterToArena(p);
-            Assert.IsTrue(p.ArenaLocation.GetTileLocation().XCoord == a.ArenaFloor.GetLength(0) - 1 && p.ArenaLocation.GetTileLocation().YCoord == 2);
+            Assert.IsTrue(p.ArenaLocation.GetTileLocation().XCoord == 0 && p.ArenaLocation.GetTileLocation().YCoord == 4);
         }
 
         [TestMethod]
-        public void ShouldAddPlayerToDefaultBottomLeftCentreOfArenaForEvenWidth()
+        public void ShouldAddOpponentToDefaultPosition()
         {
-            var p = new Player();
+            var b = new Dumbass(Alliance.Opponent, 1);
             var a = new Arena();
-            a.BuildArenaFloor(8);
-            a.AddCharacterToArena(p);
-            Assert.IsTrue(p.ArenaLocation.GetTileLocation().XCoord == a.ArenaFloor.GetLength(0) - 1 && p.ArenaLocation.GetTileLocation().YCoord == 3);
+            a.BuildArenaFloor(5);
+            a.AddCharacterToArena(b);
+            Assert.IsTrue(b.ArenaLocation.GetTileLocation().XCoord == 4 && b.ArenaLocation.GetTileLocation().YCoord == 0);
         }
 
         [TestMethod]

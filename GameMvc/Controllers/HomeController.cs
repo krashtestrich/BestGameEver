@@ -1,5 +1,5 @@
 ﻿using System.Web.Mvc;
-using GameLogic.Characters.Player;
+using GameLogic.Enums;
 using GameLogic.Game;
 using GameLogic.Shop;
 
@@ -9,15 +9,29 @@ namespace GameMvc.Controllers
     {
         public ActionResult Index()
         {
+            var g = (Game) Session["Game"];
+            if (g != null)
+            {
+                return View();
+            }
+            g = new Game();
+            Session["Game"] = g;
             return View();
         }
 
         public ActionResult Character()
         {
-            var p = (Player)Session["Player"];
-            if (p != null)
+            var g = (Game)Session["Game"];
+            if (g.Player != null)
             {
-                return View("Character", p);
+                if (g.GetBattleStatus() != BattleStatus.InBattle)
+                {
+                    g.Player.LeaveArena();
+                    Session["Game"] = g;
+                    return View("Character", g.Player);
+                }
+                ModelState.AddModelError(string.Empty, "You cannot leave the battle!");
+                return View("Arena", g);
             }
             ModelState.AddModelError(string.Empty, "You must create a character first.");
             return View("Index");
@@ -25,32 +39,36 @@ namespace GameMvc.Controllers
 
         public ActionResult Arena()
         {
-            var p = (Player)Session["Player"];
-            if (p == null)
+            var g = (Game)Session["Game"];
+            if (g.Player == null)
             {
                 ModelState.AddModelError(string.Empty, "You must create a character first.");
                 return View("Index");
             }
 
-            var game = (Game) Session["Game"];
-            game.Arena.AddCharacterToArena(p);
-            Session["Game"] = game;
+            g.Arena.AddCharacterToArena(g.Player);
+            Session["Game"] = g;
 
-            return View("Arena", game);
+            return View("Arena", g);
         }
 
         public ActionResult Shop()
         {
-            var p = (Player)Session["Player"];
-            if (p == null)
+            var g = (Game)Session["Game"];
+            if (g.Player == null)
             {
                 ModelState.AddModelError(string.Empty, "You must create a character first.");
                 return View("Index");
             }
-            var s = new Shop();
-            s.AddPlayerToShop(p);
-
-            return View("Shop", s);
+            if (g.GetBattleStatus() != BattleStatus.InBattle)
+            {
+                g.Player.LeaveArena();
+                var s = new Shop();
+                s.AddPlayerToShop(g.Player);
+                return View("Shop", s);
+            }
+            ModelState.AddModelError(string.Empty, "You cannot leave the battle!");
+            return View("Arena", g);
         }
     }
 }

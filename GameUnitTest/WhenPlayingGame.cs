@@ -20,7 +20,7 @@ namespace GameUnitTest
         public void ShouldHaveDefaultStatusOfNotStarted()
         {
             var g = new Game();
-            Assert.IsTrue(g.GetGameStatus() == GameStatus.NotStarted);
+            Assert.IsTrue(g.GetBattleStatus() == BattleStatus.NotStarted);
         }
 
         [TestMethod]

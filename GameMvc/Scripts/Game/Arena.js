@@ -9,6 +9,7 @@
             Arena.targetTile($(this));
         });
         Game.checkChooseOpponent();
+        Game.checkBattleStatus();
     }
     Arena.initialize = initialize;
 
@@ -48,4 +49,3 @@
         $.unblockUI();
     }
 })(Arena || (Arena = {}));
-//# sourceMappingURL=Arena.js.map
