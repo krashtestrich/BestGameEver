@@ -54,23 +54,26 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Actions\WhenBotsPerformingActions.cs" />
-    <Compile Include="Battle\WhenBattleOver.cs" />
-    <Compile Include="WhenBattlingInArena.cs" />
-    <Compile Include="Actions\WhenBotsChoosingActions.cs" />
-    <Compile Include="WhenCreatingArena.cs" />
-    <Compile Include="WhenEquippingCharacter.cs" />
-    <Compile Include="Actions\WhenChoosingActions.cs" />
-    <Compile Include="Actions\WhenPerformingActions.cs" />
-    <Compile Include="WhenPlayingGame.cs" />
-    <Compile Include="WhenTargettingEntities.cs" />
-    <Compile Include="WhenUsingBots.cs" />
-    <Compile Include="WhenUsingMaths.cs" />
+    <Compile Include="ActionTests\WhenBotsPerformingActions.cs" />
+    <Compile Include="BattleTests\WhenBattleOver.cs" />
+    <Compile Include="ArenaTests\WhenAddingCharactersToArena.cs" />
+    <Compile Include="ActionTests\WhenBotsChoosingActions.cs" />
+    <Compile Include="ArenaTests\WhenCreatingArena.cs" />
+    <Compile Include="BotTests\WhenCreatingBots.cs" />
+    <Compile Include="CharacterTests\WhenEquippingCharacter.cs" />
+    <Compile Include="ActionTests\WhenChoosingActions.cs" />
+    <Compile Include="ActionTests\WhenPerformingActions.cs" />
+    <Compile Include="GameTests\WhenPlayingGame.cs" />
+    <Compile Include="ModifierTests\Character\WhenApplyingHealthModifiers.cs" />
+    <Compile Include="BotTests\WhenUsingBots.cs" />
+    <Compile Include="MathsTests\WhenUsingMaths.cs" />
     <Compile Include="MoreLinq\MoreEnumerable.DistinctBy.cs" />
-    <Compile Include="WhenShopping.cs" />
-    <Compile Include="WhenCreatingPlayer.cs" />
+    <Compile Include="ShopTests\WhenShopping.cs" />
+    <Compile Include="CharacterTests\WhenCreatingPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SkillTreeTests\WhenUsingSkillTree.cs" />
     <Compile Include="TestHelpers.cs" />
+    <Compile Include="TournamentTests\WhenCreatingTournament.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameLogic\GameLogic.csproj">
@@ -81,6 +84,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -81,7 +81,7 @@ namespace GameMvc.Controllers
             opponent.EquipEquipment(new PieceofFoil());
             opponent.EquipEquipment(new Sword());
             game.ChooseOpponent(opponent);
-            game.StartBattle();
+            game.StartBattle(BattleMode.PlayerVsComputer);
             Session["Game"] = game;
 
             return View("~/Views/Home/Arena.cshtml", game);
@@ -92,7 +92,7 @@ namespace GameMvc.Controllers
             var game = (Game) Session["Game"];
             var action = game.Player.CurrentAvailableActions.First(i => i.Name == actionName);
             game.PerformPlayerAction(action);
-            game.PerformOpponentTurn();
+            game.PerformAITurn(Alliance.TeamTwo);
             Session["Game"] = game;
             return View("~/Views/Home/Arena.cshtml", game);
         }

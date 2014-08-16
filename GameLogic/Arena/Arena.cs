@@ -4,7 +4,6 @@ using System.Linq;
 using GameLogic.Actions;
 using GameLogic.Actions.Movements;
 using GameLogic.Characters;
-using GameLogic.Characters.Player;
 using GameLogic.Enums;
 
 namespace GameLogic.Arena
@@ -53,12 +52,13 @@ namespace GameLogic.Arena
 
         public List<ICharacter> Characters { get; private set; }
 
-        public void AddCharacterToArena(ICharacter c, int? xLoc = null, int? yLoc = null)
+        public void AddCharacterToArena(ICharacter c, Alliance alliance, int? xLoc = null, int? yLoc = null)
         {
             if (ArenaFloor == null)
             {
                 throw new Exception("Arena not been constructed!");
             }
+            c.ChangeAlliance(alliance);
             Characters.Add(c);
 
             if (xLoc == null || yLoc == null)
@@ -73,8 +73,8 @@ namespace GameLogic.Arena
 
         private void SetDefaultCharacterLocation(ICharacter c)
         {
-            var xLoc = c.GetAlliance() == Alliance.Player ? 0 : (ArenaFloor.GetLength(0) - 1);
-            var yLoc = c.GetAlliance() == Alliance.Player ? (ArenaFloor.GetLength(1) - 1) : 0;
+            var xLoc = c.GetAlliance() == Alliance.TeamOne ? 0 : (ArenaFloor.GetLength(0) - 1);
+            var yLoc = c.GetAlliance() == Alliance.TeamOne ? (ArenaFloor.GetLength(1) - 1) : 0;
             ArenaFloor[xLoc, yLoc].AddEntityToTile((Character)c);
         }
 
@@ -120,10 +120,11 @@ namespace GameLogic.Arena
 
         protected internal void BotSelectTile(ICharacter c, ArenaFloorTile tile)
         {
-            // Have we selected a Tile a player is on?
-            var isPlayer = tile.GetTileEntity().GetType() == typeof (Player);
+            // Have we selected a Tile an opponent is on?
+            var entity = tile.GetTileEntity();
+            var isOpponent = entity is ICharacter && ((ICharacter)entity).GetAlliance() != c.GetAlliance();
             //TODO: Implement logic where bot decides what best thing to do here is...
-            if (!isPlayer)
+            if (!isOpponent)
             {
                 //TODO: Change this - for now just assume all bot can do is move.
                 BotPerformMove(c, tile);

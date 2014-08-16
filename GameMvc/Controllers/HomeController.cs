@@ -46,7 +46,7 @@ namespace GameMvc.Controllers
                 return View("Index");
             }
 
-            g.Arena.AddCharacterToArena(g.Player);
+            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
             Session["Game"] = g;
 
             return View("Arena", g);

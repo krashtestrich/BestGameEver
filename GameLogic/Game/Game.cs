@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameLogic.Actions;
+using GameLogic.Arena;
 using GameLogic.Characters.Bots;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
@@ -11,6 +12,8 @@ namespace GameLogic.Game
     public class Game
     {
         private BattleStatus _battleStatus;
+        private BattleMode _battleMode;
+        private Alliance? _winningTeam;
 
         public Bot ChosenOpponent;
         public Arena.Arena Arena;
@@ -28,19 +31,22 @@ namespace GameLogic.Game
         }
 
         #region Battle Status
-        public void StartBattle()
+        public void StartBattle(BattleMode mode)
         {
+            _battleMode = mode;
             _battleStatus = BattleStatus.InBattle;
         }
 
-        public void EndBattle()
+        public void EndBattle(Alliance winningTeam)
         {
+            _winningTeam = winningTeam;
             _battleStatus = BattleStatus.BattleOver;
         }
 
         public void ResetBattle()
         {
             _battleStatus = BattleStatus.NotStarted;
+            _winningTeam = null;
         }
 
         public BattleStatus GetBattleStatus()
@@ -50,11 +56,17 @@ namespace GameLogic.Game
 
         public void UpdateBattleStatus()
         {
-            if (Player.Health <= 0
-                || !(Arena.Characters.Exists(i => i.GetAlliance() == Alliance.Opponent && i.Health > 0)))
+            var teamOneAlive = (Arena.Characters.Exists(i => i.GetAlliance() == Alliance.TeamOne && i.Health > 0));
+            var teamTwoAlive = (Arena.Characters.Exists(i => i.GetAlliance() == Alliance.TeamTwo && i.Health > 0));
+            if (teamOneAlive && teamTwoAlive)
             {
-                EndBattle();
+                return;
             }
+
+            var winningTeam = teamOneAlive
+                ? Alliance.TeamOne
+                : Alliance.TeamTwo;
+            EndBattle(winningTeam);
         }
         #endregion
 
@@ -70,34 +82,49 @@ namespace GameLogic.Game
             UpdateBattleStatus();
         }
 
-        public void PerformOpponentTurn()
+        public void PerformAITurn(Alliance alliance)
         {
-            Arena.Characters.Where(i => i.GetAlliance() == Alliance.Opponent).ToList().ForEach(
+            Arena.Characters.Where(i => i.GetAlliance() == alliance).ToList().ForEach(
                 i =>
                 {
                     if (_battleStatus != BattleStatus.InBattle)
                     {
                         return;
                     }
-                    Arena.BotSelectTile(i, Player.ArenaLocation);
+                    Arena.BotSelectTile(i, BotGetTarget(alliance));
                     i.UntargetTile();
                     UpdateBattleStatus();
                 });
         }
 
+        private ArenaFloorTile BotGetTarget(Alliance sourceAlliance)
+        {
+            //TODO: Intelligent targetting - ie. select from list of possible targets based on criteria.
+            return _battleMode == BattleMode.ComputerVsComputer 
+                ? Arena.Characters.First(i => i.GetAlliance() != sourceAlliance).ArenaLocation 
+                : Player.ArenaLocation;
+        }
+        
         public void ProcessBattleOver()
         {
             if (GetBattleStatus() != BattleStatus.BattleOver)
             {
                 throw new Exception("Uhh, the battle isn't over?");
             }
-            if (Player.Health > 0)
+
+            //TODO: Implement logic for when player lost.
+            if (_battleMode == BattleMode.ComputerVsComputer || Player.Health > 0)
             {
-                var cash = Arena.Characters.Where(i => i is Bot).Sum(i => ((Bot) i).Worth);
-                Player.AddCash(cash);
-                Player.LevelUp();
-                Player.LeaveArena();
+                var cash = Arena.Characters.Where(i => i is Bot && i.GetAlliance() != _winningTeam).Sum(i => ((Bot)i).Worth);
+                Arena.Characters.Where(i => i.GetAlliance() == _winningTeam && i.Health > 0)
+                    .ToList()
+                    .ForEach(w =>
+                    {
+                        w.AddCash(cash);
+                        w.LevelUp();
+                    });
             }
+
             ResetBattle();            
             Arena.ResetArena();
         }
@@ -109,13 +136,13 @@ namespace GameLogic.Game
         {
             return new List<Bot>
             {
-                new Dumbass(Alliance.Opponent, Player != null ? Player.GetLevel() : 1)
+                new Dumbass()
             };
         }
 
         public void ChooseOpponent(Bot opponent)
         {
-            Arena.AddCharacterToArena(opponent);
+            Arena.AddCharacterToArena(opponent, Alliance.TeamTwo);
             ChosenOpponent = opponent;
         }
 

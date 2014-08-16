@@ -1,8 +1,8 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GameLogic.Maths;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameUnitTest
+namespace GameUnitTest.MathsTests
 {
     [TestClass]
     public class WhenUsingMaths

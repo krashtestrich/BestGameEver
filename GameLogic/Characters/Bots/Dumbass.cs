@@ -1,14 +1,10 @@
-﻿using GameLogic.Enums;
-
-namespace GameLogic.Characters.Bots
+﻿namespace GameLogic.Characters.Bots
 {
     public class Dumbass : Bot
     {
-        public Dumbass(Alliance alliance, int level)
-            : base(alliance, level)
+        public override int BaseHealth
         {
-            SetName("Dumbass");
-            SetCash(100);
+            get { return 100; }
         }
 
         public override int Worth

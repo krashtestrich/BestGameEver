@@ -1,13 +1,10 @@
-﻿using GameLogic.Enums;
-
-namespace GameLogic.Characters.Bots
+﻿namespace GameLogic.Characters.Bots
 {
     public abstract class Bot : Character, IBot
     {
-        protected Bot(Alliance alliance, int level)
-            : base(alliance, level)
+        protected Bot()
         {
-            SetHealth(100);
+            SetName(BotHelper.GenerateRandomBotName());
         }
 
         public abstract int Worth { get; }

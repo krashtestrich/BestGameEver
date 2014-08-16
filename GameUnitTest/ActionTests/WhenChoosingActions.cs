@@ -1,10 +1,11 @@
 ﻿using GameLogic.Arena;
-using GameLogic.Characters;
+using GameLogic.Characters.Bots;
+using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Equipment.Weapons;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameUnitTest.Actions
+namespace GameUnitTest.ActionTests
 {
     [TestClass]
     public class WhenChoosingActions
@@ -14,10 +15,10 @@ namespace GameUnitTest.Actions
         {
             var a = new Arena();
             a.BuildArenaFloor(10);
-            var c = new Character(Alliance.Player, 1);
-            a.AddCharacterToArena(c, 0, 0);
-            var o = new Character(Alliance.Player, 1);
-            a.AddCharacterToArena(o, 1, 1);
+            var c = new Player();
+            a.AddCharacterToArena(c, Alliance.TeamOne, 0, 0);
+            var o = new Dumbass();
+            a.AddCharacterToArena(o, Alliance.TeamOne, 1, 1);
             var e = new Sword();
             c.EquipEquipment(e);
             var tile = a.SelectFloorTile(o.ArenaLocation.GetTileLocation());
@@ -31,10 +32,10 @@ namespace GameUnitTest.Actions
         {
             var a = new Arena();
             a.BuildArenaFloor(10);
-            var c = new Character(Alliance.Player, 1);
-            a.AddCharacterToArena(c, 0, 0);
-            var o = new Character(Alliance.Opponent, 1);
-            a.AddCharacterToArena(o, 1, 1);
+            var c = new Player();
+            a.AddCharacterToArena(c, Alliance.TeamOne, 0, 0);
+            var o = new Dumbass();
+            a.AddCharacterToArena(o, Alliance.TeamTwo, 1, 1);
             var e = new Sword();
             c.EquipEquipment(e);
             var tile = a.SelectFloorTile(o.ArenaLocation.GetTileLocation());
@@ -48,10 +49,10 @@ namespace GameUnitTest.Actions
         {
             var a = new Arena();
             a.BuildArenaFloor(10);
-            var c = new Character(Alliance.Player, 1);
-            a.AddCharacterToArena(c, 0, 0);
-            var o = new Character(Alliance.Opponent, 1);
-            a.AddCharacterToArena(o, 5, 5);
+            var c = new Player();
+            a.AddCharacterToArena(c, Alliance.TeamOne, 0, 0);
+            var o = new Dumbass();
+            a.AddCharacterToArena(o, Alliance.TeamTwo, 5, 5);
             var e = new Sword();
             c.EquipEquipment(e);
             var tile = a.SelectFloorTile(o.ArenaLocation.GetTileLocation());

@@ -1,12 +1,11 @@
 ﻿using System;
-using GameLogic.Characters;
+using GameLogic.Arena;
 using GameLogic.Characters.Bots;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using GameLogic.Arena;
 
-namespace GameUnitTest
+namespace GameUnitTest.ArenaTests
 {
     [TestClass]
     public class WhenCreatingArena
@@ -16,9 +15,9 @@ namespace GameUnitTest
         {
             var a = new Arena();
             a.BuildArenaFloor(5);
-            var c = new Character(Alliance.Neutral, 1);
+            var c = new Player();
             c.SetName("YoMomma");
-            a.AddCharacterToArena(c);
+            a.AddCharacterToArena(c, Alliance.TeamOne);
 
             Assert.IsTrue(a.Characters.Exists(i => i.Name == "YoMomma"));
         }
@@ -28,9 +27,9 @@ namespace GameUnitTest
         public void ShouldNotAddCharacterToArenaWhenFloorNotBuilt()
         {
             var a = new Arena();
-            var c = new Character(Alliance.Neutral, 1);
+            var c = new Player();
             c.SetName("YoMomma");
-            a.AddCharacterToArena(c);
+            a.AddCharacterToArena(c, Alliance.TeamOne);
         }
 
         [TestMethod]
@@ -39,7 +38,7 @@ namespace GameUnitTest
             var p = new Player();
             var a = new Arena();
             a.BuildArenaFloor(5);
-            a.AddCharacterToArena(p);
+            a.AddCharacterToArena(p, Alliance.TeamOne);
             Assert.IsTrue(a.Characters.Contains(p));
         }
 
@@ -49,7 +48,7 @@ namespace GameUnitTest
         {
             var p = new Player();
             var a = new Arena();
-            a.AddCharacterToArena(p);
+            a.AddCharacterToArena(p, Alliance.TeamOne);
         }
 
         [TestMethod]
@@ -58,17 +57,17 @@ namespace GameUnitTest
             var p = new Player();
             var a = new Arena();
             a.BuildArenaFloor(5);
-            a.AddCharacterToArena(p);
+            a.AddCharacterToArena(p, Alliance.TeamOne);
             Assert.IsTrue(p.ArenaLocation.GetTileLocation().XCoord == 0 && p.ArenaLocation.GetTileLocation().YCoord == 4);
         }
 
         [TestMethod]
         public void ShouldAddOpponentToDefaultPosition()
         {
-            var b = new Dumbass(Alliance.Opponent, 1);
+            var b = new Dumbass();
             var a = new Arena();
             a.BuildArenaFloor(5);
-            a.AddCharacterToArena(b);
+            a.AddCharacterToArena(b, Alliance.TeamTwo);
             Assert.IsTrue(b.ArenaLocation.GetTileLocation().XCoord == 4 && b.ArenaLocation.GetTileLocation().YCoord == 0);
         }
 
@@ -78,7 +77,7 @@ namespace GameUnitTest
         {
             var p = new Player();
             var a = new Arena();
-            a.AddCharacterToArena(p);
+            a.AddCharacterToArena(p, Alliance.TeamOne);
         }
 
         [TestMethod]

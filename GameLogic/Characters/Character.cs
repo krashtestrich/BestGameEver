@@ -6,12 +6,14 @@ using GameLogic.Actions.Movements;
 using GameLogic.Arena;
 using GameLogic.Enums;
 using GameLogic.Equipment;
+using GameLogic.Modifiers;
+using GameLogic.Modifiers.Character.Health;
 using GameLogic.Slots;
 using MoreLinq;
 
 namespace GameLogic.Characters
 {
-    public class Character : ICharacter, IGameEntity
+    public abstract class Character : ICharacter, IGameEntity
     {
         #region Name
 
@@ -25,22 +27,39 @@ namespace GameLogic.Characters
         #endregion
 
         #region Health
+        private int _currentHealth;
 
-        public int Health { get; private set; }
+        public int BonusHealth { get; protected set; }
 
-        public void SetHealth(int health)
+        public void AddBonusHealth(int amount)
         {
-            Health = health;
+            BonusHealth += amount;
+        }
+        public int Health
+        {
+            get { return _currentHealth; }
+        }
+
+        public abstract int BaseHealth { get; }
+
+        public void SetHealth()
+        {
+            BonusHealth = 0;
+            foreach (var m in _modifiers.Where(i => i is HealthBase))
+            {
+                m.Apply(this);
+            }
+            _currentHealth = BonusHealth + BaseHealth;
         }
 
         public void LoseHealth(int amount)
         {
-            Health = Health - amount;
+            _currentHealth = Health - amount;
         }
 
         public void GainHealth(int amount)
         {
-            Health = Health + amount;
+            _currentHealth = Health + amount;
         }
 
         #endregion
@@ -51,6 +70,11 @@ namespace GameLogic.Characters
         public void SetCash(int amount)
         {
             Cash = amount;
+        }
+
+        public void AddCash(int amount)
+        {
+            Cash += amount;
         }
         #endregion
 
@@ -199,6 +223,32 @@ namespace GameLogic.Characters
         }
         #endregion
 
+        #region Modifiers
+        private readonly List<IModifier<ICharacter>> _modifiers;
+
+        public List<IModifier<ICharacter>> CharacterModifiers
+        {
+            get { return _modifiers; }
+        }
+
+        public void AddModifier(IModifier<ICharacter> modifier)
+        {
+            if (!_modifiers.Exists(i => i.Name ==  modifier.Name))
+            {
+                _modifiers.Add(modifier);
+            }
+        }
+
+        public void RemoveModifier(IModifier<ICharacter> modifier)
+        {
+            var existingModifier = _modifiers.FirstOrDefault(i => i.Name == modifier.Name);
+            if (existingModifier != null)
+            {
+                _modifiers.Remove(existingModifier);
+            }
+        }
+        #endregion
+
         #region Level
         private int _level;
 
@@ -218,11 +268,66 @@ namespace GameLogic.Characters
         }
         #endregion
 
-        public Character(Alliance alliance, int level)
+        #region Skill Tree
+
+        private readonly SkillTree.SkillTree _skillTree;
+        public SkillTree.SkillTree SkillTree
         {
-            _alliance = alliance;
-            _level = level;
+            get { return _skillTree; }
+        }
+
+        public void ChooseSkill(string name)
+        {
+            _skillTree.TakeSkill(name, this);
+        }
+
+        public void UnchooseSkill(string name)
+        {
+            _skillTree.CancelSkill(name, this);
+        }
+
+        #endregion
+
+        #region Arena / Game
+        public void LeaveArena()
+        {
+            SetHealth();
+            SetEntityLocation(null);
+        }
+        #endregion
+
+        #region Shop Stuff
+        public bool CanAffordEquipment(Equipment.Equipment e)
+        {
+            return (Cash >= e.Price);
+        }
+
+        public void PurchaseEquipment(Equipment.Equipment e)
+        {
+            if (CanAffordEquipment(e) && CanEquipEquipment(e))
+            {
+                Cash -= e.Price;
+                EquipEquipment(e);
+            }
+            else
+            {
+                throw new Exception("Player tried to purchase unaffordable or unwearable Equipment.");
+            }
+        }
+
+        public void SellEquipment(Equipment.Equipment e)
+        {
+            Cash += (int)Math.Round(e.Price * 0.75, MidpointRounding.ToEven);
+            UnEquipEquipment(e);
+        }
+        #endregion
+
+        protected Character()
+        {
+            _modifiers = new List<IModifier<ICharacter>>();
+            SetHealth();
             _characterEquipment = new List<Equipment.Equipment>();
+            _skillTree = new SkillTree.SkillTree();
 
             _slots = new List<Slot>();
 

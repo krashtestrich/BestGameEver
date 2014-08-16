@@ -164,9 +164,14 @@ namespace GameUnitTest
         #region Characters
         public class TestCharacter : Character
         {
-           public TestCharacter() : base(Alliance.Neutral, 1)
+           public TestCharacter()
            {
                 SetName("Test Character");
+            }
+
+            public override int BaseHealth
+            {
+                get { return 100; }
             }
         }
         #endregion

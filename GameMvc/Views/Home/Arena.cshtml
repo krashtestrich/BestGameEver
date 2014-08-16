@@ -30,7 +30,7 @@
     <div id="enemyInfo">
         Enemy information
         @{
-            foreach (var c in Model.Arena.Characters.Where(i => i.GetAlliance() == Alliance.Opponent))
+            foreach (var c in Model.Arena.Characters.Where(i => i.GetAlliance() == Alliance.TeamTwo))
             {
                 <div>
                     <div>

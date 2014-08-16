@@ -4,7 +4,7 @@ using GameLogic.Enums;
 using GameLogic.Game;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameUnitTest
+namespace GameUnitTest.GameTests
 {
     [TestClass]
     public class WhenPlayingGame

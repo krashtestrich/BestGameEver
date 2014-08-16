@@ -5,10 +5,10 @@ using GameLogic.Enums;
 using GameLogic.Equipment.Weapons;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameUnitTest
+namespace GameUnitTest.ArenaTests
 {
     [TestClass]
-    public class WhenBattlingInArena
+    public class WhenAddingCharactersToArena
     {
         [TestMethod]
         public void ShouldAddDumbassBotToArena()
@@ -17,12 +17,11 @@ namespace GameUnitTest
             arena.BuildArenaFloor(5);
             var p = new Player();
             p.EquipEquipment(new Sword());
-            arena.AddCharacterToArena(p);
-
-            var b = new Dumbass(Alliance.Opponent, 1);
+            arena.AddCharacterToArena(p, Alliance.TeamOne);
+            var b = new Dumbass();
             b.SetName("Dumbass Bot");
             b.EquipEquipment(new Sword());
-            arena.AddCharacterToArena(b);
+            arena.AddCharacterToArena(b, Alliance.TeamTwo);
         }
     }
 }

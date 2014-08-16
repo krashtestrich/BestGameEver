@@ -8,7 +8,7 @@ using GameLogic.Equipment.Weapons;
 using GameLogic.Game;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameUnitTest.Actions
+namespace GameUnitTest.ActionTests
 {
     [TestClass]
     public class WhenPerformingActions
@@ -18,7 +18,7 @@ namespace GameUnitTest.Actions
         public void ShouldThrowExceptionIfBattleOverAndActionPerformed()
         {
             var g = new Game();
-            g.EndBattle();
+            g.EndBattle(Alliance.TeamOne);
             g.Player = new Player();
             g.Arena.AddCharacterToArena(g.Player, 0, 0);
             var tile = g.Arena.SelectFloorTile(new ArenaFloorPosition(0, 1));
@@ -30,9 +30,9 @@ namespace GameUnitTest.Actions
         public void ShouldPerformMoveAction()
         {
             var g = new Game();
-            g.StartBattle();
+            g.StartBattle(BattleMode.PlayerVsComputer);
             g.Player = new Player();
-            g.Arena.AddCharacterToArena(g.Player, 0, 0);
+            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
             var tile = g.Arena.SelectFloorTile(new ArenaFloorPosition(0, 1));
             var actions = g.Player.TargetTileAndSelectActions(tile);
             g.PerformPlayerAction(actions.Find(i => i.Name == "Run"));
@@ -44,14 +44,14 @@ namespace GameUnitTest.Actions
         public void ShouldPerformSwingAttackAction()
         {
             var g = new Game();
-            g.StartBattle();
+            g.StartBattle(BattleMode.PlayerVsComputer);
             g.Arena.BuildArenaFloor(10);
             g.Player = new Player();
             g.Player.EquipEquipment(new Sword());
-            g.Arena.AddCharacterToArena(g.Player, 0, 0);
-            var o = new Dumbass(Alliance.Opponent, 1);
+            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
+            var o = new Dumbass();
             Assert.IsTrue(o.Health == 100);
-            g.Arena.AddCharacterToArena(o, 0, 1);
+            g.Arena.AddCharacterToArena(o,Alliance.TeamTwo, 0, 1);
             var tile = g.Arena.SelectFloorTile(new ArenaFloorPosition(0, 1));
             var actions = g.Player.TargetTileAndSelectActions(tile);
             g.PerformPlayerAction(actions.Find(i => i.Name == "Swing"));
@@ -63,14 +63,14 @@ namespace GameUnitTest.Actions
         public void ShouldTakeLessDamageIfShieldEquipped()
         {
             var g = new Game();
-            g.StartBattle();
+            g.StartBattle(BattleMode.PlayerVsComputer);
             g.Arena.BuildArenaFloor(10);
             g.Player = new Player();
             g.Player.EquipEquipment(new ReliableTreeBranch());
-            g.Arena.AddCharacterToArena(g.Player,0,0);
-            var o = new Dumbass(Alliance.Opponent, 1);
+            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
+            var o = new Dumbass();
             o.EquipEquipment(new CrappyWoodenShield());
-            g.Arena.AddCharacterToArena(o, 0, 1);
+            g.Arena.AddCharacterToArena(o, Alliance.TeamTwo, 0, 1);
             var tile = g.Arena.SelectFloorTile(new ArenaFloorPosition(0, 1));
             var actions = g.Player.TargetTileAndSelectActions(tile);
             g.PerformPlayerAction(actions.Find(i => i.Name == "Swing"));

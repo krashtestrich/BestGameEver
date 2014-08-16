@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameUnitTest.Actions
+namespace GameUnitTest.ActionTests
 {
     [TestClass]
     public class WhenBotsChoosingActions

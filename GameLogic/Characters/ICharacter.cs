@@ -2,14 +2,12 @@
 using GameLogic.Actions;
 using GameLogic.Arena;
 using GameLogic.Enums;
+using GameLogic.Modifiers;
 
 namespace GameLogic.Characters
 {
     public interface ICharacter
     {
-        Alliance GetAlliance();
-        ArenaFloorTile ArenaLocation { get; }
-        int GetLevel();
         #region Basic - Name, etc.
         string Name
         { get; }
@@ -21,9 +19,24 @@ namespace GameLogic.Characters
         {
             get; 
         }
-        void SetHealth(int health);
+
+        int BonusHealth { get; }
+        int BaseHealth { get; }
+        void AddBonusHealth(int amount);
+        void SetHealth();
         void LoseHealth(int amount);
         void GainHealth(int amount);
+        #endregion
+
+        #region Alliance
+        Alliance GetAlliance();
+        void ChangeAlliance(Alliance a);
+        #endregion
+
+        #region Level
+        int GetLevel();
+        void SetLevel(int level);
+        void LevelUp();
         #endregion
 
         #region Slots
@@ -59,6 +72,26 @@ namespace GameLogic.Characters
         int Cash { get; }
 
         void SetCash(int amount);
+        void AddCash(int amount);
+
+        #endregion
+
+        #region SkillTree
+        SkillTree.SkillTree SkillTree { get; }
+        #endregion
+
+        #region Modifiers 
+
+        void AddModifier(IModifier<ICharacter> modifier);
+        void RemoveModifier(IModifier<ICharacter> modifier);
+
+        #endregion
+
+        #region Arena / Game
+
+        ArenaFloorTile ArenaLocation { get; }
+
+        void LeaveArena();
 
         #endregion
 

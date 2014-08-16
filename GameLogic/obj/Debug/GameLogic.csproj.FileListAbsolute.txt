@@ -6,3 +6,4 @@ G:\Websites\Game\BestGameEver\GameLogic\bin\Debug\GameLogic.dll
 G:\Websites\Game\BestGameEver\GameLogic\bin\Debug\GameLogic.pdb
 G:\Websites\Game\BestGameEver\GameLogic\obj\Debug\GameLogic.dll
 G:\Websites\Game\BestGameEver\GameLogic\obj\Debug\GameLogic.pdb
+G:\Websites\Game\BestGameEver\GameLogic\obj\Debug\GameLogic.csprojResolveAssemblyReference.cache

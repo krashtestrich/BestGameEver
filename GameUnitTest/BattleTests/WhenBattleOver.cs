@@ -8,7 +8,7 @@ using GameLogic.Equipment.Weapons;
 using GameLogic.Game;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameUnitTest.Battle
+namespace GameUnitTest.BattleTests
 {
     [TestClass]
     public class WhenBattleOver
@@ -17,13 +17,13 @@ namespace GameUnitTest.Battle
         public void ShouldGivePlayerCashWhenBotDefeated()
         {
             var g = new Game();
-            g.StartBattle();
+            g.StartBattle(BattleMode.PlayerVsComputer);
             g.Player = new Player();
             var startCash = g.Player.Cash;
             g.Player.EquipEquipment(new MegaSwordOfDeath());
-            g.Arena.AddCharacterToArena(g.Player, 0, 0);
-            var b = new Dumbass(Alliance.Opponent, 1);
-            g.Arena.AddCharacterToArena(b, 0, 1);
+            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
+            var b = new Dumbass();
+            g.Arena.AddCharacterToArena(b,Alliance.TeamTwo, 0, 1);
             g.PerformPlayerAction(
                 g.Player.TargetTileAndSelectActions(b.ArenaLocation).First(i => i is Attack)
             );
@@ -36,12 +36,13 @@ namespace GameUnitTest.Battle
         public void ShouldLevelPlayerUpWhenBotDefeated()
         {
             var g = new Game();
-            g.StartBattle();
+            g.StartBattle(BattleMode.PlayerVsComputer);
             g.Player = new Player();
+            g.Player.SetLevel(1);
             g.Player.EquipEquipment(new MegaSwordOfDeath());
-            g.Arena.AddCharacterToArena(g.Player, 0, 0);
-            var b = new Dumbass(Alliance.Opponent, 1);
-            g.Arena.AddCharacterToArena(b, 0, 1);
+            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
+            var b = new Dumbass();
+            g.Arena.AddCharacterToArena(b, Alliance.TeamTwo, 0, 1);
             g.PerformPlayerAction(
                 g.Player.TargetTileAndSelectActions(b.ArenaLocation).First(i => i is Attack)
             );
@@ -54,7 +55,7 @@ namespace GameUnitTest.Battle
         public void ShouldThrowExceptionIfPostBattleProcessAttemptedBeforeBattleOver()
         {
             var g = new Game();
-            g.StartBattle();
+            g.StartBattle(BattleMode.PlayerVsComputer);
             g.ProcessBattleOver();
         }
     }

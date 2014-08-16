@@ -2,7 +2,7 @@
 using GameLogic.Equipment.Weapons;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameUnitTest
+namespace GameUnitTest.CharacterTests
 {
     [TestClass]
     public class WhenCreatingPlayer
