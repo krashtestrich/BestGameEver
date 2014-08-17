@@ -45,10 +45,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\Action.cs" />
-    <Compile Include="Actions\Attack.cs" />
+    <Compile Include="Actions\Attacks\AttackBase.cs" />
     <Compile Include="Actions\Attacks\Swing.cs" />
-    <Compile Include="Actions\Movements\Move.cs" />
+    <Compile Include="Actions\Movements\MoveBase.cs" />
     <Compile Include="Actions\Movements\Run.cs" />
+    <Compile Include="Actions\Spells\Damage\DamageBase.cs" />
+    <Compile Include="Actions\Spells\Heals\BigHeal.cs" />
+    <Compile Include="Actions\Spells\Heals\HealBase.cs" />
+    <Compile Include="Actions\Spells\Heals\LittleHeal.cs" />
+    <Compile Include="Actions\Spells\SpellBase.cs" />
     <Compile Include="Arena\Arena.cs" />
     <Compile Include="Arena\ArenaFloorTile.cs" />
     <Compile Include="Arena\ArenaFloorPosition.cs" />
@@ -61,6 +66,8 @@
     <Compile Include="Enums\Alliance.cs" />
     <Compile Include="Enums\BattleMode.cs" />
     <Compile Include="Enums\BattleStatus.cs" />
+    <Compile Include="Enums\TournamentMode.cs" />
+    <Compile Include="Enums\TournamentStatus.cs" />
     <Compile Include="Equipment\Equipment.cs" />
     <Compile Include="Equipment\Shield.cs" />
     <Compile Include="Equipment\Shields\CrappyWoodenShield.cs" />
@@ -74,12 +81,17 @@
     <Compile Include="Game\Game.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Characters\ICharacter.cs" />
+    <Compile Include="Game\GameHelper.cs" />
+    <Compile Include="Helpers\ThreadSafeRandom.cs" />
     <Compile Include="ITarget.cs" />
     <Compile Include="Modifiers\Character\Health\HealthBase.cs" />
     <Compile Include="Modifiers\Character\Health\SuperHealth.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Modifiers\Character\Health\WeeBitOfHealth.cs" />
+    <Compile Include="Modifiers\Character\Mana\LittleBitMoreMana.cs" />
+    <Compile Include="Modifiers\Character\Mana\ManaBase.cs" />
+    <Compile Include="Modifiers\Character\Mana\TastyMana.cs" />
     <Compile Include="Modifiers\IModifier.cs" />
     <Compile Include="Modifiers\ModifiersBase.cs" />
     <Compile Include="MoreLinq\MoreEnumerable.DistinctBy.cs" />
@@ -88,7 +100,10 @@
     <Compile Include="Characters\Player\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shop\Shop.cs" />
-    <Compile Include="SkillTree\Health\Healthy.cs" />
+    <Compile Include="SkillTree\Health\HealthLevelOne.cs" />
+    <Compile Include="SkillTree\Health\HealthLevelTwo.cs" />
+    <Compile Include="SkillTree\Mana\ManaLevelOne.cs" />
+    <Compile Include="SkillTree\Mana\ManaLevelTwo.cs" />
     <Compile Include="SkillTree\SkillBase.cs" />
     <Compile Include="Enums\SkillBranches.cs" />
     <Compile Include="SkillTree\SkillTree.cs" />

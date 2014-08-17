@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GameLogic.Actions;
+using GameLogic.Helpers;
 
 namespace GameLogic.Equipment
 {
@@ -12,7 +13,7 @@ namespace GameLogic.Equipment
 
         public virtual int GetBlock()
         {
-            return BaseBlock + R.Next(0, BonusBlock);
+            return BaseBlock + new ThreadSafeRandom().Next(0, BonusBlock);
         }
 
         public override List<IAction> Actions

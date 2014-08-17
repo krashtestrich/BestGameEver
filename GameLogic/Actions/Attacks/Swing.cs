@@ -1,28 +1,28 @@
 ﻿namespace GameLogic.Actions.Attacks
 {
-	public class Swing : Attack, IAction
+	public class Swing : AttackBase, IAction
 	{
-	    public override string Name
+		public override string Name
 		{
 			get { return "Swing"; }
 		}
 
-        public override int DamageFromModifier
+		public override int DamageFromModifier
 		{
 			get { return 0; }
 		}
 
-        public override int DamageToModifier
+		public override int DamageToModifier
 		{
 			get { return 0; }
 		}
 
-        public override int MinRange
+		public override int MinRange
 		{
 			get { return 1; }
 		}
 
-        public override int MaxRange
+		public override int MaxRange
 		{   
 			get { return 1; }
 		}

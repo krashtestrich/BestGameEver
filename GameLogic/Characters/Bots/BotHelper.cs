@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GameLogic.Helpers;
 
 namespace GameLogic.Characters.Bots
 {
@@ -27,7 +28,7 @@ namespace GameLogic.Characters.Bots
         public static string GenerateRandomBotName()
         {
             var r = new Random();
-            return FirstNames[r.Next(0, FirstNames.Count)] + " " + LastNames[r.Next(0, LastNames.Count)];
+            return FirstNames[new ThreadSafeRandom().Next(0, FirstNames.Count)] + " " + LastNames[new ThreadSafeRandom().Next(0, LastNames.Count)];
         }
     }
 }

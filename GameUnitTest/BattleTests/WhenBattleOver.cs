@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using GameLogic.Actions;
+using GameLogic.Arena;
 using GameLogic.Characters.Bots;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
-using GameLogic.Equipment.Weapons;
 using GameLogic.Game;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -16,35 +15,33 @@ namespace GameUnitTest.BattleTests
         [TestMethod]
         public void ShouldGivePlayerCashWhenBotDefeated()
         {
-            var g = new Game();
-            g.StartBattle(BattleMode.PlayerVsComputer);
-            g.Player = new Player();
+            var g = new Game { Player = new Player() };
             var startCash = g.Player.Cash;
-            g.Player.EquipEquipment(new MegaSwordOfDeath());
-            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
+            g.Player.SetName("Player");
             var b = new Dumbass();
-            g.Arena.AddCharacterToArena(b,Alliance.TeamTwo, 0, 1);
+            b.SetName("Idiot");
+            g.Tournament.AddCharacterToTournament(b);
+            g.StartPlayerVsComputerGame();
+            g.Arena.Characters.First(i => i is Dumbass).LoseHealth(100);
             g.PerformPlayerAction(
-                g.Player.TargetTileAndSelectActions(b.ArenaLocation).First(i => i is Attack)
+                g.Player.TargetTileAndSelectActions(g.Arena.SelectFloorTile(new ArenaFloorPosition(0, 3))).First()
             );
             g.ProcessBattleOver();
-            Assert.IsTrue(g.GetBattleStatus() == BattleStatus.NotStarted);
             Assert.IsTrue(g.Player.Cash > startCash);
         }
 
         [TestMethod]
         public void ShouldLevelPlayerUpWhenBotDefeated()
         {
-            var g = new Game();
-            g.StartBattle(BattleMode.PlayerVsComputer);
-            g.Player = new Player();
-            g.Player.SetLevel(1);
-            g.Player.EquipEquipment(new MegaSwordOfDeath());
-            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
+            var g = new Game {Player = new Player()};
+            g.Player.SetName("Player");
             var b = new Dumbass();
-            g.Arena.AddCharacterToArena(b, Alliance.TeamTwo, 0, 1);
+            b.SetName("Idiot");
+            g.Tournament.AddCharacterToTournament(b);
+            g.StartPlayerVsComputerGame();
+            g.Arena.Characters.First(i => i is Dumbass).LoseHealth(100);
             g.PerformPlayerAction(
-                g.Player.TargetTileAndSelectActions(b.ArenaLocation).First(i => i is Attack)
+                g.Player.TargetTileAndSelectActions(g.Arena.SelectFloorTile(new ArenaFloorPosition(0,3))).First()
             );
             g.ProcessBattleOver();
             Assert.IsTrue(g.Player.GetLevel() == 2);

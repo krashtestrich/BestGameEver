@@ -1,4 +1,6 @@
-﻿namespace GameLogic.Equipment
+﻿using GameLogic.Helpers;
+
+namespace GameLogic.Equipment
 {
     public abstract class Weapon : Equipment
     {
@@ -11,7 +13,7 @@
 
         public virtual int GetDamage()
         {
-            return BaseDamage + R.Next(0, BonusDamage);
+            return BaseDamage + new ThreadSafeRandom().Next(0, BonusDamage);
         }
 
         #region Abstract Properties

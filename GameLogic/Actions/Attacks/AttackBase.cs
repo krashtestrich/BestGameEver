@@ -1,10 +1,11 @@
 ﻿using GameLogic.Arena;
 using GameLogic.Characters;
 using GameLogic.Equipment;
+using GameLogic.Helpers;
 
-namespace GameLogic.Actions
+namespace GameLogic.Actions.Attacks
 {
-    public abstract class Attack : Action
+    public abstract class AttackBase : Action
     {
         public abstract int DamageFromModifier
         {
@@ -35,7 +36,7 @@ namespace GameLogic.Actions
         public virtual void PerformAction(IGameEntity source)
         {
             var weaponDamage = ((Weapon) PerformedWith).GetDamage();
-            var modifier = R.Next(DamageFromModifier, DamageToModifier);
+            var modifier = new ThreadSafeRandom().Next(DamageFromModifier, DamageToModifier);
             var damage = modifier > 0 ? weaponDamage*modifier : weaponDamage;
             //TODO : Make more sophisticated.
             ((Character)source.TargettedTile.GetTileEntity()).TakeDamage(damage);

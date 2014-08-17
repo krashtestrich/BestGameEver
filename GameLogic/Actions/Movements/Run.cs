@@ -1,6 +1,6 @@
 ﻿namespace GameLogic.Actions.Movements
 {
-    public class Run : Move, IAction
+    public class Run : MoveBase, IAction
     {
         public override string Name
         {

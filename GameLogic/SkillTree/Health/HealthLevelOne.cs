@@ -6,11 +6,16 @@ using GameLogic.Modifiers.Character.Health;
 
 namespace GameLogic.SkillTree.Health
 {
-    public class Healthy : SkillBase
+    public class HealthLevelOne : SkillBase
     {
         public override string Name
         {
-            get { return "Healthy Skill!"; }
+            get { return "Health Level 1"; }
+        }
+
+        public override int Cost
+        {
+            get { return 1; }
         }
 
         public override int Level

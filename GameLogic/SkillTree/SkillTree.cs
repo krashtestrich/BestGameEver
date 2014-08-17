@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GameLogic.Characters;
 using GameLogic.SkillTree.Health;
+using GameLogic.SkillTree.Mana;
 
 namespace GameLogic.SkillTree
 {
@@ -9,21 +11,28 @@ namespace GameLogic.SkillTree
     {
         private readonly List<SkillBase> _skills;
 
-        public void TakeSkill(string name, ICharacter c)
+        public void TakeSkill(SkillBase skill, ICharacter c)
         {
-            _skills.First(i => i.Name == name).ActivateSkill(c);
+            if (skill.Parent != null && _skills.Exists(i => i.Name == skill.Parent.Name && !i.IsActive))
+            {
+                throw new Exception("You cannot take this skill yet!");
+            }
+            _skills.First(i => i.Name == skill.Name).ActivateSkill(c);
         }
 
-        public void CancelSkill(string name, ICharacter c)
+        public void CancelSkill(SkillBase skill, ICharacter c)
         {
-            _skills.First(i => i.Name == name).DeactivateSkill(c);
+            _skills.First(i => i.Name == skill.Name).DeactivateSkill(c);
         }
 
         public SkillTree()
         {
             _skills = new List<SkillBase>
             {
-                new Healthy()
+                new HealthLevelOne(),
+                new HealthLevelTwo(),
+                new ManaLevelOne(),
+                new ManaLevelTwo()
             };
         }
 

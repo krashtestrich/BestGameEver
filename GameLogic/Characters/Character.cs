@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using GameLogic.Actions;
 using GameLogic.Actions.Movements;
+using GameLogic.Actions.Spells.Heals;
 using GameLogic.Arena;
 using GameLogic.Enums;
 using GameLogic.Equipment;
 using GameLogic.Modifiers;
 using GameLogic.Modifiers.Character.Health;
+using GameLogic.Modifiers.Character.Mana;
+using GameLogic.SkillTree;
 using GameLogic.Slots;
 using MoreLinq;
 
@@ -62,6 +65,43 @@ namespace GameLogic.Characters
             _currentHealth = Health + amount;
         }
 
+        #endregion
+
+        #region Mana
+        private int _currentMana;
+
+        public int BonusMana { get; protected set; }
+
+        public void AddBonusMana(int amount)
+        {
+            BonusMana += amount;
+        }
+        public int Mana
+        {
+            get { return _currentMana; }
+        }
+
+        public abstract int BaseMana { get; }
+
+        public void SetMana()
+        {
+            BonusMana = 0;
+            foreach (var m in _modifiers.Where(i => i is ManaBase))
+            {
+                m.Apply(this);
+            }
+            _currentMana = BonusMana + BaseMana;
+        }
+
+        public void LoseMana(int amount)
+        {
+            _currentMana = Mana - amount;
+        }
+
+        public void GainMana(int amount)
+        {
+            _currentMana = Mana + amount;
+        }
         #endregion
 
         #region Cash
@@ -221,6 +261,16 @@ namespace GameLogic.Characters
         {
             LoseHealth(CalculateDamageTaken(damage));
         }
+
+        public void TakeSpellDamage(int damage)
+        {
+            LoseHealth(damage);
+        }
+
+        public void ReceiveHeal(int heal)
+        {
+            GainHealth(heal);
+        }
         #endregion
 
         #region Modifiers
@@ -235,6 +285,7 @@ namespace GameLogic.Characters
         {
             if (!_modifiers.Exists(i => i.Name ==  modifier.Name))
             {
+                modifier.Apply(this);
                 _modifiers.Add(modifier);
             }
         }
@@ -257,15 +308,33 @@ namespace GameLogic.Characters
             return _level;
         }
 
-        public void SetLevel(int level)
+        public virtual void SetLevel(int level)
         {
             _level = level;
+            var levelsToAdd = 0;
+            while (level > 0)
+            {
+                levelsToAdd += level;
+                level--;
+            }
+            AddSkillPoints(levelsToAdd);
         }
 
-        public void LevelUp()
+        public virtual void LevelUp()
         {
             _level++;
+            AddSkillPoints(_level);
         }
+        #endregion
+
+        #region Skill Points
+
+        private void AddSkillPoints(int points)
+        {
+            SkillPoints += points;
+        }
+
+        public int SkillPoints { get; private set; }
         #endregion
 
         #region Skill Tree
@@ -276,14 +345,19 @@ namespace GameLogic.Characters
             get { return _skillTree; }
         }
 
-        public void ChooseSkill(string name)
+        public void ChooseSkill(SkillBase skill)
         {
-            _skillTree.TakeSkill(name, this);
+            if (skill.Cost > SkillPoints)
+            {
+                throw new Exception("You cannot afford this skill.");
+            }
+            _skillTree.TakeSkill(skill, this);
+            SkillPoints -= skill.Cost;
         }
 
-        public void UnchooseSkill(string name)
+        public void UnchooseSkill(SkillBase skill)
         {
-            _skillTree.CancelSkill(name, this);
+            _skillTree.CancelSkill(skill, this);
         }
 
         #endregion
@@ -297,6 +371,12 @@ namespace GameLogic.Characters
         #endregion
 
         #region Shop Stuff
+
+        public virtual void BuyItems()
+        {
+            
+        }
+
         public bool CanAffordEquipment(Equipment.Equipment e)
         {
             return (Cash >= e.Price);
@@ -326,6 +406,7 @@ namespace GameLogic.Characters
         {
             _modifiers = new List<IModifier<ICharacter>>();
             SetHealth();
+            SetMana();
             _characterEquipment = new List<Equipment.Equipment>();
             _skillTree = new SkillTree.SkillTree();
 
@@ -339,7 +420,9 @@ namespace GameLogic.Characters
 
             _nativeActions = new List<IAction>
             {
-                new Run()
+                new Run(),
+                new LittleHeal(),
+                new BigHeal()
             };
         }
     }

@@ -2,6 +2,7 @@
 {
     public enum SkillBranches
     {
-        Health = 1
+        Health = 1,
+        Mana = 2
     }
 }

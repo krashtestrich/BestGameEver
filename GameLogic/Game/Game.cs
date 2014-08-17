@@ -6,6 +6,7 @@ using GameLogic.Arena;
 using GameLogic.Characters.Bots;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
+using GameLogic.Tournament;
 
 namespace GameLogic.Game
 {
@@ -17,12 +18,85 @@ namespace GameLogic.Game
 
         public Bot ChosenOpponent;
         public Arena.Arena Arena;
+        public Tournament.Tournament Tournament;
 
         public Game()
         {
             Arena = new Arena.Arena();
             Arena.BuildArenaFloor(5);
             _battleStatus = BattleStatus.NotStarted;
+            Tournament = new Tournament.Tournament();
+        }
+
+        public void StartComputerVsComputerGame()
+        {
+            Tournament.TournamentMode = TournamentMode.ComputerVsComputer;
+            Tournament.Populate();
+            Tournament.Start();
+            StartComputerVsComputerBattle();
+        }
+
+        public void StartPlayerVsComputerGame()
+        {
+            Tournament.TournamentMode = TournamentMode.PlayerVsComputer;
+            Tournament.AddCharacterToTournament(Player);
+            Tournament.Populate();
+            Tournament.Start();
+            StartPlayerVsComputerBattle();
+        }
+
+        private void StartPlayerVsComputerBattle()
+        {
+            Arena = new Arena.Arena();
+            Arena.BuildArenaFloor(5);
+            _battleStatus = BattleStatus.InBattle;
+            Tournament.SetPlayerAsCombatant();
+            Arena.AddCharacterToArena(Player, Alliance.TeamOne);
+            var c2 = Tournament.ChooseCombatant();
+            if (c2 == null)
+            {
+                throw new Exception("Combatant is null....");
+            }
+            c2.Status = ParticipantStatus.InBattle;
+            Arena.AddCharacterToArena(c2.Character, Alliance.TeamTwo);
+        }
+
+        private void StartComputerVsComputerBattle()
+        {
+            Arena = new Arena.Arena();
+            Arena.BuildArenaFloor(5);
+            _battleStatus = BattleStatus.InBattle;
+            var c1 = Tournament.ChooseCombatant();
+            if (c1 == null)
+            {
+                throw new Exception("Combatant is null....");
+            }
+            c1.Status = ParticipantStatus.InBattle;
+            var c2 = Tournament.ChooseCombatant();
+            if (c2 == null)
+            {
+                throw new Exception("Combatant is null....");
+            }
+            c2.Status = ParticipantStatus.InBattle;
+            Arena.AddCharacterToArena(c1.Character, Alliance.TeamOne, 0, 0);
+            Arena.AddCharacterToArena(c2.Character, Alliance.TeamTwo);
+            StartBattle(BattleMode.ComputerVsComputer);
+            var aiTurn = Alliance.TeamOne;
+            while (_battleStatus == BattleStatus.InBattle)
+            {
+                PerformAITurn(aiTurn);
+                aiTurn = aiTurn == Alliance.TeamOne ? Alliance.TeamTwo : Alliance.TeamOne;
+            }
+
+            EndComputerVsComputerBattle();
+        }
+
+        private void EndComputerVsComputerBattle()
+        {
+            if (Tournament.TournamentStatus == TournamentStatus.InProgress)
+            {
+                StartComputerVsComputerBattle();
+            }
         }
 
         public Player Player
@@ -41,6 +115,10 @@ namespace GameLogic.Game
         {
             _winningTeam = winningTeam;
             _battleStatus = BattleStatus.BattleOver;
+            if (_battleMode == BattleMode.ComputerVsComputer)
+            {
+                ProcessBattleOver();
+            }
         }
 
         public void ResetBattle()
@@ -123,6 +201,9 @@ namespace GameLogic.Game
                         w.AddCash(cash);
                         w.LevelUp();
                     });
+                var winner = Arena.Characters.First(i => i.GetAlliance() == _winningTeam);
+                var loser = Arena.Characters.First(i => i.GetAlliance() != _winningTeam);
+                Tournament.ProcessBattleResult(winner, loser);
             }
 
             ResetBattle();            

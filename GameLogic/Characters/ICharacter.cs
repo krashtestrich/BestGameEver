@@ -26,6 +26,14 @@ namespace GameLogic.Characters
         void SetHealth();
         void LoseHealth(int amount);
         void GainHealth(int amount);
+
+        int Mana { get; }
+        int BonusMana { get; }
+        int BaseMana { get; }
+        void AddBonusMana(int amount);
+        void SetMana();
+        void LoseMana(int amount);
+        void GainMana(int amount);
         #endregion
 
         #region Alliance
@@ -85,6 +93,10 @@ namespace GameLogic.Characters
         void AddModifier(IModifier<ICharacter> modifier);
         void RemoveModifier(IModifier<ICharacter> modifier);
 
+        #endregion
+
+        #region Shop / Buying
+        void BuyItems();
         #endregion
 
         #region Arena / Game

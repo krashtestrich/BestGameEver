@@ -2,7 +2,7 @@
 
 namespace GameLogic.Actions.Movements
 {
-    public abstract class Move : Action
+    public abstract class MoveBase : Action
     {
         public abstract int Distance
         { get; }

@@ -12,8 +12,7 @@ namespace GameUnitTest.ModifierTests.Character
         {
             var p = new Player();
             p.AddModifier(new SuperHealth());
-            p.SetHealth();
-            Assert.IsTrue(p.Health == 120);
+            Assert.IsTrue(p.BonusHealth == 20);
         }
 
         [TestMethod]
@@ -21,8 +20,7 @@ namespace GameUnitTest.ModifierTests.Character
         {
             var p = new Player();
             p.AddModifier(new WeeBitOfHealth());
-            p.SetHealth();
-            Assert.IsTrue(p.Health == 110); 
+            Assert.IsTrue(p.BonusHealth == 10); 
         }
     }
 }

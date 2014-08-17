@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GameLogic;
 using GameLogic.Actions;
+using GameLogic.Actions.Attacks;
 using GameLogic.Characters;
 using GameLogic.Enums;
 using GameLogic.Equipment;
@@ -12,7 +13,7 @@ namespace GameUnitTest
         #region Test Objects
         #region Attacks
 
-        public class TestAttack : Attack, IAction
+        public class TestAttack : AttackBase, IAction
         {
             public override string Name
             {
@@ -40,7 +41,7 @@ namespace GameUnitTest
             }
         }
 
-        public class TestAttack2 : Attack, IAction
+        public class TestAttack2 : AttackBase, IAction
         {
             public bool CanBePerformed(ICharacter source, IGameEntity gameEntity)
             {
@@ -172,6 +173,11 @@ namespace GameUnitTest
             public override int BaseHealth
             {
                 get { return 100; }
+            }
+
+            public override int BaseMana
+            {
+                get { return 50; }
             }
         }
         #endregion

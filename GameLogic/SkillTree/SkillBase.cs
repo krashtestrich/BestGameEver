@@ -17,6 +17,7 @@ namespace GameLogic.SkillTree
             {
                 throw new Exception("What!? Skill is already active...");
             }
+           
             CharacterModifiers.ForEach(c.AddModifier);
             IsActive = true;
         }
@@ -33,12 +34,13 @@ namespace GameLogic.SkillTree
         #endregion
 
         public abstract string Name { get; }
+        public abstract int Cost { get; }
         public abstract int Level { get; }
         public abstract SkillBranches Branch { get; }
 
-        public virtual string Parent
+        public virtual SkillBase Parent
         {
-            get { return string.Empty; }
+            get { return null; }
         }
 
         public virtual List<IModifier<ICharacter>> CharacterModifiers

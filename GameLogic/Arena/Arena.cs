@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameLogic.Actions;
+using GameLogic.Actions.Attacks;
 using GameLogic.Actions.Movements;
 using GameLogic.Characters;
 using GameLogic.Enums;
@@ -85,7 +85,7 @@ namespace GameLogic.Arena
         private void BotPerformAttack(ICharacter c, ArenaFloorTile tile)
         {
             //TODO: Implement logic where bot decides what best thing to do here is...
-            var attackAction = c.TargetTileAndSelectActions(tile).FirstOrDefault(a => a is Attack) as Attack;
+            var attackAction = c.TargetTileAndSelectActions(tile).FirstOrDefault(a => a is AttackBase) as AttackBase;
             if (attackAction != null)
             {
                 attackAction.PerformAction((Character)c);
@@ -101,9 +101,9 @@ namespace GameLogic.Arena
         {
             // Get movement with most distance.
             var moveAction = c.GetActions(false)
-                .Where(a => a is Move)
-                .OrderByDescending(a => ((Move) a).Distance)
-                .FirstOrDefault() as Move;
+                .Where(a => a is MoveBase)
+                .OrderByDescending(a => ((MoveBase) a).Distance)
+                .FirstOrDefault() as MoveBase;
 
             if (moveAction == null) return;
             // Get as close to player as possible - find movement that does this.

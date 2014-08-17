@@ -7,6 +7,11 @@
             get { return 100; }
         }
 
+        public override int BaseMana
+        {
+            get { return 50; }
+        }
+
         public override int Worth
         {
             get { return 50; }
