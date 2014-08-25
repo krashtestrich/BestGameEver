@@ -2,6 +2,7 @@
 using GameLogic.Actions;
 using GameLogic.Arena;
 using GameLogic.Enums;
+using GameLogic.Equipment;
 using GameLogic.Modifiers;
 
 namespace GameLogic.Characters
@@ -34,6 +35,14 @@ namespace GameLogic.Characters
         void SetMana();
         void LoseMana(int amount);
         void GainMana(int amount);
+
+        int Armor { get; }
+        int BonusArmor { get; }
+        int BaseArmor { get; }
+        void AddBonusArmor(int amount);
+        void SetArmor();
+        void LoseArmor(int amount);
+        void GainArmor(int amount);
         #endregion
 
         #region Alliance
@@ -57,14 +66,14 @@ namespace GameLogic.Characters
         #endregion
 
         #region Equipment
-        List<Equipment.Equipment> CharacterEquipment
+        List<IBuyableEquipment> CharacterEquipment
         {
             get;
         }
 
-        bool CanEquipEquipment(Equipment.Equipment equipment);
-        void EquipEquipment(Equipment.Equipment equipment);
-        void UnEquipEquipment(Equipment.Equipment equipment);
+        bool CanEquipEquipment(IBuyableEquipment equipment);
+        void EquipEquipment(IBuyableEquipment equipment);
+        void UnEquipEquipment(IBuyableEquipment equipment);
         #endregion
 
         #region Actions
@@ -73,6 +82,7 @@ namespace GameLogic.Characters
         List<IAction> TargetTileAndSelectActions(ArenaFloorTile tile);
         List<IAction> GetActions(bool canPerform);
         void UntargetTile();
+        void AddAction(IAction action);
 
         #endregion
 
@@ -86,12 +96,12 @@ namespace GameLogic.Characters
 
         #region SkillTree
         SkillTree.SkillTree SkillTree { get; }
+        SkillBranches CurrentClass { get; }
         #endregion
 
         #region Modifiers 
 
         void AddModifier(IModifier<ICharacter> modifier);
-        void RemoveModifier(IModifier<ICharacter> modifier);
 
         #endregion
 

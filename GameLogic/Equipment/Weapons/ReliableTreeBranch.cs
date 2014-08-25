@@ -5,7 +5,7 @@ using GameLogic.Slots;
 
 namespace GameLogic.Equipment.Weapons
 {
-    public class ReliableTreeBranch : Weapon
+    public class ReliableTreeBranch : Weapon, IBuyableEquipment
     {
         public override string Name
         {

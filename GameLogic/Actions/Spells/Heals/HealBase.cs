@@ -6,11 +6,12 @@ namespace GameLogic.Actions.Spells.Heals
 {
     public abstract class HealBase : SpellBase
     {
-        public virtual void PerformAction(IGameEntity source)
+        public virtual void Perform(IGameEntity source)
         {
             var healAmount = new ThreadSafeRandom().Next(HitsForFrom, HitsForTo);
             //TODO : Make more sophisticated.
             ((Character)source.TargettedTile.GetTileEntity()).ReceiveHeal(healAmount);
+            ((Character)source).LoseMana(ManaCost);
         }
 
         public virtual bool CanBePerformed(IGameEntity source)

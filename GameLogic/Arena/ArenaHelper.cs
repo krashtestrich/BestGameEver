@@ -1,4 +1,5 @@
 ﻿using System;
+using GameLogic.Helpers.Maths;
 
 namespace GameLogic.Arena
 {
@@ -6,7 +7,7 @@ namespace GameLogic.Arena
     {
         public static int GetDistanceBetweenFloorPositions(ArenaFloorPosition p1, ArenaFloorPosition p2)
         {
-            return Convert.ToInt32(Math.Floor(Maths.MathematicalFunctions.PythagorusGetHypotenusLengthFromRightAngledLengths(p1.XCoord - p2.XCoord, p1.YCoord - p2.YCoord)));
+            return Convert.ToInt32(Math.Floor(MathematicalFunctions.PythagorusGetHypotenusLengthFromRightAngledLengths(p1.XCoord - p2.XCoord, p1.YCoord - p2.YCoord)));
         }
 
         public static ArenaFloorPosition GetClosestMovablePosition(ArenaFloorPosition p1, ArenaFloorPosition p2, int distance)

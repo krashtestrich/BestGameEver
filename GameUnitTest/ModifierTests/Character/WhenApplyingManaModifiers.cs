@@ -11,15 +11,16 @@ namespace GameUnitTest.ModifierTests.Character
         public void ShouldApplyPercentageMana()
         {
             var p = new Player();
-            p.AddModifier(new TastyMana());
-            Assert.IsTrue(p.BonusMana == 50);
+            p.GainMana(50);
+            p.AddModifier(new ManaBonusPercentage(50));
+            Assert.IsTrue(p.BonusMana == 25);
         }
 
         [TestMethod]
-        public void ShouldApplyFlatHealth()
+        public void ShouldApplyFlatMana()
         {
             var p = new Player();
-            p.AddModifier(new LittleBitMoreMana());
+            p.AddModifier(new ManaBonusAmount(10));
             Assert.IsTrue(p.BonusMana == 10);
         }
     }

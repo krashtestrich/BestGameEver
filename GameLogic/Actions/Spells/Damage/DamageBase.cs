@@ -6,11 +6,12 @@ namespace GameLogic.Actions.Spells.Damage
 {
     public abstract class DamageBase : SpellBase
     {
-        public virtual void PerformAction(IGameEntity source)
+        public virtual void Perform(IGameEntity source)
         {
             var damage = new ThreadSafeRandom().Next(HitsForFrom, HitsForTo);
             //TODO : Make more sophisticated.
-            ((Character)source.TargettedTile.GetTileEntity()).TakeDamage(damage);
+            ((Character)source.TargettedTile.GetTileEntity()).TakePhysicalDamage(damage);
+            ((Character)source).LoseMana(ManaCost);
         }
 
         public virtual bool CanBePerformed(IGameEntity source)

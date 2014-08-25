@@ -1,4 +1,6 @@
-﻿using GameLogic.Characters.Player;
+﻿using System.Linq;
+using GameLogic.Actions.Spells.Heals;
+using GameLogic.Characters.Player;
 using GameLogic.Equipment.Weapons;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -47,6 +49,23 @@ namespace GameUnitTest.CharacterTests
                 p.SetCash(s.Price-100);
             }
             Assert.IsFalse(p.CanAffordEquipment(s));
+        }
+
+        [TestMethod]
+        public void ShouldAddAction()
+        {
+            var p = new Player();
+            p.AddAction(new LittleHeal());
+            Assert.IsTrue(p.GetActions(false).Exists(i => i is LittleHeal));
+        }
+
+        [TestMethod]
+        public void ShouldNotAddDuplicateActions()
+        {
+            var p = new Player();
+            p.AddAction(new LittleHeal());
+            p.AddAction(new LittleHeal());
+            Assert.IsTrue(p.GetActions(false).Count(i => i is LittleHeal) == 1);
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using GameLogic.Actions;
-using GameLogic.Slots;
+﻿using GameLogic.Slots;
 
 namespace GameLogic.Equipment.Shields
 {
-    public class PieceofFoil : Shield
+    public class PieceofFoil : Shield, IBuyableEquipment, IArmor
     {
          public override string Name
         {
@@ -16,14 +14,9 @@ namespace GameLogic.Equipment.Shields
             get { return 15; }
         }
 
-        public override int BaseBlock
+        public override int ArmorValue
         {
-            get { return 0; }
-        }
-
-        public override int BonusBlock
-        {
-            get { return 10; }
+            get { return 25; }
         }
 
         public PieceofFoil()

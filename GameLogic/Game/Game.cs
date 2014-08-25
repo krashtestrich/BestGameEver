@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameLogic.Actions;
+using GameLogic.Actions.Attacks;
+using GameLogic.Actions.Movements;
+using GameLogic.Actions.Spells;
+using GameLogic.Actions.Spells.Damage;
+using GameLogic.Actions.Spells.Heals;
+using GameLogic.AI;
 using GameLogic.Arena;
+using GameLogic.Characters;
 using GameLogic.Characters.Bots;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
+using GameLogic.Helpers;
 using GameLogic.Tournament;
 
 namespace GameLogic.Game
@@ -19,13 +27,15 @@ namespace GameLogic.Game
         public Bot ChosenOpponent;
         public Arena.Arena Arena;
         public Tournament.Tournament Tournament;
+        public bool EnableLogging;
 
-        public Game()
+        public Game(bool? enableLogging = false)
         {
+            EnableLogging = enableLogging.HasValue && enableLogging.Value;
             Arena = new Arena.Arena();
             Arena.BuildArenaFloor(5);
             _battleStatus = BattleStatus.NotStarted;
-            Tournament = new Tournament.Tournament();
+            Tournament = new Tournament.Tournament(EnableLogging);
         }
 
         public void StartComputerVsComputerGame()
@@ -81,6 +91,10 @@ namespace GameLogic.Game
             Arena.AddCharacterToArena(c1.Character, Alliance.TeamOne, 0, 0);
             Arena.AddCharacterToArena(c2.Character, Alliance.TeamTwo);
             StartBattle(BattleMode.ComputerVsComputer);
+            if (EnableLogging)
+            {
+                Logger.WriteBattleTurnEntry(c1.Character.Name + " (" + c1.Character.CurrentClass + ") " + " vs. " + c2.Character.Name + " (" + c2.Character.CurrentClass + ") ");
+            }
             var aiTurn = Alliance.TeamOne;
             while (_battleStatus == BattleStatus.InBattle)
             {
@@ -109,6 +123,10 @@ namespace GameLogic.Game
         {
             _battleMode = mode;
             _battleStatus = BattleStatus.InBattle;
+            if (EnableLogging)
+            {
+                Logger.CreateBattleLog();
+            }
         }
 
         public void EndBattle(Alliance winningTeam)
@@ -155,7 +173,7 @@ namespace GameLogic.Game
             {
                 throw new Exception("The battle is over what the FUCK are you doing!?");
             }
-            a.PerformAction(Player);
+            a.Perform(Player);
             Player.UntargetTile();
             UpdateBattleStatus();
         }
@@ -169,19 +187,100 @@ namespace GameLogic.Game
                     {
                         return;
                     }
-                    Arena.BotSelectTile(i, BotGetTarget(alliance));
+                    var actionType = ActionChoosers.GetPreferredActionType(i);
+                    var opponentTile = Arena.Characters.First(c => c.GetAlliance() != i.GetAlliance()).ArenaLocation;
+                    var action = ChooseAction(actionType, i, opponentTile);
+                    if (action == null)
+                    {
+                        BotPerformMove(i, opponentTile);
+                    }
+                    else
+                    {
+                        if (EnableLogging)
+                        {
+                            Logger.WriteBattleTurnEntry(i.SkillTree.Get().Where(s => s.IsActive).OrderByDescending(s => s.Level).First().Path 
+                                + " (" + i.Name + ") " 
+                                + "performed "
+                                + action.Name);
+                        }
+                        action.Perform((Character)i);
+                    }
                     i.UntargetTile();
                     UpdateBattleStatus();
                 });
         }
 
-        private ArenaFloorTile BotGetTarget(Alliance sourceAlliance)
+        private void BotPerformMove(ICharacter c, ArenaFloorTile tile)
         {
-            //TODO: Intelligent targetting - ie. select from list of possible targets based on criteria.
-            return _battleMode == BattleMode.ComputerVsComputer 
-                ? Arena.Characters.First(i => i.GetAlliance() != sourceAlliance).ArenaLocation 
-                : Player.ArenaLocation;
+            // Get movement with most distance.
+            var moveAction = c.GetActions(false)
+                .Where(a => a is MoveBase)
+                .OrderByDescending(a => ((MoveBase)a).Distance)
+                .FirstOrDefault() as MoveBase;
+
+            if (moveAction == null) return;
+            // Get as close to player as possible - find movement that does this.
+            var d = moveAction.Distance;
+            var newPosition = ArenaHelper.GetClosestMovablePosition(c.ArenaLocation.GetTileLocation(), tile.GetTileLocation(), d);
+            var newTile = Arena.ArenaFloor[newPosition.XCoord, newPosition.YCoord];
+            //TODO: Implement logic for bot moving around obstacles? For now don't allow movement onto tiles that have entities
+            var actions = c.TargetTileAndSelectActions(newTile);
+            if (actions.Exists(i => i.Name == moveAction.Name))
+            {
+                if (EnableLogging)
+                {
+                    Logger.WriteBattleTurnEntry(c.SkillTree.Get()
+                        .Where(s => s.IsActive)
+                        .OrderByDescending(s => s.Level)
+                        .First()
+                        .Path
+                                                + " (" + c.Name + ") "
+                                                + "performed "
+                                                + moveAction.Name);
+                }
+                moveAction.Perform((Character)c);
+            }
         }
+
+        private readonly Dictionary<Type, Func<ICharacter, ArenaFloorTile, IAction>> _actionChoosersByType = new Dictionary<Type, Func<ICharacter, ArenaFloorTile, IAction>>
+        {
+            {
+                typeof(HealBase), (c,t) => c.TargetTileAndSelectActions(c.ArenaLocation)
+                    .Where(i => i is HealBase)
+                    .Cast<ISpell>()
+                    .ToList()
+                    .OrderByDescending(i => i.HitsForTo)
+                    .Cast<IAction>()
+                    .FirstOrDefault()
+            },
+            {
+                typeof(AttackBase), (c,t) => c.TargetTileAndSelectActions(t)
+                    .Where(i => i is AttackBase)
+                    .Cast<IAttack>()
+                    .ToList()
+                    .OrderByDescending(i => i.DamageToModifier)
+                    .Cast<IAction>()
+                    .FirstOrDefault()
+            },
+            {
+                typeof(DamageBase), (c,t) => c.TargetTileAndSelectActions(t)
+                    .Where(i => i is DamageBase)
+                    .Cast<ISpell>()
+                    .ToList()
+                    .OrderByDescending(i => i.HitsForTo)
+                    .Cast<IAction>()
+                    .FirstOrDefault()
+            }
+        }; 
+        private IAction ChooseAction(Type actionType, ICharacter c, ArenaFloorTile opponentTile)
+        {
+            if (!_actionChoosersByType.ContainsKey(actionType))
+            {
+                throw new Exception("Error - you can't choose an action for that action type!");
+            }
+            return _actionChoosersByType[actionType].Invoke(c, opponentTile);
+        }
+        
         
         public void ProcessBattleOver()
         {
@@ -193,17 +292,25 @@ namespace GameLogic.Game
             //TODO: Implement logic for when player lost.
             if (_battleMode == BattleMode.ComputerVsComputer || Player.Health > 0)
             {
+                var winner = Arena.Characters.First(i => i.GetAlliance() == _winningTeam);
+                var loser = Arena.Characters.First(i => i.GetAlliance() != _winningTeam);
+                Tournament.ProcessBattleResult(winner, loser);
                 var cash = Arena.Characters.Where(i => i is Bot && i.GetAlliance() != _winningTeam).Sum(i => ((Bot)i).Worth);
                 Arena.Characters.Where(i => i.GetAlliance() == _winningTeam && i.Health > 0)
                     .ToList()
                     .ForEach(w =>
                     {
+                        w.SetHealth();
+                        w.SetMana();
+                        w.SetArmor();
                         w.AddCash(cash);
                         w.LevelUp();
                     });
-                var winner = Arena.Characters.First(i => i.GetAlliance() == _winningTeam);
-                var loser = Arena.Characters.First(i => i.GetAlliance() != _winningTeam);
-                Tournament.ProcessBattleResult(winner, loser);
+
+                if (EnableLogging)
+                {
+                    Logger.WriteBattleTurnEntry("Winner: " + winner.Name + " (" + winner.CurrentClass + ")");
+                }
             }
 
             ResetBattle();            

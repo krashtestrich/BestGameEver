@@ -14,9 +14,16 @@ namespace GameLogic.Tournament
         public TournamentMode TournamentMode;
         public TournamentStatus TournamentStatus;
         public Participant Winner;
+        public Logger Logger;
+        public bool EnableLogging;
 
-        public Tournament()
+        public Tournament(bool? enableLogging = false)
         {
+            EnableLogging = enableLogging.HasValue && enableLogging.Value;
+            if (EnableLogging)
+            {
+                Logger = new Logger();
+            }
             Participants = new List<Participant>();
             TournamentMode = TournamentMode.PlayerVsComputer;
             TournamentStatus = TournamentStatus.NotStarted;
@@ -51,8 +58,6 @@ namespace GameLogic.Tournament
 
         public void Start()
         {
-            Participants.Where(i => i.Status == ParticipantStatus.Active && i.Character.GetLevel() == 0)
-                .ToList();
             for (var i = 0; i < Participants.Count; i++)
             {
                     Participants[i].Character.SetLevel(1);
@@ -92,6 +97,13 @@ namespace GameLogic.Tournament
             losingParticipant.Battles++;
             losingParticipant.Status = ParticipantStatus.KnockedOut;
             UpdateTournamentStatus();
+            if (EnableLogging)
+            {
+                Logger.WriteBattleResult(
+                    winner.SkillTree.Get().Where(i => i.IsActive).OrderByDescending(i => i.Level).First().Path 
+                    + " defeated " 
+                    + loser.SkillTree.Get().Where(i => i.IsActive).OrderByDescending(i => i.Level).First().Path ); 
+            }
         }
 
         private void UpdateTournamentStatus()

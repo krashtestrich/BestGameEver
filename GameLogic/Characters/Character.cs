@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using GameLogic.Actions;
 using GameLogic.Actions.Movements;
-using GameLogic.Actions.Spells.Heals;
 using GameLogic.Arena;
 using GameLogic.Enums;
 using GameLogic.Equipment;
 using GameLogic.Modifiers;
+using GameLogic.Modifiers.Character.Armor;
 using GameLogic.Modifiers.Character.Health;
 using GameLogic.Modifiers.Character.Mana;
-using GameLogic.SkillTree;
+using GameLogic.SkillTree.Paths;
 using GameLogic.Slots;
 using MoreLinq;
 
@@ -67,6 +67,7 @@ namespace GameLogic.Characters
 
         #endregion
 
+
         #region Mana
         private int _currentMana;
 
@@ -101,6 +102,51 @@ namespace GameLogic.Characters
         public void GainMana(int amount)
         {
             _currentMana = Mana + amount;
+        }
+        #endregion
+
+        #region Armor
+        private int _currentArmor;
+
+        public int BonusArmor { get; protected set; }
+
+        public void AddBonusArmor(int amount)
+        {
+            BonusArmor += amount;
+        }
+        public int Armor
+        {
+            get { return _currentArmor; }
+        }
+
+        public int BaseArmor
+        {
+            get
+            {
+                return CharacterEquipment == null 
+                    ? 0 
+                    : CharacterEquipment.Where(i => i is IArmor).Cast<IArmor>().Sum(i => i.ArmorValue);
+            }
+        }
+
+        public void SetArmor()
+        {
+            BonusArmor = 0;
+            foreach (var m in _modifiers.Where(i => i is ArmorBase))
+            {
+                m.Apply(this);
+            }
+            _currentArmor = BonusArmor + BaseArmor;
+        }
+
+        public void LoseArmor(int amount)
+        {
+            _currentArmor = Armor - amount;
+        }
+
+        public void GainArmor(int amount)
+        {
+            _currentArmor = Armor + amount;
         }
         #endregion
 
@@ -147,9 +193,9 @@ namespace GameLogic.Characters
         #endregion
 
         #region Equipment
-        private readonly List<Equipment.Equipment> _characterEquipment;
+        private readonly List<IBuyableEquipment> _characterEquipment;
 
-        public bool CanEquipEquipment(Equipment.Equipment equipment)
+        public bool CanEquipEquipment(IBuyableEquipment equipment)
         {
             var uniqueSlots = equipment.Slots.Distinct();
 
@@ -163,7 +209,7 @@ namespace GameLogic.Characters
             return true;
         }
 
-        public void EquipEquipment(Equipment.Equipment equipment)
+        public void EquipEquipment(IBuyableEquipment equipment)
         {
             if (CanEquipEquipment(equipment))
             {
@@ -172,6 +218,11 @@ namespace GameLogic.Characters
                 {
                     _slots.Find(sf => sf.SlotFree && sf.SlotType == s.SlotType).SetSlotFree(false, equipment.Name);
                 }
+
+                if (equipment is IArmor)
+                {
+                    SetArmor();
+                }
             }
             else
             {
@@ -179,7 +230,7 @@ namespace GameLogic.Characters
             }
         }
 
-        public void UnEquipEquipment(Equipment.Equipment equipment)
+        public void UnEquipEquipment(IBuyableEquipment equipment)
         {
             _characterEquipment.Remove(equipment);
             foreach (var s in equipment.Slots)
@@ -190,7 +241,7 @@ namespace GameLogic.Characters
 
         public List<IAction> CurrentAvailableActions { get; private set; }
 
-        public List<Equipment.Equipment> CharacterEquipment
+        public List<IBuyableEquipment> CharacterEquipment
         {
             get
             {
@@ -230,6 +281,14 @@ namespace GameLogic.Characters
             return _nativeActions.Concat(CharacterEquipment.SelectMany(i => i.Actions).ToList().DistinctBy(i => i.Name)).ToList().Where(i => !canPerform || i.CanBePerformed(this)).ToList();
         }
 
+        public void AddAction(IAction action)
+        {
+            if (!_nativeActions.Exists(i => i.Name == action.Name))
+            {
+                _nativeActions.Add(action);
+            }
+        }
+
         public void UntargetTile()
         {
             TargettedTile = null;
@@ -245,21 +304,17 @@ namespace GameLogic.Characters
 
         #region Damage/Block Calculations
 
-        private IEnumerable<int> GetBlockModifiers()
+        public void TakePhysicalDamage(int damage)
         {
-            return CharacterEquipment.Where(i => i is Shield).Select(i => ((Shield) i).GetBlock());
-        }
-
-        private int CalculateDamageTaken(int damage)
-        {
-            var blockModifiers = GetBlockModifiers();
-            blockModifiers.ToList().ForEach(i => damage = damage - (damage * i/100));
-            return damage;
-        }
-
-        public void TakeDamage(int damage)
-        {
-            LoseHealth(CalculateDamageTaken(damage));
+            var damageToBlock = (damage * 67) / 100;
+            var blockAmount = damageToBlock >= Armor
+                ? Armor
+                : damageToBlock - Armor < 0
+                        ? damageToBlock 
+                        : damageToBlock - Armor;
+            LoseArmor(blockAmount);
+            var damageToTake = (damage - damageToBlock) + (damageToBlock - blockAmount);
+            LoseHealth(damageToTake);
         }
 
         public void TakeSpellDamage(int damage)
@@ -283,21 +338,14 @@ namespace GameLogic.Characters
 
         public void AddModifier(IModifier<ICharacter> modifier)
         {
-            if (!_modifiers.Exists(i => i.Name ==  modifier.Name))
-            {
+            //TODO : Check that this still works.
+            //if (!_modifiers.Exists(i => i.Name ==  modifier.Name))
+            //{
                 modifier.Apply(this);
                 _modifiers.Add(modifier);
-            }
+            //}
         }
-
-        public void RemoveModifier(IModifier<ICharacter> modifier)
-        {
-            var existingModifier = _modifiers.FirstOrDefault(i => i.Name == modifier.Name);
-            if (existingModifier != null)
-            {
-                _modifiers.Remove(existingModifier);
-            }
-        }
+        
         #endregion
 
         #region Level
@@ -345,7 +393,7 @@ namespace GameLogic.Characters
             get { return _skillTree; }
         }
 
-        public void ChooseSkill(SkillBase skill)
+        public void ChooseSkill(IPath skill)
         {
             if (skill.Cost > SkillPoints)
             {
@@ -355,9 +403,9 @@ namespace GameLogic.Characters
             SkillPoints -= skill.Cost;
         }
 
-        public void UnchooseSkill(SkillBase skill)
+        public SkillBranches CurrentClass
         {
-            _skillTree.CancelSkill(skill, this);
+            get { return SkillTree.Get().Where(i => i.IsActive).OrderByDescending(i => i.Level).First().Path; }
         }
 
         #endregion
@@ -377,12 +425,12 @@ namespace GameLogic.Characters
             
         }
 
-        public bool CanAffordEquipment(Equipment.Equipment e)
+        public bool CanAffordEquipment(IBuyableEquipment e)
         {
             return (Cash >= e.Price);
         }
 
-        public void PurchaseEquipment(Equipment.Equipment e)
+        public void PurchaseEquipment(IBuyableEquipment e)
         {
             if (CanAffordEquipment(e) && CanEquipEquipment(e))
             {
@@ -395,7 +443,7 @@ namespace GameLogic.Characters
             }
         }
 
-        public void SellEquipment(Equipment.Equipment e)
+        public void SellEquipment(IBuyableEquipment e)
         {
             Cash += (int)Math.Round(e.Price * 0.75, MidpointRounding.ToEven);
             UnEquipEquipment(e);
@@ -407,7 +455,8 @@ namespace GameLogic.Characters
             _modifiers = new List<IModifier<ICharacter>>();
             SetHealth();
             SetMana();
-            _characterEquipment = new List<Equipment.Equipment>();
+            SetArmor();
+            _characterEquipment = new List<IBuyableEquipment>();
             _skillTree = new SkillTree.SkillTree();
 
             _slots = new List<Slot>();
@@ -420,9 +469,7 @@ namespace GameLogic.Characters
 
             _nativeActions = new List<IAction>
             {
-                new Run(),
-                new LittleHeal(),
-                new BigHeal()
+                new Run()
             };
         }
     }

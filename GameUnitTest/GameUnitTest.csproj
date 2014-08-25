@@ -54,7 +54,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ActionTests\Spells\WhenCastingSpells.cs" />
+    <Compile Include="ActionTests\Spells\Attacks\WhenCastingAttackSpells.cs" />
+    <Compile Include="ActionTests\Spells\Heals\WhenCastingHeals.cs" />
     <Compile Include="ActionTests\WhenBotsPerformingActions.cs" />
     <Compile Include="BattleTests\WhenBattleOver.cs" />
     <Compile Include="ArenaTests\WhenAddingCharactersToArena.cs" />
@@ -67,9 +68,10 @@
     <Compile Include="ActionTests\WhenChoosingActions.cs" />
     <Compile Include="ActionTests\WhenPerformingActions.cs" />
     <Compile Include="GameTests\WhenPlayingGame.cs" />
+    <Compile Include="HelperTests\WhenRetrievingInterfaces.cs" />
     <Compile Include="ModifierTests\Character\WhenApplyingHealthModifiers.cs" />
     <Compile Include="BotTests\WhenUsingBots.cs" />
-    <Compile Include="MathsTests\WhenUsingMaths.cs" />
+    <Compile Include="HelperTests\MathsTests\WhenUsingMaths.cs" />
     <Compile Include="ModifierTests\Character\WhenApplyingManaModifiers.cs" />
     <Compile Include="MoreLinq\MoreEnumerable.DistinctBy.cs" />
     <Compile Include="ShopTests\WhenShopping.cs" />

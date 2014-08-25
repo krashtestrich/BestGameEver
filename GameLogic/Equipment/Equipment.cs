@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GameLogic.Actions;
 
 namespace GameLogic.Equipment
 {
     public abstract class Equipment
     {
-        internal Random R;
 
         #region Name
 
@@ -18,7 +16,6 @@ namespace GameLogic.Equipment
         #endregion
 
         #region Equipment Type
-        private string equipmentType;
 
         public abstract string EquipmentType
         {
@@ -45,7 +42,6 @@ namespace GameLogic.Equipment
         #endregion
 
         #region Price
-        private int price;
         public abstract int Price
         {
             get;
@@ -63,7 +59,6 @@ namespace GameLogic.Equipment
         protected Equipment()
         {
             _slots = new List<Slot>();
-            R = new Random();
         }
     }
 }

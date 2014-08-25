@@ -5,7 +5,7 @@ using GameLogic.Slots;
 
 namespace GameLogic.Equipment.Weapons
 {
-    public sealed class Sword : Weapon
+    public sealed class Sword : Weapon, IBuyableEquipment
     {
         public override string Name
         {

@@ -46,14 +46,20 @@
   <ItemGroup>
     <Compile Include="Actions\Action.cs" />
     <Compile Include="Actions\Attacks\AttackBase.cs" />
+    <Compile Include="Actions\Attacks\IAttack.cs" />
+    <Compile Include="Actions\Attacks\RecklessSwing.cs" />
     <Compile Include="Actions\Attacks\Swing.cs" />
+    <Compile Include="Actions\Movements\IMove.cs" />
     <Compile Include="Actions\Movements\MoveBase.cs" />
     <Compile Include="Actions\Movements\Run.cs" />
     <Compile Include="Actions\Spells\Damage\DamageBase.cs" />
+    <Compile Include="Actions\Spells\Damage\SpellSpear.cs" />
     <Compile Include="Actions\Spells\Heals\BigHeal.cs" />
     <Compile Include="Actions\Spells\Heals\HealBase.cs" />
     <Compile Include="Actions\Spells\Heals\LittleHeal.cs" />
+    <Compile Include="Actions\Spells\ISpell.cs" />
     <Compile Include="Actions\Spells\SpellBase.cs" />
+    <Compile Include="AI\ActionChoosers.cs" />
     <Compile Include="Arena\Arena.cs" />
     <Compile Include="Arena\ArenaFloorTile.cs" />
     <Compile Include="Arena\ArenaFloorPosition.cs" />
@@ -62,6 +68,8 @@
     <Compile Include="Characters\Bots\BotHelper.cs" />
     <Compile Include="Characters\Bots\Dumbass.cs" />
     <Compile Include="Characters\Bots\IBot.cs" />
+    <Compile Include="Characters\Bots\Types\BotTypeBase.cs" />
+    <Compile Include="Characters\Bots\Types\Destroyer.cs" />
     <Compile Include="Characters\Character.cs" />
     <Compile Include="Enums\Alliance.cs" />
     <Compile Include="Enums\BattleMode.cs" />
@@ -69,6 +77,8 @@
     <Compile Include="Enums\TournamentMode.cs" />
     <Compile Include="Enums\TournamentStatus.cs" />
     <Compile Include="Equipment\Equipment.cs" />
+    <Compile Include="Equipment\IArmor.cs" />
+    <Compile Include="Equipment\IBuyableEquipment.cs" />
     <Compile Include="Equipment\Shield.cs" />
     <Compile Include="Equipment\Shields\CrappyWoodenShield.cs" />
     <Compile Include="Equipment\Shields\PieceofFoil.cs" />
@@ -81,29 +91,37 @@
     <Compile Include="Game\Game.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Characters\ICharacter.cs" />
-    <Compile Include="Game\GameHelper.cs" />
+    <Compile Include="Helpers\InstanceRetriever.cs" />
+    <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Helpers\ThreadSafeRandom.cs" />
     <Compile Include="ITarget.cs" />
+    <Compile Include="Modifiers\Character\Armor\ArmorBase.cs" />
+    <Compile Include="Modifiers\Character\Health\HealthBonusPercentage.cs" />
     <Compile Include="Modifiers\Character\Health\HealthBase.cs" />
-    <Compile Include="Modifiers\Character\Health\SuperHealth.cs">
+    <Compile Include="Modifiers\Character\Health\HealthBonusAmount.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Modifiers\Character\Health\WeeBitOfHealth.cs" />
-    <Compile Include="Modifiers\Character\Mana\LittleBitMoreMana.cs" />
     <Compile Include="Modifiers\Character\Mana\ManaBase.cs" />
-    <Compile Include="Modifiers\Character\Mana\TastyMana.cs" />
+    <Compile Include="Modifiers\Character\Mana\ManaBonusAmount.cs" />
+    <Compile Include="Modifiers\Character\Mana\ManaBonusPercentage.cs" />
     <Compile Include="Modifiers\IModifier.cs" />
     <Compile Include="Modifiers\ModifiersBase.cs" />
     <Compile Include="MoreLinq\MoreEnumerable.DistinctBy.cs" />
     <Compile Include="Shop\IShop.cs" />
-    <Compile Include="Maths\MathematicalFunctions.cs" />
+    <Compile Include="Helpers\Maths\MathematicalFunctions.cs" />
     <Compile Include="Characters\Player\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shop\Shop.cs" />
-    <Compile Include="SkillTree\Health\HealthLevelOne.cs" />
-    <Compile Include="SkillTree\Health\HealthLevelTwo.cs" />
-    <Compile Include="SkillTree\Mana\ManaLevelOne.cs" />
-    <Compile Include="SkillTree\Mana\ManaLevelTwo.cs" />
+    <Compile Include="SkillTree\Paths\FighterPath\PathOfTheFighter.cs" />
+    <Compile Include="SkillTree\Paths\FighterPath\KnightPath\PathOfTheKnight.cs" />
+    <Compile Include="SkillTree\Paths\IPath.cs" />
+    <Compile Include="SkillTree\Paths\WizardPath\MagePath\PathOfTheArchMage.cs" />
+    <Compile Include="SkillTree\Paths\WizardPath\MagePath\PathOfTheMage.cs" />
+    <Compile Include="SkillTree\Paths\WizardPath\MagePath\PathOfTheNecromancer.cs" />
+    <Compile Include="SkillTree\Paths\WizardPath\MagePath\PathOfTheWarlock.cs" />
+    <Compile Include="SkillTree\Paths\WizardPath\PathOfTheWizard.cs" />
+    <Compile Include="SkillTree\Paths\FighterPath\KnightPath\PathOfTheDarkKnight.cs" />
+    <Compile Include="SkillTree\Paths\FighterPath\KnightPath\PathOfThePaladin.cs" />
     <Compile Include="SkillTree\SkillBase.cs" />
     <Compile Include="Enums\SkillBranches.cs" />
     <Compile Include="SkillTree\SkillTree.cs" />
@@ -117,7 +135,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AI\" />
     <Folder Include="Modifiers\Equipment\" />
     <Folder Include="Modifiers\Skill\" />
   </ItemGroup>

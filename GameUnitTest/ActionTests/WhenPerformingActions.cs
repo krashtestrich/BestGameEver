@@ -70,11 +70,13 @@ namespace GameUnitTest.ActionTests
             g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
             var o = new Dumbass();
             o.EquipEquipment(new CrappyWoodenShield());
+            o.SetArmor();
             g.Arena.AddCharacterToArena(o, Alliance.TeamTwo, 0, 1);
             var tile = g.Arena.SelectFloorTile(new ArenaFloorPosition(0, 1));
             var actions = g.Player.TargetTileAndSelectActions(tile);
             g.PerformPlayerAction(actions.Find(i => i.Name == "Swing"));
             Assert.IsTrue(o.Health > 70);
+            Assert.IsTrue(o.Armor < 75);
         }
     }
 }

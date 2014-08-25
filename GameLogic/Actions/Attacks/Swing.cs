@@ -1,6 +1,6 @@
 ﻿namespace GameLogic.Actions.Attacks
 {
-	public class Swing : AttackBase, IAction
+	public class Swing : AttackBase, IAction, IAttack
 	{
 		public override string Name
 		{

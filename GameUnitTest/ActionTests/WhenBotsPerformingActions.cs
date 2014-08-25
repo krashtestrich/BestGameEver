@@ -18,6 +18,7 @@ namespace GameUnitTest.ActionTests
             g.Player = new Player();
             g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
             var b = new Dumbass();
+            b.LevelUp();
             g.Arena.AddCharacterToArena(b, Alliance.TeamTwo, 4, 4);
             g.PerformAITurn(Alliance.TeamTwo);
             var endPosition = b.ArenaLocation.GetTileLocation();
@@ -32,6 +33,7 @@ namespace GameUnitTest.ActionTests
             g.Player = new Player();
             g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
             var b = new Dumbass();
+            b.LevelUp();
             g.Arena.AddCharacterToArena(b, Alliance.TeamTwo, 0, 1);
             g.PerformAITurn(Alliance.TeamTwo);
             var endPosition = b.ArenaLocation.GetTileLocation();
@@ -46,6 +48,7 @@ namespace GameUnitTest.ActionTests
             g.Player = new Player();
             g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne, 0, 0);
             var b = new Dumbass();
+            b.LevelUp();
             b.EquipEquipment(new Sword());
             g.Arena.AddCharacterToArena(b, Alliance.TeamTwo, 0, 1);
             g.PerformAITurn(Alliance.TeamTwo);

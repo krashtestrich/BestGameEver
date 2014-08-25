@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using GameLogic.Characters.Bots;
 using GameLogic.Game;
-using GameLogic.SkillTree.Health;
-using GameLogic.SkillTree.Mana;
+using GameLogic.SkillTree.Paths.FighterPath;
+using GameLogic.SkillTree.Paths.WizardPath;
 using GameLogic.Tournament;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -39,8 +39,8 @@ namespace GameUnitTest.TournamentTests
             t.Populate();
             t.Start();
             Assert.IsTrue(t.Participants.TrueForAll(i => i.Character.Health > 0));
-            Assert.IsTrue(t.Participants.Exists(i => i.Character.SkillTree.Get().ToList().Exists(s => s is HealthLevelOne && s.IsActive)));
-            Assert.IsTrue(t.Participants.Exists(i => i.Character.SkillTree.Get().ToList().Exists(s => s is ManaLevelOne && s.IsActive)));
+            Assert.IsTrue(t.Participants.Exists(i => i.Character.SkillTree.Get().ToList().Exists(s => s is PathOfTheFighter && s.IsActive)));
+            Assert.IsTrue(t.Participants.Exists(i => i.Character.SkillTree.Get().ToList().Exists(s => s is PathOfTheWizard && s.IsActive)));
         }
 
         [TestMethod]
@@ -126,26 +126,9 @@ namespace GameUnitTest.TournamentTests
 
         [TestMethod]
         public void ShouldStartComputerVsComputerTournament()
-        {
-            var g = new Game();
+        { 
+            var g = new Game(false);
             g.StartComputerVsComputerGame();
-        }
-
-        [TestMethod]
-        public void ShouldStartBattleWithTwoComputerCharacters()
-        {
-            var g = new Game();
-            g.Tournament.Populate();
-            g.Tournament.Start();
-        }
-
-        [TestMethod]
-        public void ShouldKnockOutLoserWhenProcessingResult()
-        {
-            var g = new Game();
-            g.Tournament.Populate();
-            g.Tournament.Start();
-
         }
     }
 }

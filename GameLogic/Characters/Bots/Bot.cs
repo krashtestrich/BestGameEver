@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GameLogic.AI;
+using GameLogic.Enums;
 using GameLogic.Equipment;
 using GameLogic.Helpers;
-using GameLogic.SkillTree;
+using GameLogic.SkillTree.Paths;
 
 namespace GameLogic.Characters.Bots
 {
@@ -15,37 +17,48 @@ namespace GameLogic.Characters.Bots
 
         public abstract int Worth { get; }
 
+        #region Skill Tree
+
         private void AssignSkillTreePoints()
         {
             var points = SkillPoints;
             var availableSkills = GetAvailableSkillNodes(points);
-            if (availableSkills != null && availableSkills.Count > 0)
+            if (availableSkills == null || availableSkills.Count <= 0)
             {
-               //TODO: Logic for this. For now bot just take highest skill it can.
-                var highestLevel = availableSkills.First().Level;
-                if (availableSkills.Count(i => i.Level == highestLevel) > 1)
-                {
-                    var choices = availableSkills.Where(i => i.Level == highestLevel).ToList();
-                    ChooseSkill(choices[new ThreadSafeRandom().Next(0, choices.Count)]);
-                }
-                else
-                {
-                    ChooseSkill(availableSkills.First());
-                }
+                return;
             }
+            ChooseSkill(availableSkills[new ThreadSafeRandom().Next(0, availableSkills.Count)]);
         }
 
-        private List<SkillBase> GetAvailableSkillNodes(int maxCost)
+        private List<IPath> GetAvailableSkillNodes(int maxCost)
         {
             var skillTree = SkillTree.Get();
-            var currentSkills = skillTree.Where(i => i.IsActive);
+            var currentSkills = skillTree.Where(i => i.IsActive).ToList();
+            var highestSkill = currentSkills
+                .OrderByDescending(i => i.Level)
+                .FirstOrDefault();
+            var mainPath = highestSkill != null
+                ? highestSkill.BasePath
+                : SkillBranches.NotTaken;
+            var level = highestSkill != null
+                ? highestSkill.Level
+                : 0;
+            
             return skillTree
-                .Where(i => !i.IsActive && i.Cost <= maxCost && (i.Parent == null || currentSkills
-                    .ToList()
-                    .Exists(p => p.Name == i.Parent.Name)))
-                .OrderByDescending(i => i.Level).ToList();
+                .Where(i => 
+                            (mainPath == SkillBranches.NotTaken || i.BasePath == mainPath) 
+                            && i.Level > level
+                            && !i.IsActive 
+                            && i.Cost <= maxCost 
+                            && (i.Parent == null || currentSkills
+                                        .Exists(p => p.Name == i.Parent.Name)))
+                .OrderByDescending(i => i.Level)
+                .ToList();
         }
 
+        #endregion
+
+        #region Levels
         public override void SetLevel(int level)
         {
             base.SetLevel(level);
@@ -58,6 +71,9 @@ namespace GameLogic.Characters.Bots
             AssignSkillTreePoints();
         }
 
+        #endregion
+
+        #region Shop
         public override void BuyItems()
         {
             var s = new Shop.Shop();
@@ -72,5 +88,15 @@ namespace GameLogic.Characters.Bots
                 PurchaseEquipment(shield);
             }
         }
+
+        #endregion
+
+        #region Action Choices
+
+        public void PreferredActions()
+        {
+            var actionType = ActionChoosers.GetPreferredActionType(this);
+        }
+        #endregion
     }
 }

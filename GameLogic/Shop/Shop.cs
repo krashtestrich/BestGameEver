@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GameLogic.Characters.Player;
-using GameLogic.Equipment.Shields;
-using GameLogic.Equipment.Weapons;
+using GameLogic.Equipment;
+using GameLogic.Helpers;
 
 namespace GameLogic.Shop
 {
     public class Shop : IShop
     {
         #region Equipment
-        private readonly List<Equipment.Equipment> _equipment;
+        private List<IBuyableEquipment> _equipment;
 
-        public List<Equipment.Equipment> Equipment
+        public List<IBuyableEquipment> Equipment
         {
             get
             {
@@ -20,16 +21,8 @@ namespace GameLogic.Shop
 
         private void PopulateShop()
         {
-            //TODO: Implement Structure Map.
-            // Weapons
-            _equipment.Add(new Sword());
-            _equipment.Add(new BigSword());
-            _equipment.Add(new MegaSwordOfDeath());
-            _equipment.Add(new ReliableTreeBranch());
-
-            // Shields
-            _equipment.Add(new CrappyWoodenShield());
-            _equipment.Add(new PieceofFoil());
+            var items = new InstanceRetriever<IBuyableEquipment>().RetrieveInstances();
+            _equipment = items.ToList();
         }
         #endregion        
 
@@ -45,7 +38,7 @@ namespace GameLogic.Shop
 
         public Shop()
         {
-            _equipment = new List<Equipment.Equipment>();
+            _equipment = new List<IBuyableEquipment>();
             PopulateShop();
         }
     }

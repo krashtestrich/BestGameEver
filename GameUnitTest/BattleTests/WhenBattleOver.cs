@@ -55,5 +55,24 @@ namespace GameUnitTest.BattleTests
             g.StartBattle(BattleMode.PlayerVsComputer);
             g.ProcessBattleOver();
         }
+
+        [TestMethod]
+        public void ShouldResetCharacterAfterBattle()
+        {
+            var g = new Game { Player = new Player() };
+            g.Player.SetName("Player");
+            var b = new Dumbass();
+            b.SetName("Idiot");
+            g.Tournament.AddCharacterToTournament(b);
+            g.StartPlayerVsComputerGame();
+            g.Arena.Characters.First(i => i is Player).LoseHealth(50);
+            Assert.IsTrue(g.Player.Health == 50);
+            g.Arena.Characters.First(i => i is Dumbass).LoseHealth(100);
+            g.PerformPlayerAction(
+                g.Player.TargetTileAndSelectActions(g.Arena.SelectFloorTile(new ArenaFloorPosition(0, 3))).First()
+            );
+            g.ProcessBattleOver();
+            Assert.IsTrue(g.Player.Health == 100);
+        }
     }
 }

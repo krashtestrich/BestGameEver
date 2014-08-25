@@ -33,13 +33,13 @@ namespace GameLogic.Actions.Attacks
                 && distance >= MinRange;
         }
 
-        public virtual void PerformAction(IGameEntity source)
+        public virtual void Perform(IGameEntity source)
         {
             var weaponDamage = ((Weapon) PerformedWith).GetDamage();
             var modifier = new ThreadSafeRandom().Next(DamageFromModifier, DamageToModifier);
-            var damage = modifier > 0 ? weaponDamage*modifier : weaponDamage;
+            var damage = modifier > 0 ? weaponDamage*(modifier/100) : weaponDamage;
             //TODO : Make more sophisticated.
-            ((Character)source.TargettedTile.GetTileEntity()).TakeDamage(damage);
+            ((Character)source.TargettedTile.GetTileEntity()).TakePhysicalDamage(damage);
         }
 
         public virtual bool CanBePerformed(IGameEntity source)

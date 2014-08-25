@@ -77,7 +77,7 @@ namespace GameUnitTest
         #endregion
 
         #region Weapons
-        public class TestWeapon : Weapon
+        public class TestWeapon : Weapon, IBuyableEquipment
         {
             public override string Name
             {

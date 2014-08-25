@@ -13,7 +13,7 @@ namespace GameLogic.Actions.Movements
                 && ArenaHelper.GetDistanceBetweenFloorPositions(source.ArenaLocation.GetTileLocation(), source.TargettedTile.GetTileLocation()) <= Distance;
         }
 
-        public virtual void PerformAction(IGameEntity source)
+        public virtual void Perform(IGameEntity source)
         {
             source.ArenaLocation.RemoveEntityFromTile(source);
             source.TargettedTile.AddEntityToTile(source);

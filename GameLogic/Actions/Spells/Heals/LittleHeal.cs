@@ -1,6 +1,6 @@
 ﻿namespace GameLogic.Actions.Spells.Heals
 {
-    public class LittleHeal : HealBase, IAction
+    public class LittleHeal : HealBase, IAction, ISpell
     {
         public override string Name
         {

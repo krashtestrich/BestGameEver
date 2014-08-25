@@ -4,15 +4,8 @@ namespace GameLogic.Modifiers.Character.Health
 {
     public abstract class HealthBase : ModifiersBase<ICharacter>, IModifier<ICharacter>
     {
-        public abstract string Name { get; }
-
-        public virtual int Percentage
-        {
-            get { return 0; }
-        }
-        public virtual int Amount {
-            get { return 0; }
-        }
+        protected int Percentage;
+        protected int Amount;
 
         public override void Apply(ICharacter c)
         {

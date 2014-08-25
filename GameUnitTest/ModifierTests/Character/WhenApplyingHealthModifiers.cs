@@ -11,15 +11,15 @@ namespace GameUnitTest.ModifierTests.Character
         public void ShouldApplyPercentageHealth()
         {
             var p = new Player();
-            p.AddModifier(new SuperHealth());
-            Assert.IsTrue(p.BonusHealth == 20);
+            p.AddModifier(new HealthBonusPercentage(50));
+            Assert.IsTrue(p.BonusHealth == 50);
         }
 
         [TestMethod]
         public void ShouldApplyFlatHealth()
         {
             var p = new Player();
-            p.AddModifier(new WeeBitOfHealth());
+            p.AddModifier(new HealthBonusAmount(10));
             Assert.IsTrue(p.BonusHealth == 10); 
         }
     }

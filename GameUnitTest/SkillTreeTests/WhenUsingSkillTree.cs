@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
+using GameLogic.Actions.Spells.Damage;
 using GameLogic.Characters.Player;
-using GameLogic.SkillTree.Health;
+using GameLogic.SkillTree.Paths.FighterPath;
+using GameLogic.SkillTree.Paths.FighterPath.KnightPath;
+using GameLogic.SkillTree.Paths.WizardPath;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GameUnitTest.SkillTreeTests
@@ -13,16 +17,8 @@ namespace GameUnitTest.SkillTreeTests
         public void ShouldNotBeAbleToTakeSkillAlreadyTaken()
         {
             var p = new Player();
-            p.ChooseSkill(new HealthLevelOne());
-            p.ChooseSkill(new HealthLevelOne());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
-        public void ShouldNotBeAbleToUnchooseInactiveSkill()
-        {
-            var p = new Player();
-            p.UnchooseSkill(new HealthLevelOne());
+            p.ChooseSkill(new PathOfTheFighter());
+            p.ChooseSkill(new PathOfTheFighter());
         }
 
         [TestMethod]
@@ -57,7 +53,7 @@ namespace GameUnitTest.SkillTreeTests
         public void ShouldNotTakeSkillIfCharacterCannotAfford()
         {
             var p = new Player();
-            p.ChooseSkill(new HealthLevelOne());
+            p.ChooseSkill(new PathOfTheDarkKnight());
         }
 
         [TestMethod]
@@ -66,19 +62,18 @@ namespace GameUnitTest.SkillTreeTests
             var p = new Player();
             Assert.IsTrue(p.CharacterModifiers.Count == 0);
             p.LevelUp();
-            p.ChooseSkill(new HealthLevelOne());
+            p.ChooseSkill(new PathOfTheFighter());
             Assert.IsTrue(p.CharacterModifiers.Count > 0);
         }
 
         [TestMethod]
-        public void ShouldRemoveModifiersToCharacterWhenSkillUnchosen()
+        public void ShouldAddActionsToCharacterWhenSkillChosen()
         {
             var p = new Player();
-            p.SetLevel(2);
-            p.ChooseSkill(new HealthLevelOne());
-            Assert.IsTrue(p.CharacterModifiers.Count > 0);
-            p.UnchooseSkill(new HealthLevelOne());
-            Assert.IsTrue(p.CharacterModifiers.Count == 0);
+            p.LevelUp();
+            Assert.IsFalse(p.GetActions(false).Exists(i => i is SpellSpear));
+            p.ChooseSkill(new PathOfTheWizard());
+            Assert.IsTrue(p.GetActions(false).Exists(i => i is SpellSpear));
         }
 
         [TestMethod]
@@ -86,8 +81,8 @@ namespace GameUnitTest.SkillTreeTests
         {
             var p = new Player();
             p.SetLevel(2);
-            p.ChooseSkill(new HealthLevelOne());
-            p.ChooseSkill(new HealthLevelTwo());
+            p.ChooseSkill(new PathOfTheFighter());
+            p.ChooseSkill(new PathOfTheKnight());
             Assert.IsTrue(p.CharacterModifiers.Count == 2);
         }
 
@@ -96,7 +91,17 @@ namespace GameUnitTest.SkillTreeTests
         public void ShouldNotBeAbleToTakeSkillAtLevelAbove()
         {
             var p = new Player();
-            p.ChooseSkill(new HealthLevelTwo());
+            p.ChooseSkill(new PathOfTheKnight());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof (Exception))]
+        public void ShouldNotBeAbleToTakeMultipleTopLevelPaths()
+        {
+            var p = new Player();
+            p.SetLevel(2);
+            p.ChooseSkill(new PathOfTheFighter());
+            p.ChooseSkill(new PathOfTheWizard());
         }
     }
 }

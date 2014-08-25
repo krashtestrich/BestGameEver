@@ -2,41 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameLogic.Characters;
-using GameLogic.SkillTree.Health;
-using GameLogic.SkillTree.Mana;
+using GameLogic.Helpers;
+using GameLogic.SkillTree.Paths;
 
 namespace GameLogic.SkillTree
 {
     public class SkillTree
     {
-        private readonly List<SkillBase> _skills;
+        private readonly List<IPath> _skills;
 
-        public void TakeSkill(SkillBase skill, ICharacter c)
+        public void TakeSkill(IPath skill, ICharacter c)
         {
             if (skill.Parent != null && _skills.Exists(i => i.Name == skill.Parent.Name && !i.IsActive))
             {
                 throw new Exception("You cannot take this skill yet!");
             }
-            _skills.First(i => i.Name == skill.Name).ActivateSkill(c);
-        }
+            if (skill.Level == 1 && _skills.Exists(i => i.IsActive && i.Level == 1))
+            {
+                throw new Exception("You can only have one level one skill!");
+            }
 
-        public void CancelSkill(SkillBase skill, ICharacter c)
-        {
-            _skills.First(i => i.Name == skill.Name).DeactivateSkill(c);
+            _skills.First(i => i.Name == skill.Name).ActivateSkill(c);
         }
 
         public SkillTree()
         {
-            _skills = new List<SkillBase>
-            {
-                new HealthLevelOne(),
-                new HealthLevelTwo(),
-                new ManaLevelOne(),
-                new ManaLevelTwo()
-            };
+            _skills = new InstanceRetriever<IPath>().RetrieveInstances().ToList();
         }
 
-        public List<SkillBase> Get()
+        public List<IPath> Get()
         {
             return _skills;
         }
