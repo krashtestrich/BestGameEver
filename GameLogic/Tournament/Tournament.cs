@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GameLogic.Characters;
 using GameLogic.Characters.Bots;
@@ -13,9 +14,11 @@ namespace GameLogic.Tournament
         public List<Participant> Participants { get; set; }
         public TournamentMode TournamentMode;
         public TournamentStatus TournamentStatus;
+        public int Round;
         public Participant Winner;
         public Logger Logger;
         public bool EnableLogging;
+        public Dictionary<int, List<BattleDetails>> BattlesByRound; 
 
         public Tournament(bool? enableLogging = false)
         {
@@ -27,6 +30,13 @@ namespace GameLogic.Tournament
             Participants = new List<Participant>();
             TournamentMode = TournamentMode.PlayerVsComputer;
             TournamentStatus = TournamentStatus.NotStarted;
+            BattlesByRound = new Dictionary<int, List<BattleDetails>>();
+            Round = 0;
+        }
+
+        public BattleDetails GetNextBattleDetails()
+        {
+            return BattlesByRound[Round].First(b => b.BattleStatus == BattleStatus.NotStarted);
         }
 
         public void AddCharacterToTournament(ICharacter c)
@@ -49,7 +59,7 @@ namespace GameLogic.Tournament
 
         public void Populate()
         {
-            while (Participants.Count < 50)
+            while (Participants.Count < 128)
             {
                 var c = new Dumbass();
                 AddCharacterToTournament(c);
@@ -58,14 +68,49 @@ namespace GameLogic.Tournament
 
         public void Start()
         {
-            for (var i = 0; i < Participants.Count; i++)
-            {
-                    Participants[i].Character.SetLevel(1);
-                    Participants[i].Character.SetCash(100);
-                    Participants[i].Character.BuyItems();
-            }
+            Participants
+                .ToList()
+                .ForEach(p =>
+                {
+                    if (!(p.Character is Player))
+                    {
+                        p.Character.LevelUp();
+                        p.Character.AddCash(100);
+                        p.Character.BuyItems();
+                    }
+                });
                
             TournamentStatus = TournamentStatus.InProgress;
+            StartNextRound();
+        }
+
+        private void StartNextRound()
+        {
+            Round++;
+            PopulateFights();
+        }
+
+        private void PopulateFights()
+        {
+            BattlesByRound.Add(Round, new List<BattleDetails>());
+            var takenParticipants = 0;
+            var validParticipants = Participants.Where(p => p.Status == ParticipantStatus.Active).ToList();
+            if (validParticipants.Count < 2)
+            {
+                throw new Exception("Not enough valid participants to fight bro");
+            }
+            while (takenParticipants < Participants.Count)
+            {
+                var battleDetails = new BattleDetails();
+                battleDetails.Participants.Add(validParticipants.ElementAt(takenParticipants));
+                takenParticipants++;
+                battleDetails.Participants.Add(validParticipants.ElementAt(takenParticipants));
+                takenParticipants++;
+                battleDetails.BattleMode = battleDetails.Participants.Any(p => p.Character is Player)
+                    ? BattleMode.PlayerVsComputer
+                    : BattleMode.ComputerVsComputer;
+                BattlesByRound[Round].Add(battleDetails);
+            }
         }
 
         public void SetPlayerAsCombatant()
@@ -73,36 +118,21 @@ namespace GameLogic.Tournament
             Participants.First(i => i.Character is Player).Status = ParticipantStatus.InBattle;
         }
 
-        public Participant ChooseCombatant()
+        public void ProcessBattleResult(BattleDetails battleDetails)
         {
-            var activeParticipants = Participants.Where(i => i.Status == ParticipantStatus.Active).ToList();
-            if (activeParticipants.Count == 0)
-            {
-                return null;
-            }
-            var lowestParticipantLevel = activeParticipants.OrderBy(i => i.Battles).First().Battles;
-            var lowestParticipants =
-                Participants.Where(i => i.Status == ParticipantStatus.Active && i.Battles == lowestParticipantLevel).ToList();
-            return lowestParticipants.Count == 1
-                ? lowestParticipants.First()
-                : lowestParticipants[new ThreadSafeRandom().Next(0, lowestParticipants.Count)];
-        }
-
-        public void ProcessBattleResult(ICharacter winner, ICharacter loser)
-        {
-            var winningParticipant = Participants.First(i => i.Character.Name == winner.Name);
+            var winningParticipant = Participants.First(i => i.Character.Name == battleDetails.WinnerName);
             winningParticipant.Battles++;
             winningParticipant.Status = ParticipantStatus.Active;
-            var losingParticipant = Participants.First(i => i.Character.Name == loser.Name);
+            var losingParticipant = Participants.First(i => i.Character.Name == battleDetails.LoserName);
             losingParticipant.Battles++;
             losingParticipant.Status = ParticipantStatus.KnockedOut;
             UpdateTournamentStatus();
             if (EnableLogging)
             {
                 Logger.WriteBattleResult(
-                    winner.SkillTree.Get().Where(i => i.IsActive).OrderByDescending(i => i.Level).First().Path 
+                    winningParticipant.Character.SkillTree.Get().Where(i => i.IsActive).OrderByDescending(i => i.Level).First().Path 
                     + " defeated " 
-                    + loser.SkillTree.Get().Where(i => i.IsActive).OrderByDescending(i => i.Level).First().Path ); 
+                    + losingParticipant.Character.SkillTree.Get().Where(i => i.IsActive).OrderByDescending(i => i.Level).First().Path ); 
             }
         }
 

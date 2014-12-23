@@ -2,6 +2,7 @@
 using GameLogic.Characters;
 using GameLogic.Enums;
 using GameLogic.Modifiers;
+using GameLogic.Modifiers.Character.Armor;
 using GameLogic.Modifiers.Character.Health;
 
 namespace GameLogic.SkillTree.Paths.FighterPath.KnightPath
@@ -45,7 +46,8 @@ namespace GameLogic.SkillTree.Paths.FighterPath.KnightPath
             {
                 return new List<IModifier<ICharacter>>
                 {
-                    new HealthBonusPercentage(20)
+                    new HealthBonusPercentage(20),
+                    new ArmorBonusPercentage(25)
                 };
             }
         }

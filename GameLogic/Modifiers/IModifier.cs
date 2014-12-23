@@ -3,5 +3,6 @@
     public interface IModifier<in TType>
     {
         void Apply(TType modType);
+        string GetDisplayText();
     }
 }

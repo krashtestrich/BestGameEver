@@ -1,6 +1,6 @@
 ﻿namespace GameLogic.Characters.Player
 {
-    public class Player : Character
+    public sealed class Player : Character
     {
         public override int BaseHealth
         {
@@ -14,7 +14,8 @@
 
         public Player()
         {
-            SetCash(100);
+            SetLevel(1);
+            AddCash(100);
         }
     }
 }

@@ -11,6 +11,8 @@
         Mage = 6,
         ArchMage = 7,
         Necromancer = 8,
-        Warlock = 9
+        Warlock = 9,
+        Barbarian = 10,
+        Berzerker = 11
     }
 }

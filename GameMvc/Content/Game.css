@@ -1,4 +1,45 @@
-﻿div.charEquipRow {
+﻿
+/* General Reusable styles...*/
+span.warningText, span.emphasiseNegativeText {
+    color: red;
+    font-weight: bold;
+}
+
+span.emphasisePositiveText {
+    color: #70E270;
+    font-weight: bold;
+}
+
+span.emphasiseText {
+    font-weight: bold;
+}
+
+span.labelTextContainer {
+    margin-bottom: 10px;
+}
+
+div.centeredTextContainer {
+    text-align: center;
+}
+
+span.centeredText {
+    display: inline-block;
+}
+
+span.boomText {
+    font-weight: bold;
+    font-size: 14px;
+    color: #000000;
+}
+
+div.borderedContainer {
+    border: 1px solid #000000;
+    padding: 5px;
+    margin: 10px;
+}
+
+/* Character area...*/
+div.charEquipRow {
     height: 100px;
     margin-bottom: 5px;
     width: 650px;
@@ -25,6 +66,64 @@ span.charEquipTitle {
     font-weight: bold;
 }
 
+div.skillTreePathContainer {
+    float: left;
+    border: 1px dashed #5A5A5A;
+    margin-right: 10px;
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+    color: #5A5A5A;
+}
+
+div.skillTreePathContainerActive {
+    border: 1px solid #FFFFFF;
+    color: #FFFFFF;
+}
+
+div.skillTreePathContainerHover {
+    border: 2px solid #70E270;
+    color: #70E270;   
+}
+
+span.skillTreeBaseHeading {
+    display: inline-block;
+    width: 100%;
+}
+
+span.skillTreePathHeading {
+    display: block;
+    max-width: 100px;
+    margin-bottom: 5px;
+}
+
+div.skillPathContainer {
+    border: 1px dashed #5A5A5A;
+    color: #5A5A5A;
+    padding: 5px;
+    text-align: center;
+    min-width: 50px;
+    min-height: 100px;
+    float: left;
+    margin-top: 5px;
+    margin-right: 10px;
+}
+
+span.skillPathModifier {
+    display: inline-block;
+}
+
+div.skillPathContent li {
+    text-align: left;
+}
+
+div.skillTreeHeadingText {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+
+/* Arena area... */
 #arenaFloor {
     border: 1px solid #000000;
     width: 350px;
@@ -79,3 +178,10 @@ img.player {
     margin-right: auto;
 }
 
+/* Tournament Area */
+div.versusContainer {
+    padding: 15px;
+    border: 1px solid #000000;
+    margin: 10px;
+    width: 150px;
+}

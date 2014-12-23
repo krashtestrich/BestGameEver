@@ -1,6 +1,6 @@
 ﻿using GameLogic.Arena;
 using GameLogic.Characters;
-using GameLogic.Equipment;
+using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Helpers;
 
 namespace GameLogic.Actions.Attacks
@@ -35,11 +35,11 @@ namespace GameLogic.Actions.Attacks
 
         public virtual void Perform(IGameEntity source)
         {
-            var weaponDamage = ((Weapon) PerformedWith).GetDamage();
+            var weaponDamage = ((Equipment.Weapons.Weapon) PerformedWith).GetDamage();
             var modifier = new ThreadSafeRandom().Next(DamageFromModifier, DamageToModifier);
             var damage = modifier > 0 ? weaponDamage*(modifier/100) : weaponDamage;
-            //TODO : Make more sophisticated.
-            ((Character)source.TargettedTile.GetTileEntity()).TakePhysicalDamage(damage);
+            damage = DamageBlockHelper.GetPhysicalDamage((Character)source, damage);
+            DamageBlockHelper.TakePhysicalDamage((Character)source.TargettedTile.GetTileEntity(), damage);
         }
 
         public virtual bool CanBePerformed(IGameEntity source)

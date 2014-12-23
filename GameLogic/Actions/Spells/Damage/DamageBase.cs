@@ -1,5 +1,6 @@
 ﻿using GameLogic.Arena;
 using GameLogic.Characters;
+using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Helpers;
 
 namespace GameLogic.Actions.Spells.Damage
@@ -9,8 +10,8 @@ namespace GameLogic.Actions.Spells.Damage
         public virtual void Perform(IGameEntity source)
         {
             var damage = new ThreadSafeRandom().Next(HitsForFrom, HitsForTo);
-            //TODO : Make more sophisticated.
-            ((Character)source.TargettedTile.GetTileEntity()).TakePhysicalDamage(damage);
+            damage = DamageBlockHelper.GetSpellDamage((Character)source, damage);
+            ((Character)source.TargettedTile.GetTileEntity()).TakeSpellDamage(damage);
             ((Character)source).LoseMana(ManaCost);
         }
 

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using GameLogic.AI;
+using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Enums;
 using GameLogic.Equipment;
+using GameLogic.Equipment.Shields;
+using GameLogic.Equipment.Weapons;
 using GameLogic.Helpers;
 using GameLogic.SkillTree.Paths;
 
@@ -78,25 +81,63 @@ namespace GameLogic.Characters.Bots
         {
             var s = new Shop.Shop();
             var affordableWeapons = s.Equipment.Where(i => i is Weapon && i.Price <= Cash).ToList();
-            var weapon =  affordableWeapons[new ThreadSafeRandom().Next(0, affordableWeapons.Count)];
-            PurchaseEquipment(weapon);
+            var weapon = _equipmentBuyersByClass.ContainsKey(CurrentClass.GetValueOrDefault())
+                ? _equipmentBuyersByClass[CurrentClass.GetValueOrDefault()].Invoke(this, affordableWeapons)
+                : _equipmentBuyersByClass[CurrentPath.BasePath].Invoke(this, affordableWeapons);
+            EquipmentHelper.PurchaseEquipment(this, weapon);
 
             if (weapon.Slots.Count == 1)
             {
                 var affordableShield = s.Equipment.Where(i => i is Shield && i.Price <= Cash).ToList();
-                var shield = affordableShield[new ThreadSafeRandom().Next(0, affordableShield.Count)];
-                PurchaseEquipment(shield);
+                var shield = _equipmentBuyersByClass.ContainsKey(CurrentClass.GetValueOrDefault())
+                ? _equipmentBuyersByClass[CurrentClass.GetValueOrDefault()].Invoke(this, affordableShield)
+                : _equipmentBuyersByClass[CurrentPath.BasePath].Invoke(this, affordableShield);
+                EquipmentHelper.PurchaseEquipment(this, shield);
             }
         }
 
-        #endregion
+        private readonly Dictionary<SkillBranches, Func<ICharacter, List<IBuyableEquipment>, IBuyableEquipment>> _equipmentBuyersByClass = 
+            new Dictionary<SkillBranches, Func<ICharacter, List<IBuyableEquipment>, IBuyableEquipment>>
+            {
+                {
+                     SkillBranches.Wizard, (c, e) =>
+                     {
+                         if (!c.CharacterEquipment.Exists(i => i is Weapon))
+                         {
+                             var equip = e.Where(i => i.EquipmentType == EquipmentType.OneHandedWeapon
+                                                      && i.EquipmentSubTypes.IndexOf(EquipmentSubType.Caster) > -1).ToList();
+                             return equip[new ThreadSafeRandom().Next(0, equip.Count)];
+                         }
+                         else
+                         {
+                             var equip = e.Where(i => i.EquipmentType == EquipmentType.Shield
+                                                      && i.EquipmentSubTypes.IndexOf(EquipmentSubType.Caster) > -1).ToList();
+                             return equip[new ThreadSafeRandom().Next(0, equip.Count)];
+                         }
+                     }
+                 },
+                 {
+                    SkillBranches.Fighter, (c, e) =>
+                        {
+                            if (!c.CharacterEquipment.Exists(i => i is Weapon))
+                            {
+                                var equip = e.Where(i => i.EquipmentType == EquipmentType.OneHandedWeapon || i.EquipmentType == EquipmentType.TwoHandedWeapon
+                                                         && (i.EquipmentSubTypes.IndexOf(EquipmentSubType.DefensiveFighter) > -1
+                                                            || i.EquipmentSubTypes.IndexOf(EquipmentSubType.OffensiveFighter) > -1)).ToList();
+                                return equip[new ThreadSafeRandom().Next(0, equip.Count)];
+                            }
+                            else
+                            {
+                                var equip = e.Where(i => i.EquipmentType == EquipmentType.Shield
+                                                        && (i.EquipmentSubTypes.IndexOf(EquipmentSubType.DefensiveFighter) > -1
+                                                            || i.EquipmentSubTypes.IndexOf(EquipmentSubType.OffensiveFighter) > -1)).ToList();
+                                return equip[new ThreadSafeRandom().Next(0, equip.Count)];
+                            }
+                        } 
+                    }
+            }; 
 
-        #region Action Choices
-
-        public void PreferredActions()
-        {
-            var actionType = ActionChoosers.GetPreferredActionType(this);
-        }
         #endregion
+        
     }
 }

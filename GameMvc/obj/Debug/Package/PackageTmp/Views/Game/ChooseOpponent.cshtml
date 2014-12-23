@@ -1,0 +1,20 @@
+﻿@model GameMvc.Models.UiAvailableOpponentsModel
+           
+@section scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+}
+
+@{
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <ul id="opponentList">
+        @foreach (var o in Model.Opponents)
+        {
+            <li>@Html.ActionLink(@o.Name, "ChooseOpponent", "Game", new { name = @o.Name }, null)</li>
+        }
+    </ul>
+    <br/>
+    @Html.ActionLink("I'm scared - get me out of here!", "Character", "Home")
+</div>

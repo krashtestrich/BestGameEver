@@ -13,7 +13,7 @@ namespace GameLogic.Helpers
             if (_local == null)
             {
                 int seed;
-                lock (Global) ;
+                lock (Global)
                 {
                     seed = Global.Next();
                 }

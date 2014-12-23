@@ -106,12 +106,9 @@ G:\Websites\Game\BestGameEver\GameMvc\bin\Microsoft.Web.Infrastructure.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\Microsoft.Web.WebPages.OAuth.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\Newtonsoft.Json.dll
-G:\Websites\Game\BestGameEver\GameMvc\bin\System.Net.Http.Formatting.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Spatial.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Helpers.dll
-G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Http.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Http.OData.dll
-G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Http.WebHost.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Mvc.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Optimization.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Razor.dll
@@ -125,10 +122,7 @@ G:\Websites\Game\BestGameEver\GameMvc\bin\WebMatrix.WebData.dll
 G:\Websites\Game\BestGameEver\GameMvc\bin\GameLogic.pdb
 G:\Websites\Game\BestGameEver\GameMvc\bin\EntityFramework.xml
 G:\Websites\Game\BestGameEver\GameMvc\bin\Newtonsoft.Json.xml
-G:\Websites\Game\BestGameEver\GameMvc\bin\System.Net.Http.Formatting.xml
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Helpers.xml
-G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Http.xml
-G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Http.WebHost.xml
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Mvc.xml
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Razor.xml
 G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.WebPages.xml

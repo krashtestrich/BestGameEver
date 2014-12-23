@@ -1,5 +1,9 @@
 ﻿using System;
+using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Characters.Player;
+using GameLogic.Equipment.Shields;
+using GameLogic.Modifiers.Character.MagicDamage;
+using GameLogic.SkillTree.Paths.WizardPath;
 using GameLogic.Slots;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,7 +17,7 @@ namespace GameUnitTest.CharacterTests
         {
             var c = new Player();
             var e = new TestHelpers.TestWeapon();
-            Assert.IsTrue(c.CanEquipEquipment(e));
+            Assert.IsTrue(EquipmentHelper.CanEquipEquipment(c, e));
         }
 
         [TestMethod]
@@ -24,7 +28,7 @@ namespace GameUnitTest.CharacterTests
             e.AddSlotType(new Hand());
             e.AddSlotType(new Hand());
             e.AddSlotType(new Hand());
-            Assert.IsFalse(c.CanEquipEquipment(e));
+            Assert.IsFalse(EquipmentHelper.CanEquipEquipment(c, e));
         }
 
         [TestMethod]
@@ -32,7 +36,7 @@ namespace GameUnitTest.CharacterTests
         {
             var c = new Player();
             var e = new TestHelpers.TestWeapon();
-            c.EquipEquipment(e);
+            EquipmentHelper.EquipEquipment(c, e);
             Assert.IsTrue(c.CharacterEquipment.Exists(x => x == e));
         }
 
@@ -42,7 +46,7 @@ namespace GameUnitTest.CharacterTests
             var c = new Player();
             var e = new TestHelpers.TestWeapon();
             e.AddSlotType(new Hand());
-            c.EquipEquipment(e);
+            EquipmentHelper.EquipEquipment(c, e);
             Assert.IsTrue(c.Slots.Exists(x => !x.SlotFree && x.SlotEquipmentName == e.Name));
         }
 
@@ -55,7 +59,7 @@ namespace GameUnitTest.CharacterTests
             e.AddSlotType(new Hand());
             e.AddSlotType(new Hand());
             e.AddSlotType(new Hand());
-            c.EquipEquipment(e);
+            EquipmentHelper.EquipEquipment(c, e);
         }
 
         [TestMethod]
@@ -63,8 +67,8 @@ namespace GameUnitTest.CharacterTests
         {
             var c = new Player();
             var e = new TestHelpers.TestWeapon();
-            c.EquipEquipment(e);
-            c.UnEquipEquipment(e);
+            EquipmentHelper.EquipEquipment(c, e);
+            EquipmentHelper.UnEquipEquipment(c, e);
             Assert.IsFalse(c.CharacterEquipment.Exists(x => x == e));
         }
 
@@ -73,8 +77,8 @@ namespace GameUnitTest.CharacterTests
         {
             var c = new Player();
             var e = new TestHelpers.TestWeapon();
-            c.EquipEquipment(e);
-            c.UnEquipEquipment(e);
+            EquipmentHelper.EquipEquipment(c, e);
+            EquipmentHelper.UnEquipEquipment(c, e);
             Assert.IsFalse(c.Slots.Exists(x => !x.SlotFree || x.SlotEquipmentName == e.Name));
         }
 
@@ -87,9 +91,14 @@ namespace GameUnitTest.CharacterTests
         }
 
         [TestMethod]
-        public void ShouldCalculateAttackActionDamage()
+        public void ShouldApplyEquipmentModifiersToCharacter()
         {
-            
+            var c = new Player();
+            c.LevelUp();
+            c.ChooseSkill(new PathOfTheWizard());
+            var e = new CastersShield();
+            EquipmentHelper.EquipEquipment(c, e);
+            Assert.IsTrue(c.CharacterModifiers.Exists(i => i is MagicDamagePercentage));
         }
     }
 }

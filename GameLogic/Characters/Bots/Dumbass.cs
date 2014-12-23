@@ -9,7 +9,7 @@
 
         public override int BaseMana
         {
-            get { return 50; }
+            get { return 0; }
         }
 
         public override int Worth

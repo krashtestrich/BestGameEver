@@ -11,7 +11,7 @@ namespace GameMvc.Controllers
         public ActionResult TargetTile(UiTileSelectModel model)
         {
             var g = (Game) Session["Game"];
-            var actions = g.Player.TargetTileAndSelectActions(g.Arena.SelectFloorTile(new ArenaFloorPosition(model.XCoord, model.YCoord)));
+            var actions = g.Player.TargetTileAndSelectActions(g.CurrentBattleDetails.Arena.SelectFloorTile(new ArenaFloorPosition(model.XCoord, model.YCoord)));
             Session["Game"] = g;
             return View("~/Views/Game/Arena/Actions.cshtml", new UiActionModel
             {

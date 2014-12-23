@@ -1,0 +1,48 @@
+﻿
+@using GameLogic.Enums
+@model GameLogic.Tournament.BattleDetails
+@{
+    Layout = null;
+}
+
+<div class="versusContainer">
+    <div class="centeredTextContainer">
+        @if (Model.BattleStatus == BattleStatus.BattleOver)
+        {
+            if (Model.WinningTeam == Model.Participants.ElementAt(0).Character.GetAlliance())
+             {
+                 
+                 <span class="emphasisePositiveText">WIN </span>
+             }
+            if (Model.WinningTeam == Model.Participants.ElementAt(1).Character.GetAlliance())
+            {
+                <span class="emphasiseNegativeText">LOSS </span>
+            }
+
+        }<span class="centeredText">@Model.Participants.ElementAt(0).Character.Name</span>
+    </div>
+    <div class="centeredTextContainer">
+        <span class="centeredText boomText">VS</span>
+    </div>
+    <div class="centeredTextContainer">
+        @if (Model.BattleStatus == BattleStatus.BattleOver)
+        {
+            if (Model.WinningTeam == Model.Participants.ElementAt(1).Character.GetAlliance())
+            {
+
+                <span class="emphasisePositiveText">WIN </span>
+            }
+            if (Model.WinningTeam == Model.Participants.ElementAt(0).Character.GetAlliance())
+            {
+                <span class="emphasiseNegativeText">LOSS </span>
+            }
+
+        }<span class="centeredText">@Model.Participants.ElementAt(1).Character.Name</span>
+    </div>
+    @if (Model.BattleStatus == BattleStatus.NotStarted)
+    {
+        <div class="">
+            
+        </div>
+    }
+</div>

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using GameLogic.Actions.Spells.Damage;
 using GameLogic.Characters;
 using GameLogic.Enums;
 using GameLogic.Modifiers;
+using GameLogic.Modifiers.Character.Mana;
 
 namespace GameLogic.SkillTree.Paths.WizardPath.MagePath
 {
@@ -44,7 +46,7 @@ namespace GameLogic.SkillTree.Paths.WizardPath.MagePath
             {
                 return new List<IModifier<ICharacter>>
                 {
-                    
+                    new ManaBonusPercentage(50),
                 };
             }
         }
@@ -52,6 +54,11 @@ namespace GameLogic.SkillTree.Paths.WizardPath.MagePath
         public SkillBranches BasePath
         {
             get { return SkillBranches.Wizard; }
+        }
+
+        public PathOfTheMage()
+        {
+            Actions.Add(new MindBlast());
         }
     }
 }

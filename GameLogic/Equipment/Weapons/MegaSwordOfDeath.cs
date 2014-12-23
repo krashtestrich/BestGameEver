@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GameLogic.Actions;
 using GameLogic.Actions.Attacks;
+using GameLogic.Enums;
 using GameLogic.Slots;
 
 namespace GameLogic.Equipment.Weapons
@@ -10,6 +11,22 @@ namespace GameLogic.Equipment.Weapons
         public override string Name
         {
             get { return "Mega Sword of Death"; }
+        }
+
+        public override List<EquipmentSubType> EquipmentSubTypes
+        {
+            get
+            {
+                return new List<EquipmentSubType>
+                {
+                    EquipmentSubType.OffensiveFighter
+                };
+            }
+        }
+
+        public override EquipmentType EquipmentType
+        {
+            get { return EquipmentType.TwoHandedWeapon; }
         }
 
         public override int BaseDamage

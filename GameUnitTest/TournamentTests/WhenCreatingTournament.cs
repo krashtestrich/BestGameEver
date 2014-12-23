@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using GameLogic.Characters.Bots;
 using GameLogic.Game;
 using GameLogic.SkillTree.Paths.FighterPath;
@@ -29,7 +30,7 @@ namespace GameUnitTest.TournamentTests
         {
             var t = new Tournament();
             t.Populate();
-            Assert.IsTrue(t.Participants.Count == 50);
+            Assert.IsTrue(t.Participants.Count == 128);
         }
 
         [TestMethod]
@@ -44,40 +45,18 @@ namespace GameUnitTest.TournamentTests
         }
 
         [TestMethod]
-        public void ShouldChooseParticipant()
+        public void ShouldChooseBattleDetails()
         {
             var t = new Tournament();
             t.Populate();
             t.Start();
-            Assert.IsNotNull(t.ChooseCombatant());
+            var battleDetails = t.GetNextBattleDetails();
+            Assert.IsNotNull(battleDetails);
         }
 
         [TestMethod]
-        public void ShouldChooseParticipantParticipatedInLeastBattles()
-        {
-            var t = new Tournament();
-            var c1 = new Dumbass();
-            c1.SetName("1");
-            t.Participants.Add(new Participant
-            {
-                Battles = 5,
-                Character = c1,
-                Status = ParticipantStatus.Active
-            });
-            var c2 = new Dumbass();
-            c2.SetName("2");
-            t.Participants.Add(new Participant
-            {
-                Battles = 1,
-                Character = c2,
-                Status = ParticipantStatus.Active
-            });
-            t.Start();
-            Assert.IsTrue(t.ChooseCombatant().Character == c2);
-        }
-
-        [TestMethod]
-        public void ShouldOnlyChooseActiveParticipant()
+        [ExpectedException(typeof(Exception))]
+        public void ShouldThrowExceptionIfTournamentStartedWithoutEnoughValidParticipants()
         {
             var t = new Tournament();
             var c1 = new Dumbass();
@@ -97,34 +76,9 @@ namespace GameUnitTest.TournamentTests
                 Status = ParticipantStatus.KnockedOut
             });
             t.Start();
-            Assert.IsTrue(t.ChooseCombatant().Character == c1);
         }
 
-        [TestMethod]
-        public void ShouldReturnNullIfNoValidParticipantExists()
-        {
-            var t = new Tournament();
-            var c1 = new Dumbass();
-            c1.SetName("1");
-            t.Participants.Add(new Participant
-            {
-                Battles = 5,
-                Character = c1,
-                Status = ParticipantStatus.KnockedOut
-            });
-            var c2 = new Dumbass();
-            c2.SetName("2");
-            t.Participants.Add(new Participant
-            {
-                Battles = 1,
-                Character = c2,
-                Status = ParticipantStatus.KnockedOut
-            });
-            t.Start();
-            Assert.IsNull(t.ChooseCombatant());
-        }
-
-        [TestMethod]
+        [TestMethod, Ignore]
         public void ShouldStartComputerVsComputerTournament()
         { 
             var g = new Game(false);

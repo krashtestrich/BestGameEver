@@ -25,7 +25,8 @@ namespace GameMvc
                         "~/Scripts/Game/PlayerAnimations.js",
                         "~/Scripts/Game/Arena.js",
                         "~/Scripts/Game/Character.js",
-                        "~/Scripts/Game/Game.js"));
+                        "~/Scripts/Game/Game.js",
+                        "~/Scripts/Game/SkillTree.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.

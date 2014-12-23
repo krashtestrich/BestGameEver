@@ -24,19 +24,5 @@ namespace GameUnitTest.BotTests
             b.LevelUp();
             Assert.IsTrue(b.SkillTree.Get().Where(i => i.IsActive).ToList().Count == 2);
         }
-
-        [TestMethod]
-        public void ShouldNotChooseSkillsAtSameLevel()
-        {
-            var b = new Dumbass();
-            b.LevelUp();
-            Assert.IsTrue(b.SkillTree.Get().Where(i => i.IsActive).ToList().Count == 1);
-            b.LevelUp();
-            Assert.IsTrue(b.SkillTree.Get().Where(i => i.IsActive).ToList().Count == 2);
-            b.LevelUp();
-            Assert.IsTrue(b.SkillTree.Get().Where(i => i.IsActive).ToList().Count == 3);
-            b.LevelUp();
-            Assert.IsTrue(b.SkillTree.Get().Where(i => i.IsActive).ToList().Count == 3);
-        }
     }
 }

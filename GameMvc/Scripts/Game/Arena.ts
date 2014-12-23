@@ -14,7 +14,7 @@ module Arena {
         $('div.arenaFloorTile').off('click').on('click', function () {
             Arena.targetTile($(this));
         });
-        Game.checkChooseOpponent();
+        //Game.checkChooseOpponent();
         Game.checkBattleStatus();
     }
 

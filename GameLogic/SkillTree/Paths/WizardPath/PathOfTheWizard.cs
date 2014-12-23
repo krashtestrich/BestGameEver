@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using GameLogic.Actions;
 using GameLogic.Actions.Spells.Damage;
 using GameLogic.Actions.Spells.Heals;
 using GameLogic.Characters;
 using GameLogic.Enums;
 using GameLogic.Modifiers;
+using GameLogic.Modifiers.Character.Block;
 using GameLogic.Modifiers.Character.Mana;
 
 namespace GameLogic.SkillTree.Paths.WizardPath
@@ -45,21 +45,16 @@ namespace GameLogic.SkillTree.Paths.WizardPath
             {
                 return new List<IModifier<ICharacter>>
                 {
-                    new ManaBonusAmount(50)
+                    new ManaBonusAmount(100),
+                    new BlockPercentage(15)
                 };
             }
         }
 
-        public override List<IAction> Actions
+        public PathOfTheWizard()
         {
-            get
-            {
-                return new List<IAction>
-                {
-                    new LittleHeal(),
-                    new SpellSpear()
-                };
-            }
+            Actions.Add(new LittleHeal());
+            Actions.Add(new SpellSpear());    
         }
     }
 }

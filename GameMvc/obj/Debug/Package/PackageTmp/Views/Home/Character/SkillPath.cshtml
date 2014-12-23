@@ -1,0 +1,29 @@
+﻿@using GameMvc.Models
+@model UiSkillPathViewModel
+
+<div class="skillPathContainer">
+    <span class="skillTreePathHeading">@Model.CurrentPath.Name</span>
+
+    <div class="skillPathContent">
+        <ul>
+            @foreach (var mod in Model.CurrentPath.CharacterModifiers)
+            {
+                <li>
+                    <span class="skillPathModifier">
+                        @mod.GetDisplayText()
+                    </span>
+                </li>
+            }
+        </ul>
+    </div>
+
+    @foreach (var subSkill in Model.Paths.Where(i => i.Parent != null && i.Parent.Name == Model.CurrentPath.Name))
+    {
+        var skillPath = new UiSkillPathViewModel
+        {
+            CurrentPath = subSkill,
+            Paths = Model.Paths
+        };
+        Html.RenderPartial("~/Views/Home/Character/SkillPath.cshtml", skillPath);
+    }
+</div>

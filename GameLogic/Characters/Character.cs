@@ -6,10 +6,14 @@ using GameLogic.Actions.Movements;
 using GameLogic.Arena;
 using GameLogic.Enums;
 using GameLogic.Equipment;
+using GameLogic.Equipment.Shields;
 using GameLogic.Modifiers;
 using GameLogic.Modifiers.Character.Armor;
+using GameLogic.Modifiers.Character.Block;
 using GameLogic.Modifiers.Character.Health;
+using GameLogic.Modifiers.Character.MagicDamage;
 using GameLogic.Modifiers.Character.Mana;
+using GameLogic.Modifiers.Character.PhysicalDamage;
 using GameLogic.SkillTree.Paths;
 using GameLogic.Slots;
 using MoreLinq;
@@ -67,7 +71,6 @@ namespace GameLogic.Characters
 
         #endregion
 
-
         #region Mana
         private int _currentMana;
 
@@ -114,6 +117,7 @@ namespace GameLogic.Characters
         {
             BonusArmor += amount;
         }
+
         public int Armor
         {
             get { return _currentArmor; }
@@ -147,6 +151,97 @@ namespace GameLogic.Characters
         public void GainArmor(int amount)
         {
             _currentArmor = Armor + amount;
+        }
+        #endregion
+
+        #region Physical Damage
+
+        public int PhysicalDamage { get; protected set; }
+        public int PhysicalDamageBonusPercent { get; protected set; }
+
+        public void AddPhysicalDamageBonusPercent(int amount)
+        {
+            PhysicalDamageBonusPercent += amount;
+        }
+
+        public void AddPhysicalDamage(int amount)
+        {
+            PhysicalDamage += amount;
+        }
+
+        public void SetPhysicalDamage()
+        {
+            PhysicalDamage = 0;
+            PhysicalDamageBonusPercent = 0;
+            foreach (var m in _modifiers.Where(i => i is PhysicalDamageBase))
+            {
+                m.Apply(this);
+            }
+        }
+
+        #endregion
+
+        #region Magic Damage
+        public int MagicDamage { get; protected set; }
+        public int MagicDamageBonusPercent { get; protected set; }
+
+        public void AddMagicDamageBonusPercent(int amount)
+        {
+            MagicDamageBonusPercent += amount;
+        }
+
+        public void AddMagicDamage(int amount)
+        {
+            MagicDamage += amount;
+        }
+
+        public void SetMagicDamage()
+        {
+            MagicDamage = 0;
+            MagicDamageBonusPercent = 0;
+            foreach (var m in _modifiers.Where(i => i is MagicDamageBase))
+            {
+                m.Apply(this);
+            }
+        }
+        #endregion
+
+        #region Block
+
+        private int _currentBlockAmount;
+        public int BonusBlockAmount { get; protected set; }
+
+        public void AddBonusBlockAmount(int amount)
+        {
+            BonusBlockAmount += amount;
+        }
+
+        public int BlockAmount
+        {
+            get
+            {
+                return _currentBlockAmount;
+            }
+        }
+
+        public int BaseBlockAmount
+        {
+            get
+            {
+                return CharacterEquipment == null
+                                    ? 0
+                                    : CharacterEquipment.Where(i => i is Shield).Cast<Shield>().Sum(i => i.BlockValue);
+            }
+        }
+
+        public void SetBlockAmount()
+        {
+            BonusBlockAmount = 0;
+            foreach (var m in _modifiers.Where(i => i is BlockBase))
+            {
+                m.Apply(this);
+            }
+            _currentBlockAmount = BonusBlockAmount + BaseBlockAmount;
         }
         #endregion
 
@@ -194,50 +289,6 @@ namespace GameLogic.Characters
 
         #region Equipment
         private readonly List<IBuyableEquipment> _characterEquipment;
-
-        public bool CanEquipEquipment(IBuyableEquipment equipment)
-        {
-            var uniqueSlots = equipment.Slots.Distinct();
-
-            foreach (var e in uniqueSlots)
-            {
-                if (_slots.Count(i => i.SlotFree && i.SlotType == e.SlotType) < equipment.Slots.Select(x => x.SlotType == e.SlotType).Count())
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public void EquipEquipment(IBuyableEquipment equipment)
-        {
-            if (CanEquipEquipment(equipment))
-            {
-                _characterEquipment.Add(equipment);
-                foreach (var s in equipment.Slots)
-                {
-                    _slots.Find(sf => sf.SlotFree && sf.SlotType == s.SlotType).SetSlotFree(false, equipment.Name);
-                }
-
-                if (equipment is IArmor)
-                {
-                    SetArmor();
-                }
-            }
-            else
-            {
-                throw new Exception();
-            }
-        }
-
-        public void UnEquipEquipment(IBuyableEquipment equipment)
-        {
-            _characterEquipment.Remove(equipment);
-            foreach (var s in equipment.Slots)
-            {
-                _slots.Find(sf => !sf.SlotFree && sf.SlotType == s.SlotType).SetSlotFree(true, null);
-            }
-        }
 
         public List<IAction> CurrentAvailableActions { get; private set; }
 
@@ -304,19 +355,6 @@ namespace GameLogic.Characters
 
         #region Damage/Block Calculations
 
-        public void TakePhysicalDamage(int damage)
-        {
-            var damageToBlock = (damage * 67) / 100;
-            var blockAmount = damageToBlock >= Armor
-                ? Armor
-                : damageToBlock - Armor < 0
-                        ? damageToBlock 
-                        : damageToBlock - Armor;
-            LoseArmor(blockAmount);
-            var damageToTake = (damage - damageToBlock) + (damageToBlock - blockAmount);
-            LoseHealth(damageToTake);
-        }
-
         public void TakeSpellDamage(int damage)
         {
             LoseHealth(damage);
@@ -358,6 +396,7 @@ namespace GameLogic.Characters
 
         public virtual void SetLevel(int level)
         {
+            SkillPoints = 0;
             _level = level;
             var levelsToAdd = 0;
             while (level > 0)
@@ -377,7 +416,7 @@ namespace GameLogic.Characters
 
         #region Skill Points
 
-        private void AddSkillPoints(int points)
+        public void AddSkillPoints(int points)
         {
             SkillPoints += points;
         }
@@ -401,11 +440,23 @@ namespace GameLogic.Characters
             }
             _skillTree.TakeSkill(skill, this);
             SkillPoints -= skill.Cost;
+            SetAttributes();
         }
 
-        public SkillBranches CurrentClass
+        public SkillBranches? CurrentClass
         {
-            get { return SkillTree.Get().Where(i => i.IsActive).OrderByDescending(i => i.Level).First().Path; }
+            get { return CurrentPath.Path; }
+        }
+
+        public IPath CurrentPath
+        {
+            get
+            {
+                var activeSkills = SkillTree.Get().Where(i => i.IsActive).ToList();
+                return activeSkills.Any()
+                    ? activeSkills.OrderByDescending(i => i.Level).First()
+                    : new PathOfTheNothing();
+            }
         }
 
         #endregion
@@ -424,38 +475,13 @@ namespace GameLogic.Characters
         {
             
         }
-
-        public bool CanAffordEquipment(IBuyableEquipment e)
-        {
-            return (Cash >= e.Price);
-        }
-
-        public void PurchaseEquipment(IBuyableEquipment e)
-        {
-            if (CanAffordEquipment(e) && CanEquipEquipment(e))
-            {
-                Cash -= e.Price;
-                EquipEquipment(e);
-            }
-            else
-            {
-                throw new Exception("Player tried to purchase unaffordable or unwearable Equipment.");
-            }
-        }
-
-        public void SellEquipment(IBuyableEquipment e)
-        {
-            Cash += (int)Math.Round(e.Price * 0.75, MidpointRounding.ToEven);
-            UnEquipEquipment(e);
-        }
+        
         #endregion
 
         protected Character()
         {
             _modifiers = new List<IModifier<ICharacter>>();
-            SetHealth();
-            SetMana();
-            SetArmor();
+            SetAttributes();
             _characterEquipment = new List<IBuyableEquipment>();
             _skillTree = new SkillTree.SkillTree();
 
@@ -471,6 +497,15 @@ namespace GameLogic.Characters
             {
                 new Run()
             };
+        }
+
+        public void SetAttributes()
+        {
+            SetHealth();
+            SetMana();
+            SetArmor();
+            SetPhysicalDamage();
+            SetBlockAmount();
         }
     }
 }

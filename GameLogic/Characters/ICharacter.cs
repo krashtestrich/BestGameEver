@@ -4,6 +4,7 @@ using GameLogic.Arena;
 using GameLogic.Enums;
 using GameLogic.Equipment;
 using GameLogic.Modifiers;
+using GameLogic.SkillTree.Paths;
 
 namespace GameLogic.Characters
 {
@@ -45,6 +46,32 @@ namespace GameLogic.Characters
         void GainArmor(int amount);
         #endregion
 
+        #region Physical Damage
+
+        int PhysicalDamage { get; }
+        int PhysicalDamageBonusPercent { get; }
+        void AddPhysicalDamage(int amount);
+        void AddPhysicalDamageBonusPercent(int amount);
+        void SetPhysicalDamage();
+
+        #endregion
+
+        #region Magic Damage
+        int MagicDamage { get; }
+        int MagicDamageBonusPercent { get; }
+        void AddMagicDamage(int amount);
+        void AddMagicDamageBonusPercent(int amount);
+        void SetMagicDamage();
+        #endregion
+
+        #region Block
+        int BlockAmount { get; }
+        int BonusBlockAmount { get; }
+        int BaseBlockAmount { get; }
+        void AddBonusBlockAmount(int amount);
+        void SetBlockAmount();
+        #endregion
+
         #region Alliance
         Alliance GetAlliance();
         void ChangeAlliance(Alliance a);
@@ -70,10 +97,6 @@ namespace GameLogic.Characters
         {
             get;
         }
-
-        bool CanEquipEquipment(IBuyableEquipment equipment);
-        void EquipEquipment(IBuyableEquipment equipment);
-        void UnEquipEquipment(IBuyableEquipment equipment);
         #endregion
 
         #region Actions
@@ -96,7 +119,9 @@ namespace GameLogic.Characters
 
         #region SkillTree
         SkillTree.SkillTree SkillTree { get; }
-        SkillBranches CurrentClass { get; }
+        SkillBranches? CurrentClass { get; }
+        IPath CurrentPath { get; }
+
         #endregion
 
         #region Modifiers 
@@ -116,6 +141,8 @@ namespace GameLogic.Characters
         void LeaveArena();
 
         #endregion
+
+        void SetAttributes();
 
     }
 }

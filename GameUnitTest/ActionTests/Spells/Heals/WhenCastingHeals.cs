@@ -4,6 +4,7 @@ using GameLogic.Characters.Bots;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Game;
+using GameLogic.Tournament;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GameUnitTest.ActionTests.Spells.Heals
@@ -14,12 +15,20 @@ namespace GameUnitTest.ActionTests.Spells.Heals
         [TestMethod]
         public void ShouldHaveHealActionOnSelf()
         {
-            var g = new Game {Player = new Player()};
-            g.Player.AddAction(new LittleHeal());;
-            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
+            var g = new Game
+            {
+                CurrentBattleDetails = new BattleDetails
+                {
+                    BattleMode = BattleMode.PlayerVsComputer,
+                    BattleStatus = BattleStatus.InBattle,
+                    BattleTurn = Alliance.TeamOne
+                },
+                Player = new Player()
+            };
+            g.Player.AddAction(new LittleHeal());
+            g.CurrentBattleDetails.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
             var c = new Dumbass();
-            g.Arena.AddCharacterToArena(c, Alliance.TeamTwo);
-            g.StartBattle(BattleMode.PlayerVsComputer);
+            g.CurrentBattleDetails.Arena.AddCharacterToArena(c, Alliance.TeamTwo);
             var actions = g.Player.TargetTileAndSelectActions(g.Player.ArenaLocation);
             Assert.IsTrue(actions.Exists(i => i is LittleHeal));
         }
@@ -27,12 +36,20 @@ namespace GameUnitTest.ActionTests.Spells.Heals
         [TestMethod]
         public void ShouldHealSelfWhenHealCast()
         {
-            var g = new Game { Player = new Player() };
-            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
-            g.Player.AddAction(new LittleHeal()); ;
+            var g = new Game
+            {
+                CurrentBattleDetails = new BattleDetails
+                {
+                    BattleMode = BattleMode.PlayerVsComputer,
+                    BattleStatus = BattleStatus.InBattle,
+                    BattleTurn = Alliance.TeamOne
+                },
+                Player = new Player()
+            };
+            g.CurrentBattleDetails.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
+            g.Player.AddAction(new LittleHeal());
             var c = new Dumbass();
-            g.Arena.AddCharacterToArena(c, Alliance.TeamTwo);
-            g.StartBattle(BattleMode.PlayerVsComputer);
+            g.CurrentBattleDetails.Arena.AddCharacterToArena(c, Alliance.TeamTwo);
             var actions = g.Player.TargetTileAndSelectActions(g.Player.ArenaLocation);
             g.PerformPlayerAction(actions.First(i => i is LittleHeal));
             Assert.IsTrue(g.Player.Health > 100);
@@ -41,12 +58,20 @@ namespace GameUnitTest.ActionTests.Spells.Heals
         [TestMethod]
         public void ShouldRemoveManaWhenSpellCast()
         {
-            var g = new Game { Player = new Player() };
-            g.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
-            g.Player.AddAction(new LittleHeal()); ;
+            var g = new Game
+            {
+                CurrentBattleDetails = new BattleDetails
+                {
+                    BattleMode = BattleMode.PlayerVsComputer,
+                    BattleStatus = BattleStatus.InBattle,
+                    BattleTurn = Alliance.TeamOne
+                },
+                Player = new Player()
+            };
+            g.CurrentBattleDetails.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
+            g.Player.AddAction(new LittleHeal());
             var c = new Dumbass();
-            g.Arena.AddCharacterToArena(c, Alliance.TeamTwo);
-            g.StartBattle(BattleMode.PlayerVsComputer);
+            g.CurrentBattleDetails.Arena.AddCharacterToArena(c, Alliance.TeamTwo);
             var actions = g.Player.TargetTileAndSelectActions(g.Player.ArenaLocation);
             g.PerformPlayerAction(actions.First(i => i is LittleHeal));
             Assert.IsTrue(g.Player.Mana < 50);

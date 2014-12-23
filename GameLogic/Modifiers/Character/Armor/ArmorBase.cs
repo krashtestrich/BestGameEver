@@ -2,7 +2,7 @@
 
 namespace GameLogic.Modifiers.Character.Armor
 {
-    public abstract class ArmorBase : ModifiersBase<ICharacter>, IModifier<ICharacter>
+    public abstract class ArmorBase : ModifiersBase<ICharacter>
     {
         protected int Percentage;
         protected int Amount;

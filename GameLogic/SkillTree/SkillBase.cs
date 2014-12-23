@@ -40,12 +40,11 @@ namespace GameLogic.SkillTree
             }
         }
 
-        public virtual List<IAction> Actions
+        public List<IAction> Actions { get; protected set; }
+
+        protected SkillBase()
         {
-            get
-            {
-                return new List<IAction>();
-            }
+            Actions = new List<IAction>();
         }
     }
 }

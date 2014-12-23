@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using GameLogic.Actions.Spells.Heals;
+using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Characters.Player;
 using GameLogic.Equipment.Weapons;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -36,7 +37,7 @@ namespace GameUnitTest.CharacterTests
             {
                 p.AddCash(s.Price);
             }
-            Assert.IsTrue(p.CanAffordEquipment(s));
+            Assert.IsTrue(EquipmentHelper.CanAffordEquipment(p, s));
         }
 
         [TestMethod]
@@ -48,7 +49,7 @@ namespace GameUnitTest.CharacterTests
             {
                 p.SetCash(s.Price-100);
             }
-            Assert.IsFalse(p.CanAffordEquipment(s));
+            Assert.IsFalse(EquipmentHelper.CanAffordEquipment(p, s));
         }
 
         [TestMethod]

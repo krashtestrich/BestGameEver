@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Equipment.Shields;
@@ -33,7 +34,7 @@ namespace GameMvc.Controllers
         public ActionResult CheckChooseOpponent()
         {
             var game = (Game) Session["Game"];
-            if (game.GetBattleStatus() == BattleStatus.NotStarted)
+            if (game.CurrentBattleDetails.BattleStatus == BattleStatus.NotStarted)
             {
                 return View("~/Views/Game/ChooseOpponent.cshtml", new UiAvailableOpponentsModel
                 {
@@ -47,12 +48,12 @@ namespace GameMvc.Controllers
         public ActionResult CheckBattleStatus()
         {
             var game = (Game)Session["Game"];
-            if (game.GetBattleStatus() != BattleStatus.BattleOver)
+            if (game.CurrentBattleDetails.BattleStatus != BattleStatus.BattleOver)
             {
                 return null;
             }
 
-            var br = game.BuildBattleReport();
+            var br = game.BuildBattleReport(game.CurrentBattleDetails);
             return View("~/Views/Game/BattleOver.cshtml", br);
         }
 
@@ -68,7 +69,7 @@ namespace GameMvc.Controllers
         public ActionResult ChooseOpponent(string name)
         {
             var game = (Game) Session["Game"];
-            if (game.GetBattleStatus() != BattleStatus.NotStarted)
+            if (game.CurrentBattleDetails.BattleStatus != BattleStatus.NotStarted)
             {
                 throw new Exception("WTF YOU CANT CHOOSE AN OPPONENT YOU ALREADY HAVE ONE");
             }
@@ -78,13 +79,12 @@ namespace GameMvc.Controllers
             {
                 throw new Exception("THAT OPPONENT DOESNT EXIST WHAT ARE YOU DOING");
             }
-            opponent.EquipEquipment(new PieceofFoil());
-            opponent.EquipEquipment(new Sword());
+            EquipmentHelper.EquipEquipment(opponent, new PieceofFoil());
+            EquipmentHelper.EquipEquipment(opponent, new Sword());
             game.ChooseOpponent(opponent);
-            game.StartBattle(BattleMode.PlayerVsComputer);
             Session["Game"] = game;
 
-            return View("~/Views/Home/Arena.cshtml", game);
+            return View("~/Views/Home/Arena.cshtml", game.CurrentBattleDetails);
         }
 
         public ActionResult PerformPlayerAction(string actionName)
@@ -92,9 +92,9 @@ namespace GameMvc.Controllers
             var game = (Game) Session["Game"];
             var action = game.Player.CurrentAvailableActions.First(i => i.Name == actionName);
             game.PerformPlayerAction(action);
-            game.PerformAITurn(Alliance.TeamTwo);
+            game.PerformAITurn();
             Session["Game"] = game;
-            return View("~/Views/Home/Arena.cshtml", game);
+            return View("~/Views/Home/Arena.cshtml", game.CurrentBattleDetails);
         }
     }
 }

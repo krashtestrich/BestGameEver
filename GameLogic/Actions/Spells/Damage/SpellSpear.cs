@@ -9,12 +9,12 @@
 
         public override int HitsForFrom
         {
-            get { return 5; }
+            get { return 15; }
         }
 
         public override int HitsForTo
         {
-            get { return 15; }
+            get { return 35; }
         }
 
         public override int MinRange

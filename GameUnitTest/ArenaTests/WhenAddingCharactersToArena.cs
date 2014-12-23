@@ -1,5 +1,6 @@
 ﻿using GameLogic.Arena;
 using GameLogic.Characters.Bots;
+using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Equipment.Weapons;
@@ -16,11 +17,11 @@ namespace GameUnitTest.ArenaTests
             var arena = new Arena();
             arena.BuildArenaFloor(5);
             var p = new Player();
-            p.EquipEquipment(new Sword());
+            EquipmentHelper.EquipEquipment(p, new Sword());
             arena.AddCharacterToArena(p, Alliance.TeamOne);
             var b = new Dumbass();
             b.SetName("Dumbass Bot");
-            b.EquipEquipment(new Sword());
+            EquipmentHelper.EquipEquipment(b, new Sword());
             arena.AddCharacterToArena(b, Alliance.TeamTwo);
         }
     }

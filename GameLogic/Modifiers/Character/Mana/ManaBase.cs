@@ -2,7 +2,7 @@
 
 namespace GameLogic.Modifiers.Character.Mana
 {
-    public abstract class ManaBase : ModifiersBase<ICharacter>, IModifier<ICharacter>
+    public abstract class ManaBase : ModifiersBase<ICharacter>
     {
         protected int Percentage;
         protected int Amount;

@@ -1,5 +1,6 @@
 ﻿using GameLogic.Arena;
 using GameLogic.Characters.Bots;
+using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Equipment.Weapons;
@@ -20,7 +21,7 @@ namespace GameUnitTest.ActionTests
             var o = new Dumbass();
             a.AddCharacterToArena(o, Alliance.TeamOne, 1, 1);
             var e = new Sword();
-            c.EquipEquipment(e);
+            EquipmentHelper.EquipEquipment(c, e);
             var tile = a.SelectFloorTile(o.ArenaLocation.GetTileLocation());
             var actions = c.TargetTileAndSelectActions(tile);
             Assert.IsFalse(actions.Exists(i => i.Name == "Swing"));
@@ -37,7 +38,7 @@ namespace GameUnitTest.ActionTests
             var o = new Dumbass();
             a.AddCharacterToArena(o, Alliance.TeamTwo, 1, 1);
             var e = new Sword();
-            c.EquipEquipment(e);
+            EquipmentHelper.EquipEquipment(c, e);
             var tile = a.SelectFloorTile(o.ArenaLocation.GetTileLocation());
             var actions = c.TargetTileAndSelectActions(tile);
             Assert.IsTrue(actions.Exists(i => i.Name == "Swing"));
@@ -54,7 +55,7 @@ namespace GameUnitTest.ActionTests
             var o = new Dumbass();
             a.AddCharacterToArena(o, Alliance.TeamTwo, 5, 5);
             var e = new Sword();
-            c.EquipEquipment(e);
+            EquipmentHelper.EquipEquipment(c, e);
             var tile = a.SelectFloorTile(o.ArenaLocation.GetTileLocation());
             var actions = c.TargetTileAndSelectActions(tile);
 

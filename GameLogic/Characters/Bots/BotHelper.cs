@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GameLogic.Helpers;
 
 namespace GameLogic.Characters.Bots
@@ -12,22 +11,27 @@ namespace GameLogic.Characters.Bots
             "Unknown","Mr","Mrs","King","Queen","Prince","Princess","Mister","Master","Monster",
             "Erect","Flacid","Flakey","Articulate","Dedicated","Strong","Smelly","Stinky","Vacuous",
             "Explicit","Scary","Horrifying","Bouncing","Beautiful","Child","Homosexual","Homo",
-            "Hetero","Heterosexual","Asexual","Slave","Sleepy","Bashful","Embarassed","Messy"
+            "Hetero","Heterosexual","Asexual","Slave","Sleepy","Bashful","Embarassed","Messy",
+            "Dancing", "Prancing", "Coughing", "Finishing", "Sneezing", "Laughing", "Gassing",
+            "Assing", "Cumming", "Farting", "Shitting", "Stinking", "Amazing", "Fantasising",
+            "Fantastical", "Fantastic", "Terrific", "Horrific", "Great", "Good", "Ok", "Acceptable",
+            "Unacceptable", "Appropriate", "Inappropriate", "Perplexing", "Geeky", "Nerdy", "Foxy",
+            "Nice", "Kind", "Sad", "Blue", "Red", "Yellow", "Green", "Gold", "Black", "White", "Brown"
         };
 
         private static readonly List<string> LastNames = new List<string>
         {
-            "Amazing","Killer","Bear","Wolf","Zombie","Strangler","Murder","Champion","Captain",
+            "Amazer","Killer","Bear","Wolf","Zombie","Strangler","Murder","Champion","Captain",
             "Sex","Erection","Breast","Model","Rockstar","Alchemist","Wizard","Cleric","Pornstar",
             "Adult","Peanut","Vitamin","Spunk","Semen","Teacher","Doctor","Dentist","Businessman",
             "Shapeshifter","Idiot","Genius","Bot","Player","Opponent","Computer","Molester",
-            "Slave","Master","Drummer","Guitarist","Bassist","Musician","Sleeper","Thinker"
+            "Slave","Master","Drummer","Guitarist","Bassist","Musician","Sleeper","Thinker",
+            "Butcher", "Baker", "Dancer", "Man", "Woman", "Dentist", "Blaster", "Drinker"
         };
 
 
         public static string GenerateRandomBotName()
         {
-            var r = new Random();
             return FirstNames[new ThreadSafeRandom().Next(0, FirstNames.Count)] + " " + LastNames[new ThreadSafeRandom().Next(0, LastNames.Count)];
         }
     }

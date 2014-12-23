@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GameLogic.Actions;
 using GameLogic.Actions.Attacks;
+using GameLogic.Enums;
 using GameLogic.Slots;
 
 namespace GameLogic.Equipment.Weapons
@@ -13,6 +14,22 @@ namespace GameLogic.Equipment.Weapons
             {
                 return "Sword";
             }
+        }
+
+        public override List<EquipmentSubType> EquipmentSubTypes
+        {
+            get
+            {
+                return new List<EquipmentSubType>
+                {
+                    EquipmentSubType.DefensiveFighter
+                };
+            }
+        }
+
+        public override EquipmentType EquipmentType
+        {
+            get { return EquipmentType.OneHandedWeapon; }
         }
 
         public override int BaseDamage

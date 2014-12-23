@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Game;
 using GameLogic.Shop;
 
@@ -17,7 +18,7 @@ namespace GameMvc.Controllers
             {
                 // TODO - Exception
             }
-            g.Player.PurchaseEquipment(e);
+            EquipmentHelper.PurchaseEquipment(g.Player, e);
             s.AddPlayerToShop(g.Player);
             Session["Game"] = g;
 
@@ -34,7 +35,7 @@ namespace GameMvc.Controllers
             {
                 // TODO - Exception
             }
-            g.Player.SellEquipment(e);
+            EquipmentHelper.SellEquipment(g.Player, e);
             s.AddPlayerToShop(g.Player);
             Session["Game"] = g;
 

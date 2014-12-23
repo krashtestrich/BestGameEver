@@ -26,6 +26,7 @@ namespace GameLogic.AI
                     {
                         return typeof (AttackBase);
                     }
+
                     if (c.Health < ((c.BonusHealth + c.BaseHealth)/2) && spells.Exists(i => i is HealBase))
                     {
                         return typeof (HealBase);
@@ -36,7 +37,7 @@ namespace GameLogic.AI
         }; 
         public static Type GetPreferredActionType(ICharacter c)
         {
-            var highestPath = c.SkillTree.Get().Where(i => i.IsActive).OrderByDescending(i => i.Level).First();
+            var highestPath = c.SkillTree.Get().Where(i => i.IsActive).OrderByDescending(i => i.Level).FirstOrDefault();
             
             //TODO: Add different Action chooser for each class type.
             return

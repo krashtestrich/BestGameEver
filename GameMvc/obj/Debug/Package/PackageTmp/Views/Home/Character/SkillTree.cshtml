@@ -1,0 +1,48 @@
+﻿@using System.Globalization
+@using GameMvc.Models
+@model GameLogic.Characters.Player.Player
+@{
+    Layout = null;
+    var skills = Model.SkillTree.Get().ToList();
+}
+
+<div>
+    <div class="skillTreeHeadingText">
+        You have <span class="emphasisePositiveText">@Model.SkillPoints.ToString(CultureInfo.InvariantCulture) </span>skill points to spend.
+        <br/>
+        <br/>
+        <span id="skillTreeSelectLabel" style="display: none;">Click to select <span class="emphasisePositiveText" id="skillTreeSelectSkillText"></span></span>
+    </div>
+    @foreach (var s in skills.Where(i => i.Level == 1))
+    {
+        <div class="skillTreePathContainer @(Model.SkillPoints > 0 && !s.IsActive && Model.GetLevel() == 1 ? " skillTreePathContainerAvailable" : string.Empty)@(s.IsActive ? " skillTreePathContainerActive" : string.Empty)">
+            <span class="skillTreeBaseHeading">@s.Name</span>
+            
+            <div class="skillPathContent">
+                <ul>
+                    @foreach (var mod in s.CharacterModifiers)
+                    {
+                        <li>
+                            <span class="skillPathModifier">
+                                @mod.GetDisplayText()
+                            </span>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            @{
+                var baseSkill = s;
+            }
+
+            @foreach (var skillPath in skills.Where(i =>  i.Parent != null && i.Parent.Name == baseSkill.Name).Select(subSkill => new UiSkillPathViewModel
+            {
+                CurrentPath = subSkill,
+                Paths = skills
+            }))
+            {
+                Html.RenderPartial("~/Views/Home/Character/SkillPath.cshtml", skillPath);
+            }
+        </div>
+    }
+</div>

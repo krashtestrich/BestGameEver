@@ -2,7 +2,7 @@
 
 namespace GameLogic.Modifiers.Character.Health
 {
-    public abstract class HealthBase : ModifiersBase<ICharacter>, IModifier<ICharacter>
+    public abstract class HealthBase : ModifiersBase<ICharacter>
     {
         protected int Percentage;
         protected int Amount;

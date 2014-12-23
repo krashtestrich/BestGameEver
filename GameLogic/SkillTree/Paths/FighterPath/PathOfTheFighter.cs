@@ -2,7 +2,9 @@
 using GameLogic.Characters;
 using GameLogic.Enums;
 using GameLogic.Modifiers;
+using GameLogic.Modifiers.Character.Armor;
 using GameLogic.Modifiers.Character.Health;
+using GameLogic.Modifiers.Character.PhysicalDamage;
 
 namespace GameLogic.SkillTree.Paths.FighterPath
 {
@@ -42,7 +44,9 @@ namespace GameLogic.SkillTree.Paths.FighterPath
             { 
                 return new List<IModifier<ICharacter>>
                 {
-                    new HealthBonusAmount(50)    
+                    new HealthBonusAmount(50),
+                    new ArmorBonusAmount(10),
+                    new PhysicalDamageAmount(10)
                 }; 
             }
         }

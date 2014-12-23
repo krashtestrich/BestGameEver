@@ -7,6 +7,6 @@
             get;
         }
 
-        public Equipment.Equipment PerformedWith { get; set; }
+        public Equipment.EquipmentBase PerformedWith { get; set; }
     }
 }

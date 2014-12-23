@@ -5,5 +5,7 @@
         protected TType ModType;
 
         public abstract void Apply(TType modType);
+
+        public abstract string GetDisplayText();
     }
 }

@@ -20,22 +20,16 @@ namespace GameLogic.Game
 {
     public class Game
     {
-        private BattleStatus _battleStatus;
-        private BattleMode _battleMode;
-        private Alliance? _winningTeam;
-
         public Bot ChosenOpponent;
-        public Arena.Arena Arena;
         public Tournament.Tournament Tournament;
         public bool EnableLogging;
+        public BattleDetails CurrentBattleDetails;
 
         public Game(bool? enableLogging = false)
         {
             EnableLogging = enableLogging.HasValue && enableLogging.Value;
-            Arena = new Arena.Arena();
-            Arena.BuildArenaFloor(5);
-            _battleStatus = BattleStatus.NotStarted;
             Tournament = new Tournament.Tournament(EnableLogging);
+            CurrentBattleDetails = new BattleDetails();
         }
 
         public void StartComputerVsComputerGame()
@@ -43,73 +37,57 @@ namespace GameLogic.Game
             Tournament.TournamentMode = TournamentMode.ComputerVsComputer;
             Tournament.Populate();
             Tournament.Start();
-            StartComputerVsComputerBattle();
+            CurrentBattleDetails = Tournament.GetNextBattleDetails();
+            StartBattle();
         }
 
-        public void StartPlayerVsComputerGame()
+        public void StartPlayerVsComputerTournament()
         {
             Tournament.TournamentMode = TournamentMode.PlayerVsComputer;
             Tournament.AddCharacterToTournament(Player);
             Tournament.Populate();
             Tournament.Start();
-            StartPlayerVsComputerBattle();
+            CurrentBattleDetails = Tournament.GetNextBattleDetails();
+            StartBattle();
         }
 
-        private void StartPlayerVsComputerBattle()
+        private void StartBattle()
         {
-            Arena = new Arena.Arena();
-            Arena.BuildArenaFloor(5);
-            _battleStatus = BattleStatus.InBattle;
-            Tournament.SetPlayerAsCombatant();
-            Arena.AddCharacterToArena(Player, Alliance.TeamOne);
-            var c2 = Tournament.ChooseCombatant();
-            if (c2 == null)
-            {
-                throw new Exception("Combatant is null....");
-            }
-            c2.Status = ParticipantStatus.InBattle;
-            Arena.AddCharacterToArena(c2.Character, Alliance.TeamTwo);
-        }
+            CurrentBattleDetails.BattleStatus = BattleStatus.InBattle;
+            var characterOne = CurrentBattleDetails.Participants.ElementAt(0);
+            var characterTwo = CurrentBattleDetails.Participants.ElementAt(1);
+            CurrentBattleDetails.Arena.AddCharacterToArena(characterOne.Character, Alliance.TeamOne, 0, 4);
+            CurrentBattleDetails.Participants.ElementAt(0).Status = ParticipantStatus.InBattle;
+            CurrentBattleDetails.Arena.AddCharacterToArena(characterTwo.Character, Alliance.TeamTwo, 4, 0);
+            CurrentBattleDetails.Participants.ElementAt(1).Status = ParticipantStatus.InBattle;
 
-        private void StartComputerVsComputerBattle()
-        {
-            Arena = new Arena.Arena();
-            Arena.BuildArenaFloor(5);
-            _battleStatus = BattleStatus.InBattle;
-            var c1 = Tournament.ChooseCombatant();
-            if (c1 == null)
-            {
-                throw new Exception("Combatant is null....");
-            }
-            c1.Status = ParticipantStatus.InBattle;
-            var c2 = Tournament.ChooseCombatant();
-            if (c2 == null)
-            {
-                throw new Exception("Combatant is null....");
-            }
-            c2.Status = ParticipantStatus.InBattle;
-            Arena.AddCharacterToArena(c1.Character, Alliance.TeamOne, 0, 0);
-            Arena.AddCharacterToArena(c2.Character, Alliance.TeamTwo);
-            StartBattle(BattleMode.ComputerVsComputer);
+            CurrentBattleDetails.BattleTurn = Alliance.TeamOne;
             if (EnableLogging)
             {
-                Logger.WriteBattleTurnEntry(c1.Character.Name + " (" + c1.Character.CurrentClass + ") " + " vs. " + c2.Character.Name + " (" + c2.Character.CurrentClass + ") ");
-            }
-            var aiTurn = Alliance.TeamOne;
-            while (_battleStatus == BattleStatus.InBattle)
-            {
-                PerformAITurn(aiTurn);
-                aiTurn = aiTurn == Alliance.TeamOne ? Alliance.TeamTwo : Alliance.TeamOne;
+                Logger.CreateBattleLog();
+                Logger.WriteBattleTurnEntry(characterOne.Character.Name + " (" + characterOne.Character.CurrentClass + ") " + " vs. " + characterTwo.Character.Name + " (" + characterTwo.Character.CurrentClass + ") ");
             }
 
-            EndComputerVsComputerBattle();
+            if (CurrentBattleDetails.BattleMode == BattleMode.ComputerVsComputer)
+            {
+                var aiTurn = Alliance.TeamOne;
+                while (CurrentBattleDetails.BattleStatus == BattleStatus.InBattle)
+                {
+                    PerformAITurn();
+                    aiTurn = aiTurn == Alliance.TeamOne ? Alliance.TeamTwo : Alliance.TeamOne;
+                }
+
+                EndComputerVsComputerBattle();
+            }
+            
         }
 
         private void EndComputerVsComputerBattle()
         {
             if (Tournament.TournamentStatus == TournamentStatus.InProgress)
             {
-                StartComputerVsComputerBattle();
+                CurrentBattleDetails = Tournament.GetNextBattleDetails();
+                StartBattle();
             }
         }
 
@@ -119,43 +97,30 @@ namespace GameLogic.Game
         }
 
         #region Battle Status
-        public void StartBattle(BattleMode mode)
-        {
-            _battleMode = mode;
-            _battleStatus = BattleStatus.InBattle;
-            if (EnableLogging)
-            {
-                Logger.CreateBattleLog();
-            }
-        }
 
         public void EndBattle(Alliance winningTeam)
         {
-            _winningTeam = winningTeam;
-            _battleStatus = BattleStatus.BattleOver;
-            if (_battleMode == BattleMode.ComputerVsComputer)
+            CurrentBattleDetails.WinningTeam = winningTeam;
+            CurrentBattleDetails.WinnerName =
+                CurrentBattleDetails.Participants.First(p => p.Character.GetAlliance() == winningTeam).Character.Name;
+            CurrentBattleDetails.LoserName =
+                CurrentBattleDetails.Participants.First(p => p.Character.GetAlliance() != winningTeam).Character.Name;
+            CurrentBattleDetails.BattleStatus = BattleStatus.BattleOver;
+            if (CurrentBattleDetails.BattleMode == BattleMode.ComputerVsComputer)
             {
                 ProcessBattleOver();
             }
         }
 
-        public void ResetBattle()
-        {
-            _battleStatus = BattleStatus.NotStarted;
-            _winningTeam = null;
-        }
-
-        public BattleStatus GetBattleStatus()
-        {
-            return _battleStatus;
-        }
-
         public void UpdateBattleStatus()
         {
-            var teamOneAlive = (Arena.Characters.Exists(i => i.GetAlliance() == Alliance.TeamOne && i.Health > 0));
-            var teamTwoAlive = (Arena.Characters.Exists(i => i.GetAlliance() == Alliance.TeamTwo && i.Health > 0));
+            var teamOneAlive = (CurrentBattleDetails.Arena.Characters.Exists(i => i.GetAlliance() == Alliance.TeamOne && i.Health > 0));
+            var teamTwoAlive = (CurrentBattleDetails.Arena.Characters.Exists(i => i.GetAlliance() == Alliance.TeamTwo && i.Health > 0));
             if (teamOneAlive && teamTwoAlive)
             {
+                CurrentBattleDetails.BattleTurn = CurrentBattleDetails.BattleTurn == Alliance.TeamOne
+                    ? Alliance.TeamTwo
+                    : Alliance.TeamOne;
                 return;
             }
 
@@ -169,7 +134,7 @@ namespace GameLogic.Game
         #region Perform Actions/Turns
         public void PerformPlayerAction(IAction a)
         {
-            if (_battleStatus != BattleStatus.InBattle)
+            if (CurrentBattleDetails.BattleStatus != BattleStatus.InBattle)
             {
                 throw new Exception("The battle is over what the FUCK are you doing!?");
             }
@@ -178,17 +143,17 @@ namespace GameLogic.Game
             UpdateBattleStatus();
         }
 
-        public void PerformAITurn(Alliance alliance)
+        public void PerformAITurn()
         {
-            Arena.Characters.Where(i => i.GetAlliance() == alliance).ToList().ForEach(
+            CurrentBattleDetails.Arena.Characters.Where(i => i.GetAlliance() == CurrentBattleDetails.BattleTurn).ToList().ForEach(
                 i =>
                 {
-                    if (_battleStatus != BattleStatus.InBattle)
+                    if (CurrentBattleDetails.BattleStatus != BattleStatus.InBattle)
                     {
                         return;
                     }
                     var actionType = ActionChoosers.GetPreferredActionType(i);
-                    var opponentTile = Arena.Characters.First(c => c.GetAlliance() != i.GetAlliance()).ArenaLocation;
+                    var opponentTile = CurrentBattleDetails.Arena.Characters.First(c => c.GetAlliance() != i.GetAlliance()).ArenaLocation;
                     var action = ChooseAction(actionType, i, opponentTile);
                     if (action == null)
                     {
@@ -198,10 +163,12 @@ namespace GameLogic.Game
                     {
                         if (EnableLogging)
                         {
+                            var performedWith = action.PerformedWith == null ? "" : " with " + action.PerformedWith.Name;
                             Logger.WriteBattleTurnEntry(i.SkillTree.Get().Where(s => s.IsActive).OrderByDescending(s => s.Level).First().Path 
-                                + " (" + i.Name + ") " 
+                                + " (" + i.Name + " " + i.Health + "/" + i.Mana +  ") " 
                                 + "performed "
-                                + action.Name);
+                                + action.Name
+                                + performedWith);
                         }
                         action.Perform((Character)i);
                     }
@@ -222,7 +189,7 @@ namespace GameLogic.Game
             // Get as close to player as possible - find movement that does this.
             var d = moveAction.Distance;
             var newPosition = ArenaHelper.GetClosestMovablePosition(c.ArenaLocation.GetTileLocation(), tile.GetTileLocation(), d);
-            var newTile = Arena.ArenaFloor[newPosition.XCoord, newPosition.YCoord];
+            var newTile = CurrentBattleDetails.Arena.ArenaFloor[newPosition.XCoord, newPosition.YCoord];
             //TODO: Implement logic for bot moving around obstacles? For now don't allow movement onto tiles that have entities
             var actions = c.TargetTileAndSelectActions(newTile);
             if (actions.Exists(i => i.Name == moveAction.Name))
@@ -234,7 +201,7 @@ namespace GameLogic.Game
                         .OrderByDescending(s => s.Level)
                         .First()
                         .Path
-                                                + " (" + c.Name + ") "
+                                                + " (" + c.Name + " " + c.Health + "/" + c.Mana + ") "
                                                 + "performed "
                                                 + moveAction.Name);
                 }
@@ -284,19 +251,19 @@ namespace GameLogic.Game
         
         public void ProcessBattleOver()
         {
-            if (GetBattleStatus() != BattleStatus.BattleOver)
+            if (CurrentBattleDetails.BattleStatus != BattleStatus.BattleOver)
             {
                 throw new Exception("Uhh, the battle isn't over?");
             }
 
             //TODO: Implement logic for when player lost.
-            if (_battleMode == BattleMode.ComputerVsComputer || Player.Health > 0)
+            if (CurrentBattleDetails.BattleMode == BattleMode.ComputerVsComputer || Player.Health > 0)
             {
-                var winner = Arena.Characters.First(i => i.GetAlliance() == _winningTeam);
-                var loser = Arena.Characters.First(i => i.GetAlliance() != _winningTeam);
-                Tournament.ProcessBattleResult(winner, loser);
-                var cash = Arena.Characters.Where(i => i is Bot && i.GetAlliance() != _winningTeam).Sum(i => ((Bot)i).Worth);
-                Arena.Characters.Where(i => i.GetAlliance() == _winningTeam && i.Health > 0)
+                var winner = CurrentBattleDetails.Arena.Characters.First(i => i.GetAlliance() == CurrentBattleDetails.WinningTeam);
+                var loser = CurrentBattleDetails.Arena.Characters.First(i => i.GetAlliance() != CurrentBattleDetails.WinningTeam);
+                Tournament.ProcessBattleResult(CurrentBattleDetails);
+                var cash = CurrentBattleDetails.Arena.Characters.Where(i => i is Bot && i.GetAlliance() != CurrentBattleDetails.WinningTeam).Sum(i => ((Bot)i).Worth);
+                CurrentBattleDetails.Arena.Characters.Where(i => i.GetAlliance() == CurrentBattleDetails.WinningTeam && i.Health > 0)
                     .ToList()
                     .ForEach(w =>
                     {
@@ -313,8 +280,7 @@ namespace GameLogic.Game
                 }
             }
 
-            ResetBattle();            
-            Arena.ResetArena();
+            CurrentBattleDetails.Arena.ResetArena();
         }
 
         #endregion
@@ -330,19 +296,19 @@ namespace GameLogic.Game
 
         public void ChooseOpponent(Bot opponent)
         {
-            Arena.AddCharacterToArena(opponent, Alliance.TeamTwo);
+            CurrentBattleDetails.Arena.AddCharacterToArena(opponent, Alliance.TeamTwo);
             ChosenOpponent = opponent;
         }
 
         #endregion
 
 
-        public BattleReport BuildBattleReport()
+        public BattleReport BuildBattleReport(BattleDetails battleDetails)
         {
             var br = new BattleReport
             {
-                BattleStatus = _battleStatus,
-                PlayerWins = _battleStatus == BattleStatus.BattleOver && Player.Health > 0
+                BattleStatus = battleDetails.BattleStatus,
+                PlayerWins = battleDetails.BattleStatus == BattleStatus.BattleOver && Player.Health > 0
             };
             return br;
         }

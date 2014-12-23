@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using GameLogic.Actions;
+using GameLogic.Characters;
+using GameLogic.Enums;
+using GameLogic.Modifiers;
 
 namespace GameLogic.Equipment
 {
-    public abstract class Equipment
+    public abstract class EquipmentBase
     {
 
         #region Name
@@ -17,10 +20,9 @@ namespace GameLogic.Equipment
 
         #region Equipment Type
 
-        public abstract string EquipmentType
-        {
-            get;
-        }
+        public abstract EquipmentType EquipmentType { get; }
+
+        public abstract List<EquipmentSubType> EquipmentSubTypes { get; }
 
         #endregion
 
@@ -56,7 +58,19 @@ namespace GameLogic.Equipment
         }
         #endregion
 
-        protected Equipment()
+        #region Modifiers
+
+        public virtual List<IModifier<ICharacter>> Modifiers
+        {
+            get
+            {
+                return new List<IModifier<ICharacter>>();
+            }
+        }
+
+        #endregion
+
+        protected EquipmentBase()
         {
             _slots = new List<Slot>();
         }

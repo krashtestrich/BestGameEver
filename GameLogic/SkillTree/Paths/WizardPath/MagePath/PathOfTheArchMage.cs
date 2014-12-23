@@ -2,6 +2,8 @@
 using GameLogic.Characters;
 using GameLogic.Enums;
 using GameLogic.Modifiers;
+using GameLogic.Modifiers.Character.Block;
+using GameLogic.Modifiers.Character.Mana;
 
 namespace GameLogic.SkillTree.Paths.WizardPath.MagePath
 {
@@ -44,7 +46,8 @@ namespace GameLogic.SkillTree.Paths.WizardPath.MagePath
             {
                 return new List<IModifier<ICharacter>>
                 {
-
+                    new ManaBonusPercentage(15),
+                    new BlockPercentage(5)
                 };
             }
         }

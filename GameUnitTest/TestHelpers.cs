@@ -5,6 +5,7 @@ using GameLogic.Actions.Attacks;
 using GameLogic.Characters;
 using GameLogic.Enums;
 using GameLogic.Equipment;
+using GameLogic.Equipment.Weapons;
 
 namespace GameUnitTest
 {
@@ -79,6 +80,7 @@ namespace GameUnitTest
         #region Weapons
         public class TestWeapon : Weapon, IBuyableEquipment
         {
+
             public override string Name
             {
                 get { return "Test Weapon"; }
@@ -94,11 +96,24 @@ namespace GameUnitTest
                 get { return 3; }
             }
 
-            public override string EquipmentType
+            public override EquipmentType EquipmentType
             {
                 get
                 {
-                    return "Test Equipment";
+                    return EquipmentType.OneHandedWeapon;
+                }
+            }
+
+            public override List<EquipmentSubType> EquipmentSubTypes
+            {
+                get
+                {
+                    return new List<EquipmentSubType>
+                    {
+                        EquipmentSubType.Caster,
+                        EquipmentSubType.DefensiveFighter,
+                        EquipmentSubType.OffensiveFighter
+                    };
                 }
             }
 
@@ -136,11 +151,24 @@ namespace GameUnitTest
                 get { return 3; }
             }
 
-            public override string EquipmentType
+            public override EquipmentType EquipmentType
             {
                 get
                 {
-                    return "Test Equipment";
+                    return EquipmentType.OneHandedWeapon;
+                }
+            }
+
+            public override List<EquipmentSubType> EquipmentSubTypes
+            {
+                get
+                {
+                    return new List<EquipmentSubType>
+                    {
+                        EquipmentSubType.Caster,
+                        EquipmentSubType.DefensiveFighter,
+                        EquipmentSubType.OffensiveFighter
+                    };
                 }
             }
 
