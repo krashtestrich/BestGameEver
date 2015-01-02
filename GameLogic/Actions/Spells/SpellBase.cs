@@ -2,6 +2,11 @@
 {
     public abstract class SpellBase : Action
     {
+        protected override string Verb
+        {
+            get { return "casts"; }
+        }
+
         public abstract int HitsForFrom
         {
             get;

@@ -185,3 +185,7 @@ div.versusContainer {
     margin: 10px;
     width: 150px;
 }
+
+div.battleLogContent {
+    background-color: #ffe4c4;
+}

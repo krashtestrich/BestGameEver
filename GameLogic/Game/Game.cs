@@ -41,6 +41,26 @@ namespace GameLogic.Game
             StartBattle();
         }
 
+        public void SimulateComputerVsComputerBattle(Guid battleGuid)
+        {
+            CurrentBattleDetails = Tournament.GetBattleByGuid(battleGuid);
+            StartBattle();
+        }
+
+        public void SimulateAllComputerBattles()
+        {
+            var battle = Tournament.GetNextBattleDetails();
+            while (battle != null)
+            {
+                if (battle.BattleMode == BattleMode.ComputerVsComputer)
+                {
+                    CurrentBattleDetails = battle;
+                    StartBattle();
+                }
+                battle = Tournament.GetNextBattleDetails();
+            }
+        }
+
         public void StartPlayerVsComputerTournament()
         {
             Tournament.TournamentMode = TournamentMode.PlayerVsComputer;
@@ -86,8 +106,8 @@ namespace GameLogic.Game
         {
             if (Tournament.TournamentStatus == TournamentStatus.InProgress)
             {
-                CurrentBattleDetails = Tournament.GetNextBattleDetails();
-                StartBattle();
+                //CurrentBattleDetails = Tournament.GetNextBattleDetails();
+                //StartBattle();
             }
         }
 
@@ -138,7 +158,7 @@ namespace GameLogic.Game
             {
                 throw new Exception("The battle is over what the FUCK are you doing!?");
             }
-            a.Perform(Player);
+            CurrentBattleDetails.TurnDetails.Add(a.Perform(Player));
             Player.UntargetTile();
             UpdateBattleStatus();
         }
@@ -170,7 +190,7 @@ namespace GameLogic.Game
                                 + action.Name
                                 + performedWith);
                         }
-                        action.Perform((Character)i);
+                        CurrentBattleDetails.TurnDetails.Add(action.Perform((Character)i));
                     }
                     i.UntargetTile();
                     UpdateBattleStatus();
@@ -205,7 +225,7 @@ namespace GameLogic.Game
                                                 + "performed "
                                                 + moveAction.Name);
                 }
-                moveAction.Perform((Character)c);
+                CurrentBattleDetails.TurnDetails.Add(moveAction.Perform((Character)c));
             }
         }
 

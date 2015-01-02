@@ -30,7 +30,7 @@ namespace GameLogic.Characters.Bots
             {
                 return;
             }
-            ChooseSkill(availableSkills[new ThreadSafeRandom().Next(0, availableSkills.Count)]);
+            ChooseSkill(availableSkills[SecureRandom.Next(0, availableSkills.Count)]);
         }
 
         private List<IPath> GetAvailableSkillNodes(int maxCost)
@@ -106,13 +106,13 @@ namespace GameLogic.Characters.Bots
                          {
                              var equip = e.Where(i => i.EquipmentType == EquipmentType.OneHandedWeapon
                                                       && i.EquipmentSubTypes.IndexOf(EquipmentSubType.Caster) > -1).ToList();
-                             return equip[new ThreadSafeRandom().Next(0, equip.Count)];
+                             return equip[SecureRandom.Next(0, equip.Count)];
                          }
                          else
                          {
                              var equip = e.Where(i => i.EquipmentType == EquipmentType.Shield
                                                       && i.EquipmentSubTypes.IndexOf(EquipmentSubType.Caster) > -1).ToList();
-                             return equip[new ThreadSafeRandom().Next(0, equip.Count)];
+                             return equip[SecureRandom.Next(0, equip.Count)];
                          }
                      }
                  },
@@ -124,14 +124,14 @@ namespace GameLogic.Characters.Bots
                                 var equip = e.Where(i => i.EquipmentType == EquipmentType.OneHandedWeapon || i.EquipmentType == EquipmentType.TwoHandedWeapon
                                                          && (i.EquipmentSubTypes.IndexOf(EquipmentSubType.DefensiveFighter) > -1
                                                             || i.EquipmentSubTypes.IndexOf(EquipmentSubType.OffensiveFighter) > -1)).ToList();
-                                return equip[new ThreadSafeRandom().Next(0, equip.Count)];
+                                return equip[SecureRandom.Next(0, equip.Count)];
                             }
                             else
                             {
                                 var equip = e.Where(i => i.EquipmentType == EquipmentType.Shield
                                                         && (i.EquipmentSubTypes.IndexOf(EquipmentSubType.DefensiveFighter) > -1
                                                             || i.EquipmentSubTypes.IndexOf(EquipmentSubType.OffensiveFighter) > -1)).ToList();
-                                return equip[new ThreadSafeRandom().Next(0, equip.Count)];
+                                return equip[SecureRandom.Next(0, equip.Count)];
                             }
                         } 
                     }

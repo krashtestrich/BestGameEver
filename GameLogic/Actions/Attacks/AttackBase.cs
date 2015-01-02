@@ -1,4 +1,5 @@
-﻿using GameLogic.Arena;
+﻿using System;
+using GameLogic.Arena;
 using GameLogic.Characters;
 using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Helpers;
@@ -7,6 +8,11 @@ namespace GameLogic.Actions.Attacks
 {
     public abstract class AttackBase : Action
     {
+        protected override string Verb
+        {
+            get { return "attacks"; }
+        }
+
         public abstract int DamageFromModifier
         {
             get;           
@@ -33,13 +39,26 @@ namespace GameLogic.Actions.Attacks
                 && distance >= MinRange;
         }
 
-        public virtual void Perform(IGameEntity source)
+        public virtual string Perform(IGameEntity source)
         {
+            var character = source as Character;
+            if (character == null)
+            {
+                throw new Exception("Source cannot be null....");
+            }
+            var target = source.TargettedTile.GetTileEntity() as Character;
+            if (target == null)
+            {
+                throw new Exception("Target cannot be null....");
+                
+            }
             var weaponDamage = ((Equipment.Weapons.Weapon) PerformedWith).GetDamage();
-            var modifier = new ThreadSafeRandom().Next(DamageFromModifier, DamageToModifier);
+            var modifier = SecureRandom.Next(DamageFromModifier, DamageToModifier);
             var damage = modifier > 0 ? weaponDamage*(modifier/100) : weaponDamage;
-            damage = DamageBlockHelper.GetPhysicalDamage((Character)source, damage);
-            DamageBlockHelper.TakePhysicalDamage((Character)source.TargettedTile.GetTileEntity(), damage);
+            damage = DamageBlockHelper.GetPhysicalDamage(character, damage);
+            var takenDamage = DamageBlockHelper.TakePhysicalDamage(target, damage);
+            return character.Name + " " + Verb + " " + target.Name + " with " + Name + " for " + damage + ". "
+                + target.Name + " blocks " + (damage - takenDamage) + " loses " + takenDamage + " health.";
         }
 
         public virtual bool CanBePerformed(IGameEntity source)

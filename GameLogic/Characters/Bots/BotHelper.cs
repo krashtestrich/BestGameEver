@@ -32,7 +32,7 @@ namespace GameLogic.Characters.Bots
 
         public static string GenerateRandomBotName()
         {
-            return FirstNames[new ThreadSafeRandom().Next(0, FirstNames.Count)] + " " + LastNames[new ThreadSafeRandom().Next(0, LastNames.Count)];
+            return FirstNames[SecureRandom.Next(0, FirstNames.Count)] + " " + LastNames[SecureRandom.Next(0, LastNames.Count)];
         }
     }
 }

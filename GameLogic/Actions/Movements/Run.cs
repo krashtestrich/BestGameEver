@@ -2,6 +2,11 @@
 {
     public class Run : MoveBase, IAction, IMove
     {
+        protected override string Verb
+        {
+            get { return "runs"; }
+        }
+
         public override string Name
         {
             get { return "Run"; }

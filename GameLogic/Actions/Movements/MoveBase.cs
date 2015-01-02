@@ -1,4 +1,6 @@
-﻿using GameLogic.Arena;
+﻿using System;
+using GameLogic.Arena;
+using GameLogic.Characters;
 
 namespace GameLogic.Actions.Movements
 {
@@ -13,10 +15,17 @@ namespace GameLogic.Actions.Movements
                 && ArenaHelper.GetDistanceBetweenFloorPositions(source.ArenaLocation.GetTileLocation(), source.TargettedTile.GetTileLocation()) <= Distance;
         }
 
-        public virtual void Perform(IGameEntity source)
+        public virtual string Perform(IGameEntity source)
         {
+            var character = source as Character;
+            if (character == null)
+            {
+                throw new Exception("Source cannot be null...");
+            }
             source.ArenaLocation.RemoveEntityFromTile(source);
             source.TargettedTile.AddEntityToTile(source);
+            return character.Name + " " + Verb + " to " + source.TargettedTile.GetTileLocation().XCoord + "," +
+                   source.TargettedTile.GetTileLocation().YCoord;
         }
     }
 }

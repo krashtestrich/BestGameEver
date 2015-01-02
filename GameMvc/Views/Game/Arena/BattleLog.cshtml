@@ -1,0 +1,14 @@
+﻿@model GameLogic.Tournament.BattleDetails
+@{
+    Layout = null;
+}
+
+<div id="battleLogContent borderedContainer">
+    @foreach (var l in Model.TurnDetails)
+    {
+        <div class="">
+            <span class="emphasiseText">Turn: </span>
+            @l
+        </div>
+    }
+</div>

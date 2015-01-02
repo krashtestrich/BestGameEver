@@ -1,28 +1,50 @@
 ﻿using System;
+using System.Security.Cryptography;
 
 namespace GameLogic.Helpers
 {
-    public class ThreadSafeRandom
+    public class SecureRandom : RandomNumberGenerator
     {
-        private static readonly Random Global = new Random();
-        [ThreadStatic]
-        private static Random _local;
+        private static readonly RandomNumberGenerator Rng = new RNGCryptoServiceProvider();
 
-        public ThreadSafeRandom()
+
+        public int Next()
         {
-            if (_local == null)
-            {
-                int seed;
-                lock (Global)
-                {
-                    seed = Global.Next();
-                }
-                _local = new Random(seed);
-            }
+            var data = new byte[sizeof(int)];
+            Rng.GetBytes(data);
+            return BitConverter.ToInt32(data, 0) & (int.MaxValue - 1);
         }
-        public int Next(int from, int to)
+
+        public int Next(int maxValue)
         {
-            return _local.Next(from, to);
+            return Next(0, maxValue);
+        }
+
+        public static int Next(int minValue, int maxValue)
+        {
+            if (minValue > maxValue)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            return (int)Math.Floor((minValue + ((double)maxValue - minValue) * NextDouble()));
+        }
+
+        public static double NextDouble()
+        {
+            var data = new byte[sizeof(uint)];
+            Rng.GetBytes(data);
+            var randUint = BitConverter.ToUInt32(data, 0);
+            return randUint / (uint.MaxValue + 1.0);
+        }
+
+        public override void GetBytes(byte[] data)
+        {
+            Rng.GetBytes(data);
+        }
+
+        public override void GetNonZeroBytes(byte[] data)
+        {
+            Rng.GetNonZeroBytes(data);
         }
     }
 }

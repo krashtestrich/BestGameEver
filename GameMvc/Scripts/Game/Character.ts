@@ -1,6 +1,5 @@
 ﻿module Character {
     var skillTreeDialogSelector: string = '#skillTreeDialog';
-    var characterUrl: any = 'http://localhost/Home/Character';
     export function initialize() : void {
         $('a.test').cluetip();
         $('div.charEquipCellContent').cluetip({ local: true, attribute: 'data-tip', hoverClass: 'highlight' });
@@ -21,6 +20,6 @@
     }
 
     function onSkillTreeClose() {
-        window.location = characterUrl;
+        window.location.href = '/Home/Character';
     }
 }

@@ -36,7 +36,17 @@ namespace GameLogic.Tournament
 
         public BattleDetails GetNextBattleDetails()
         {
-            return BattlesByRound[Round].First(b => b.BattleStatus == BattleStatus.NotStarted);
+            return BattlesByRound[Round].FirstOrDefault(b => b.BattleStatus == BattleStatus.NotStarted);
+        }
+
+        public BattleDetails GetBattleByGuid(Guid battleGuid)
+        {
+            return BattlesByRound[Round].FirstOrDefault(b => b.BattleGuid == battleGuid);
+        }
+
+        public void SimulateBattle(BattleDetails battleDetails)
+        {
+            
         }
 
         public void AddCharacterToTournament(ICharacter c)

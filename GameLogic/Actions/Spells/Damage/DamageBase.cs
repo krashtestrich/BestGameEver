@@ -1,4 +1,5 @@
-﻿using GameLogic.Arena;
+﻿using System;
+using GameLogic.Arena;
 using GameLogic.Characters;
 using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Helpers;
@@ -7,12 +8,23 @@ namespace GameLogic.Actions.Spells.Damage
 {
     public abstract class DamageBase : SpellBase
     {
-        public virtual void Perform(IGameEntity source)
+        public virtual string Perform(IGameEntity source)
         {
-            var damage = new ThreadSafeRandom().Next(HitsForFrom, HitsForTo);
-            damage = DamageBlockHelper.GetSpellDamage((Character)source, damage);
-            ((Character)source.TargettedTile.GetTileEntity()).TakeSpellDamage(damage);
-            ((Character)source).LoseMana(ManaCost);
+            var sourceCharacter = source as Character;
+            var targetCharacter = source.TargettedTile.GetTileEntity() as Character;
+            if (sourceCharacter == null)
+            {
+                throw new Exception("Source cannot be null....");
+            }
+            if (targetCharacter == null)
+            {
+                throw new Exception("Target cannot be null....");
+            }
+            var damage = SecureRandom.Next(HitsForFrom, HitsForTo);
+            damage = DamageBlockHelper.GetSpellDamage(sourceCharacter, damage);
+            targetCharacter.TakeSpellDamage(damage);
+            sourceCharacter.LoseMana(ManaCost);
+            return sourceCharacter.Name + " " + Verb + " " + Name + " on " + targetCharacter.Name + " for " + damage;
         }
 
         public virtual bool CanBePerformed(IGameEntity source)

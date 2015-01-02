@@ -150,6 +150,7 @@
     <Compile Include="Tournament\Participant.cs" />
     <Compile Include="Tournament\ParticipantStatus.cs" />
     <Compile Include="Tournament\Tournament.cs" />
+    <Compile Include="Tournament\TurnDetail.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

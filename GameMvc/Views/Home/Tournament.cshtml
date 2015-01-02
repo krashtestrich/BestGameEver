@@ -28,6 +28,7 @@
         {
             <div>
                 <span class="labelTextContainer">Tournament Round <span class="emphasisePositiveText">@Model.Round.ToString(CultureInfo.InvariantCulture)</span></span>
+                
                 @foreach (var battle in Model.BattlesByRound[Model.Round])
                 {
                     Html.RenderPartial("~/Views/Home/Tournament/VersusContainer.cshtml", battle);

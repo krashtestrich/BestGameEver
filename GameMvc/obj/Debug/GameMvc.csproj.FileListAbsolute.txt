@@ -171,3 +171,8 @@ G:\Websites\Game\BestGameEver\GameMvc\bin\zh-Hant\System.Spatial.resources.dll
 G:\Websites\Game\BestGameEver\GameMvc\obj\Debug\GameMvc.csprojResolveAssemblyReference.cache
 G:\Websites\Game\BestGameEver\GameMvc\obj\Debug\GameMvc.dll
 G:\Websites\Game\BestGameEver\GameMvc\obj\Debug\GameMvc.pdb
+G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Http.WebHost.dll
+G:\Websites\Game\BestGameEver\GameMvc\bin\System.Web.Http.WebHost.xml
+G:\Websites\Game\BestGameEver\GameMvc\bin\System.Net.Http.Formatting.dll
+G:\Websites\Game\BestGameEver\GameMvc\bin\System.Net.Http.WebRequest.dll
+G:\Websites\Game\BestGameEver\GameMvc\bin\System.Net.Http.Formatting.xml

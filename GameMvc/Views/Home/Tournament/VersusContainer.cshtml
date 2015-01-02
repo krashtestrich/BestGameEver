@@ -39,10 +39,17 @@
 
         }<span class="centeredText">@Model.Participants.ElementAt(1).Character.Name</span>
     </div>
-    @if (Model.BattleStatus == BattleStatus.NotStarted)
+    @if (Model.BattleStatus == BattleStatus.NotStarted && Model.BattleMode == BattleMode.ComputerVsComputer)
     {
         <div class="">
-            
+            @using (Html.BeginForm("WatchMatch", "Tournament", new { battleGuid = Model.BattleGuid }))
+            {
+                <button type="submit">Watch</button>
+            }
+            @using (Html.BeginForm("SimulateBattle", "Tournament", new  { battleGuid = Model.BattleGuid }))
+            {
+                <button type="submit">Simulate</button>
+            }
         </div>
     }
 </div>

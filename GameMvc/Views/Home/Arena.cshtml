@@ -41,8 +41,8 @@
                     @for (var j = 0; j < Model.Arena.ArenaFloor.GetLength(1); j++)
                     {
                         var entity = (from ArenaFloorTile tile in Model.Arena.ArenaFloor
-                                        where tile.GetTileEntity() != null &&  tile.GetTileLocation().XCoord == i && tile.GetTileLocation().YCoord == j
-                                        select tile.GetTileEntity()).FirstOrDefault();
+                            where tile.GetTileEntity() != null &&  tile.GetTileLocation().XCoord == i && tile.GetTileLocation().YCoord == j
+                            select tile.GetTileEntity()).FirstOrDefault();
                         <div class="arenaFloorTile" data-xcoord="@i" data-ycoord="@j">
                             @if (entity is Player)
                             {
@@ -58,7 +58,11 @@
             }
         }
     </div>
-
+    <div id="battleLog">
+        @{
+            Html.RenderPartial("~/Views/Game/Arena/BattleLog.cshtml", Model);
+        }
+    </div>
     <div id="playerActions"></div>
     <div id="chooseOpponent"></div>
     <div id="battleOver"></div>

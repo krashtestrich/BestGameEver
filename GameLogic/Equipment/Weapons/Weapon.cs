@@ -1,12 +1,10 @@
-﻿using GameLogic.Helpers;
-
-namespace GameLogic.Equipment.Weapons
+﻿namespace GameLogic.Equipment.Weapons
 {
     public abstract class Weapon : EquipmentBase
     {
         public virtual int GetDamage()
         {
-            return BaseDamage + new ThreadSafeRandom().Next(0, BonusDamage);
+            return BaseDamage + Helpers.SecureRandom.Next(0, BonusDamage);
         }
 
         #region Abstract Properties

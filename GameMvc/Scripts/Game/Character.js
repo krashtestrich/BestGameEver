@@ -1,7 +1,6 @@
 ﻿var Character;
 (function (Character) {
     var skillTreeDialogSelector = '#skillTreeDialog';
-    var characterUrl = 'http://localhost/Home/Character';
     function initialize() {
         $('a.test').cluetip();
         $('div.charEquipCellContent').cluetip({ local: true, attribute: 'data-tip', hoverClass: 'highlight' });
@@ -23,6 +22,6 @@
     Character.initialize = initialize;
 
     function onSkillTreeClose() {
-        window.location = characterUrl;
+        window.location.href = '/Home/Character';
     }
 })(Character || (Character = {}));

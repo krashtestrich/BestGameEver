@@ -7,6 +7,11 @@
             get;
         }
 
+        protected abstract string Verb
+        {
+            get;
+        }
+
         public Equipment.EquipmentBase PerformedWith { get; set; }
     }
 }

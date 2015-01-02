@@ -5,6 +5,7 @@
         bool CanBePerformed(IGameEntity source);
         string Name { get; }
         Equipment.EquipmentBase PerformedWith { get; }
-        void Perform(IGameEntity source);
+        string Perform(IGameEntity source);
+        
     }
 }
