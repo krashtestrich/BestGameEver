@@ -1,5 +1,6 @@
 ﻿using GameLogic.Characters.Player;
 using GameLogic.Modifiers.Character.Mana;
+using GameLogic.SkillTree.Paths.WizardPath;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GameUnitTest.ModifierTests.Character
@@ -11,9 +12,11 @@ namespace GameUnitTest.ModifierTests.Character
         public void ShouldApplyPercentageMana()
         {
             var p = new Player();
+            p.LevelUp();
+            p.ChooseSkill(new PathOfTheWizard());
             p.GainMana(50);
             p.AddModifier(new ManaBonusPercentage(50));
-            Assert.IsTrue(p.BonusMana == 25);
+            Assert.IsTrue(p.BonusMana == 100);
         }
 
         [TestMethod]

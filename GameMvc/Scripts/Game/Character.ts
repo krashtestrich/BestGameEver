@@ -1,10 +1,10 @@
 ﻿module Character {
-    var skillTreeDialogSelector: string = '#skillTreeDialog';
+    var skillTreeDialogContentSelector: string = '#skillTreeDialogContent';
     export function initialize() : void {
         $('a.test').cluetip();
         $('div.charEquipCellContent').cluetip({ local: true, attribute: 'data-tip', hoverClass: 'highlight' });
-
-        $('#skillTreeDialog').dialog({
+        var $dlg = $(skillTreeDialogContentSelector);
+        $dlg.dialog({
             width: 1060,
             height: 850,
             title: 'Skill Tree',
@@ -15,8 +15,17 @@
         });
 
         $('#characterSkillTreeLink').off('click').on('click', () => {
-            SkillTree.openSkillTreeDialog(skillTreeDialogSelector);
+            SkillTree.openSkillTreeDialog(skillTreeDialogContentSelector);
         });
+
+        var skillPointExists = parseInt($(skillTreeDialogContentSelector).attr('data-skillpoints')) > 0;
+        if (skillPointExists) {
+            $dlg.dialog("widget")
+                .find(".ui-dialog-titlebar-close")
+                .hide();
+            $dlg.dialog("option", "closeOnEscape", false);
+            SkillTree.openSkillTreeDialog(skillTreeDialogContentSelector);
+        }
     }
 
     function onSkillTreeClose() {

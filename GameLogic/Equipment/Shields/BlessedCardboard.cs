@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+using GameLogic.Characters;
 using GameLogic.Enums;
+using GameLogic.Modifiers;
+using GameLogic.Modifiers.Character.Health;
 using GameLogic.Slots;
 
 namespace GameLogic.Equipment.Shields
 {
-    public class PieceofFoil : Shield, IBuyableEquipment, IArmor
+    public class BlessedCardboard : Shield, IBuyableEquipment, IArmor
     {
         public override string Name
         {
-            get { return "Piece of Foil"; }
+            get { return "Blessed Cardboard"; }
         }
 
         public override List<EquipmentSubType> EquipmentSubTypes
@@ -23,6 +26,18 @@ namespace GameLogic.Equipment.Shields
             }
         }
 
+        public override List<IModifier<ICharacter>> Modifiers
+        {
+            get
+            {
+                return new List<IModifier<ICharacter>>
+                {
+                    new HealthBonusAmount(25),
+                    new HealthBonusPercentage(10)
+                };
+            }
+        }
+
         public override int Price
         {
             get { return 15; }
@@ -30,7 +45,7 @@ namespace GameLogic.Equipment.Shields
 
         public override int ArmorValue
         {
-            get { return 50; }
+            get { return 5; }
         }
 
         public override int BlockValue
@@ -38,7 +53,7 @@ namespace GameLogic.Equipment.Shields
             get { return 5; }
         }
 
-        public PieceofFoil()
+        public BlessedCardboard()
         {
             AddSlotType(new Hand());
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using GameLogic.Arena;
 using GameLogic.Characters.Bots;
+using GameLogic.Characters.Bots.BotTypes;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

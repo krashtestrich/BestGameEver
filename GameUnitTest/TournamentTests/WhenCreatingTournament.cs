@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using GameLogic.Characters.Bots;
+using GameLogic.Characters.Bots.BotTypes;
 using GameLogic.Game;
 using GameLogic.SkillTree.Paths.FighterPath;
 using GameLogic.SkillTree.Paths.WizardPath;
@@ -78,10 +78,10 @@ namespace GameUnitTest.TournamentTests
             t.Start();
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void ShouldStartComputerVsComputerTournament()
         { 
-            var g = new Game(false);
+            var g = new Game(true, true);
             g.StartComputerVsComputerGame();
         }
     }

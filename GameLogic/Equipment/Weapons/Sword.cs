@@ -34,12 +34,12 @@ namespace GameLogic.Equipment.Weapons
 
         public override int BaseDamage
         {
-            get { return 10; }
+            get { return 15; }
         }
 
         public override int BonusDamage
         {
-            get { return 5; }
+            get { return 7; }
         }
 
         public override int Price

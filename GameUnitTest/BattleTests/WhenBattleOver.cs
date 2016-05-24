@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using GameLogic.Characters.Bots;
+using GameLogic.Characters.Bots.BotTypes;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Game;
@@ -78,6 +78,7 @@ namespace GameUnitTest.BattleTests
         [TestMethod]
         public void ShouldResetCharacterAfterBattle()
         {
+            const int playerStartingHealth = 150;
             var g = new Game
             {
                 CurrentBattleDetails = new BattleDetails
@@ -94,10 +95,10 @@ namespace GameUnitTest.BattleTests
             g.Tournament.AddCharacterToTournament(b);
             g.StartPlayerVsComputerTournament();
             g.CurrentBattleDetails.Arena.Characters.First(i => i is Player).LoseHealth(50);
-            Assert.IsTrue(g.Player.Health == 50);
+            Assert.IsTrue(g.Player.Health == playerStartingHealth - 50);
             g.EndBattle(g.Player.GetAlliance());
             g.ProcessBattleOver();
-            Assert.IsTrue(g.Player.Health == 100);
+            Assert.IsTrue(g.Player.Health == playerStartingHealth);
         }
     }
 }

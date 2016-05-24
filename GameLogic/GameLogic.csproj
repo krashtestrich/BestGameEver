@@ -48,6 +48,7 @@
     <Compile Include="Actions\Attacks\AttackBase.cs" />
     <Compile Include="Actions\Attacks\IAttack.cs" />
     <Compile Include="Actions\Attacks\RecklessSwing.cs" />
+    <Compile Include="Actions\Attacks\Shoot.cs" />
     <Compile Include="Actions\Attacks\Swing.cs" />
     <Compile Include="Actions\Movements\IMove.cs" />
     <Compile Include="Actions\Movements\MoveBase.cs" />
@@ -67,7 +68,7 @@
     <Compile Include="Arena\ArenaHelper.cs" />
     <Compile Include="Characters\Bots\Bot.cs" />
     <Compile Include="Characters\Bots\BotHelper.cs" />
-    <Compile Include="Characters\Bots\Dumbass.cs" />
+    <Compile Include="Characters\Bots\BotTypes\Dumbass.cs" />
     <Compile Include="Characters\Bots\IBot.cs" />
     <Compile Include="Characters\Character.cs" />
     <Compile Include="Characters\CharacterHelpers\DamageBlockHelper.cs" />
@@ -83,11 +84,13 @@
     <Compile Include="Equipment\IArmor.cs" />
     <Compile Include="Equipment\IBuyableEquipment.cs" />
     <Compile Include="Equipment\Shields\BestShieldEver.cs" />
+    <Compile Include="Equipment\Shields\BrokenWoodenDoor.cs" />
     <Compile Include="Equipment\Shields\CastersShield.cs" />
     <Compile Include="Equipment\Shields\Shield.cs" />
     <Compile Include="Equipment\Shields\CrappyWoodenShield.cs" />
-    <Compile Include="Equipment\Shields\PieceofFoil.cs" />
+    <Compile Include="Equipment\Shields\BlessedCardboard.cs" />
     <Compile Include="Equipment\Weapons\FairyWand.cs" />
+    <Compile Include="Equipment\Weapons\GnarledStaff.cs" />
     <Compile Include="Equipment\Weapons\Weapon.cs" />
     <Compile Include="Equipment\Weapons\BigSword.cs" />
     <Compile Include="Equipment\Weapons\MegaSwordOfDeath.cs" />
@@ -106,6 +109,7 @@
     <Compile Include="Modifiers\Character\Armor\ArmorBonusPercentage.cs" />
     <Compile Include="Modifiers\Character\Block\BlockBase.cs" />
     <Compile Include="Modifiers\Character\Block\BlockPercentage.cs" />
+    <Compile Include="Modifiers\Character\HealthRegeneration\HealthRegenerationPercentage.cs" />
     <Compile Include="Modifiers\Character\Health\HealthBonusPercentage.cs" />
     <Compile Include="Modifiers\Character\Health\HealthBase.cs" />
     <Compile Include="Modifiers\Character\Health\HealthBonusAmount.cs">
@@ -120,6 +124,8 @@
     <Compile Include="Modifiers\Character\PhysicalDamage\PhysicalDamageAmount.cs" />
     <Compile Include="Modifiers\Character\PhysicalDamage\PhysicalDamageBase.cs" />
     <Compile Include="Modifiers\Character\PhysicalDamage\PhysicalDamagePercentage.cs" />
+    <Compile Include="Modifiers\Character\HealthRegeneration\HealthRegenerationAmount.cs" />
+    <Compile Include="Modifiers\Character\HealthRegeneration\HealthRegenerationBase.cs" />
     <Compile Include="Modifiers\IModifier.cs" />
     <Compile Include="Modifiers\ModifiersBase.cs" />
     <Compile Include="MoreLinq\MoreEnumerable.DistinctBy.cs" />
@@ -128,6 +134,8 @@
     <Compile Include="Characters\Player\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shop\Shop.cs" />
+    <Compile Include="SkillTree\CharacterClass\DarkKnight.cs" />
+    <Compile Include="SkillTree\CharacterClass\WhiteKnight.cs" />
     <Compile Include="SkillTree\Paths\FighterPath\BarbarianPath\PathOfTheBarbarian.cs" />
     <Compile Include="SkillTree\Paths\FighterPath\BarbarianPath\PathOfTheBerzerker.cs" />
     <Compile Include="SkillTree\Paths\FighterPath\PathOfTheFighter.cs" />

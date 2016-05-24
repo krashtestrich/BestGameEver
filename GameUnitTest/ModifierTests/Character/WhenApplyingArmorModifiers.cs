@@ -13,9 +13,9 @@ namespace GameUnitTest.ModifierTests.Character
         public void ShouldApplyPercentageArmor()
         {
             var p = new Player();
-            EquipmentHelper.EquipEquipment(p, new PieceofFoil());
+            EquipmentHelper.EquipEquipment(p, new BlessedCardboard());
             p.AddModifier(new ArmorBonusPercentage(50));
-            Assert.IsTrue(p.BonusArmor == 25);
+            Assert.IsTrue(p.BonusArmor == 2);
         }
 
         [TestMethod]

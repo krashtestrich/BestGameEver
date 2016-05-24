@@ -14,7 +14,7 @@
 
         public override int HitsForTo
         {
-            get { return 35; }
+            get { return 25; }
         }
 
         public override int MinRange
@@ -29,7 +29,7 @@
 
         public override int ManaCost
         {
-            get { return 15; }
+            get { return 25; }
         }
     }
 }

@@ -72,16 +72,19 @@
     <Compile Include="ModifierTests\Character\WhenApplyingHealthModifiers.cs" />
     <Compile Include="BotTests\WhenUsingBots.cs" />
     <Compile Include="HelperTests\MathsTests\WhenUsingMaths.cs" />
+    <Compile Include="ModifierTests\Character\WhenApplyingHealthRegenerationModifiers.cs" />
     <Compile Include="ModifierTests\Character\WhenApplyingMagicDamageModifiers.cs" />
     <Compile Include="ModifierTests\Character\WhenApplyingManaModifiers.cs" />
     <Compile Include="ModifierTests\Character\WhenApplyingPhysicalDamageModifiers.cs" />
     <Compile Include="MoreLinq\MoreEnumerable.DistinctBy.cs" />
-    <Compile Include="ShopTests\WhenShopping.cs" />
+    <Compile Include="ShopTests\WhenBotsShopping.cs" />
     <Compile Include="CharacterTests\WhenCreatingPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShopTests\WhenSellingEquipment.cs" />
     <Compile Include="SkillTreeTests\WhenUsingSkillTree.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="TournamentTests\WhenCreatingTournament.cs" />
+    <Compile Include="TurnBasedTests\WhenRegeneratingHealth.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameLogic\GameLogic.csproj">

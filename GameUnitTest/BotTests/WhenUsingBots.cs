@@ -1,4 +1,5 @@
 ﻿using GameLogic.Characters.Bots;
+using GameLogic.Characters.Bots.BotTypes;
 using GameLogic.Enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

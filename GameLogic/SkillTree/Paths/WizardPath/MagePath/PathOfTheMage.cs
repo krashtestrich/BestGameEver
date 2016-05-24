@@ -16,7 +16,7 @@ namespace GameLogic.SkillTree.Paths.WizardPath.MagePath
 
         public int Cost
         {
-            get { return 2; }
+            get { return 1; }
         }
 
         public int Level

@@ -11,14 +11,32 @@ using GameLogic.SkillTree.Paths;
 
 namespace GameLogic.Characters.Bots
 {
-    public abstract class Bot : Character, IBot
+    public abstract class Bot : Character
     {
         protected Bot()
         {
             SetName(BotHelper.GenerateRandomBotName());
         }
 
-        public abstract int Worth { get; }
+        public int Worth
+        {
+            get { return 50; }
+        }
+
+        public override int BaseHealth
+        {
+            get { return 100; }
+        }
+
+        public override int BaseMana
+        {
+            get { return 0; }
+        }
+
+        public override int BaseHealthRegeneration
+        {
+            get { return 1; }
+        }
 
         #region Skill Tree
 

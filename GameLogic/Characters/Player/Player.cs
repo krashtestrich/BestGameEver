@@ -4,12 +4,17 @@
     {
         public override int BaseHealth
         {
-            get { return 100; }
+            get { return 150; }
         }
 
         public override int BaseMana
         {
-            get { return 50; }
+            get { return 0; }
+        }
+
+        public override int BaseHealthRegeneration
+        {
+            get { return 1; }
         }
 
         public Player()

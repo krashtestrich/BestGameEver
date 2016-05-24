@@ -10,9 +10,11 @@ namespace GameUnitTest.ModifierTests.Character
         [TestMethod]
         public void ShouldApplyPercentageHealth()
         {
+            const int playerStartingHealth = 150;
+            const int playerBonusHealth = 75;
             var p = new Player();
             p.AddModifier(new HealthBonusPercentage(50));
-            Assert.IsTrue(p.BonusHealth == 50);
+            Assert.IsTrue(p.BonusHealth == playerBonusHealth);
         }
 
         [TestMethod]

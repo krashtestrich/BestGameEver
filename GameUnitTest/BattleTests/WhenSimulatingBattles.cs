@@ -13,7 +13,7 @@ namespace GameUnitTest.BattleTests
         [TestMethod]
         public void ShouldSimulateAllBattles()
         {
-            var g = new Game {Player = new Player(), Tournament = new Tournament()};
+            var g = new Game {Player = new Player(), Tournament = new Tournament(true)};
             g.Tournament.Populate();
             g.Tournament.Start();
             g.SimulateAllComputerBattles();

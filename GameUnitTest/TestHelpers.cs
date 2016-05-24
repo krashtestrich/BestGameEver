@@ -207,6 +207,11 @@ namespace GameUnitTest
             {
                 get { return 50; }
             }
+
+            public override int BaseHealthRegeneration
+            {
+                get { return 5; }
+            }
         }
         #endregion
 

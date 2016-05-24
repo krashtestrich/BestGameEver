@@ -16,7 +16,7 @@ namespace GameLogic.SkillTree.Paths.FighterPath.KnightPath
 
         public int Cost
         {
-            get { return 3; }
+            get { return 1; }
         }
 
         public int Level

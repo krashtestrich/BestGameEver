@@ -6,6 +6,7 @@ namespace GameLogic.Characters.CharacterHelpers
 {
     public class EquipmentHelper
     {
+        public static readonly decimal SellBackModifier = 0.75M;
         public static bool CanEquipEquipment(ICharacter character, IBuyableEquipment equipment)
         {
             var uniqueSlots = equipment.Slots.Distinct();
@@ -71,7 +72,7 @@ namespace GameLogic.Characters.CharacterHelpers
 
         public static void SellEquipment(ICharacter character, IBuyableEquipment e)
         {
-            character.AddCash((int)Math.Round(e.Price * 0.75, MidpointRounding.ToEven));
+            character.AddCash((int)Math.Round(e.Price * SellBackModifier, MidpointRounding.ToEven));
             UnEquipEquipment(character, e);
         }
     }

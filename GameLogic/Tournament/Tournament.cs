@@ -6,6 +6,7 @@ using GameLogic.Characters.Bots;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Helpers;
+using Dumbass = GameLogic.Characters.Bots.BotTypes.Dumbass;
 
 namespace GameLogic.Tournament
 {

@@ -24,10 +24,14 @@ namespace GameLogic.Characters
 
         int BonusHealth { get; }
         int BaseHealth { get; }
+        int BaseHealthRegeneration { get; }
+        int BonusHealthRegeneration { get; }
         void AddBonusHealth(int amount);
         void SetHealth();
         void LoseHealth(int amount);
         void GainHealth(int amount);
+        void AddBonusHealthRegeneration(int amount);
+
 
         int Mana { get; }
         int BonusMana { get; }

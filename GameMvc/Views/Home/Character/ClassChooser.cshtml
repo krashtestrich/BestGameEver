@@ -1,0 +1,31 @@
+﻿@model GameLogic.Characters.Character
+@{
+    Layout = null;
+    var skills = Model.SkillTree.Get().ToList();
+}
+
+<div id="classChooserDialogContent">
+    <div class="classChooserHeadingText">
+        <span id="classChooserSelectLabel" style="display: none;">Click to select your class:<span class="emphasisePositiveText" id="classChooserSelectSkillText"></span></span>
+    </div>
+    @foreach (var s in skills)
+    {
+        <div class="classChooserClassContainer">
+            <span class="classChooserBaseHeading">@s.Name</span>
+
+            <div class="classChooserPathContent">
+                <ul>
+                    @foreach (var mod in s.CharacterModifiers)
+                    {
+                        <li>
+                            <span class="skillPathModifier">
+                                @mod.GetDisplayText()
+                            </span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+</div>
+

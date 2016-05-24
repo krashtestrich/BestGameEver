@@ -15,6 +15,7 @@ using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Helpers;
 using GameLogic.Tournament;
+using Dumbass = GameLogic.Characters.Bots.BotTypes.Dumbass;
 
 namespace GameLogic.Game
 {
@@ -23,11 +24,13 @@ namespace GameLogic.Game
         public Bot ChosenOpponent;
         public Tournament.Tournament Tournament;
         public bool EnableLogging;
+        public bool AutoFinish;
         public BattleDetails CurrentBattleDetails;
 
-        public Game(bool? enableLogging = false)
+        public Game(bool? enableLogging = false, bool? autoFinish = false)
         {
             EnableLogging = enableLogging.HasValue && enableLogging.Value;
+            AutoFinish = autoFinish.HasValue && autoFinish.Value;
             Tournament = new Tournament.Tournament(EnableLogging);
             CurrentBattleDetails = new BattleDetails();
         }
@@ -49,16 +52,14 @@ namespace GameLogic.Game
 
         public void SimulateAllComputerBattles()
         {
-            var battle = Tournament.GetNextBattleDetails();
-            while (battle != null)
-            {
-                if (battle.BattleMode == BattleMode.ComputerVsComputer)
+            Tournament.BattlesByRound[Tournament.Round]
+                .Where(b => b.BattleMode == BattleMode.ComputerVsComputer && b.BattleStatus == BattleStatus.NotStarted)
+                .ToList()
+                .ForEach(b =>
                 {
-                    CurrentBattleDetails = battle;
+                    CurrentBattleDetails = b;
                     StartBattle();
-                }
-                battle = Tournament.GetNextBattleDetails();
-            }
+                });
         }
 
         public void StartPlayerVsComputerTournament()
@@ -104,10 +105,13 @@ namespace GameLogic.Game
 
         private void EndComputerVsComputerBattle()
         {
-            if (Tournament.TournamentStatus == TournamentStatus.InProgress)
+            if (Tournament.TournamentStatus == TournamentStatus.InProgress && AutoFinish)
             {
-                //CurrentBattleDetails = Tournament.GetNextBattleDetails();
-                //StartBattle();
+                CurrentBattleDetails = Tournament.GetNextBattleDetails();
+                if (CurrentBattleDetails != null)
+                {
+                    StartBattle();
+                }
             }
         }
 
@@ -152,6 +156,27 @@ namespace GameLogic.Game
         #endregion
 
         #region Perform Actions/Turns
+
+        public void StartTurn(Alliance alliance)
+        {
+            //TODO: Add buffs to player, apply ticks to player.
+            CurrentBattleDetails.Participants.ForEach(p =>
+            {
+                if (p.Character.Health < (p.Character.BaseHealth + p.Character.BonusHealth))
+                {
+                    p.Character.GainHealth(p.Character.BaseHealthRegeneration + p.Character.BonusHealthRegeneration);
+                }
+            });
+
+            if (CurrentBattleDetails.BattleMode == BattleMode.ComputerVsComputer
+                ||
+                (CurrentBattleDetails.BattleTurn != Player.GetAlliance()))
+            {
+                PerformAITurn();
+            }
+        }
+        
+
         public void PerformPlayerAction(IAction a)
         {
             if (CurrentBattleDetails.BattleStatus != BattleStatus.InBattle)
@@ -194,6 +219,10 @@ namespace GameLogic.Game
                     }
                     i.UntargetTile();
                     UpdateBattleStatus();
+                    if (CurrentBattleDetails.BattleStatus != BattleStatus.BattleOver)
+                    {
+                        StartTurn(CurrentBattleDetails.BattleTurn);
+                    }
                 });
         }
 

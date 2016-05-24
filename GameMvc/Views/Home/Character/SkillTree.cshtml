@@ -1,12 +1,12 @@
 ﻿@using System.Globalization
 @using GameMvc.Models
-@model GameLogic.Characters.Player.Player
+@model GameLogic.Characters.Character
 @{
     Layout = null;
     var skills = Model.SkillTree.Get().ToList();
 }
 
-<div>
+<div id="skillTreeDialogContent" data-skillpoints="@Model.SkillPoints">
     <div class="skillTreeHeadingText">
         You have <span class="emphasisePositiveText">@Model.SkillPoints.ToString(CultureInfo.InvariantCulture) </span>skill points to spend.
         <br/>

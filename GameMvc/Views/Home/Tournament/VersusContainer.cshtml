@@ -19,7 +19,7 @@
                 <span class="emphasiseNegativeText">LOSS </span>
             }
 
-        }<span class="centeredText">@Model.Participants.ElementAt(0).Character.Name</span>
+        }<span class="centeredText"><a href="#" data-charactername="@Model.Participants.ElementAt(0).Character.Name">@Model.Participants.ElementAt(0).Character.Name</a></span>
     </div>
     <div class="centeredTextContainer">
         <span class="centeredText boomText">VS</span>
@@ -37,11 +37,17 @@
                 <span class="emphasiseNegativeText">LOSS </span>
             }
 
-        }<span class="centeredText">@Model.Participants.ElementAt(1).Character.Name</span>
+        }<span class="centeredText"><a href="#" data-charactername="@Model.Participants.ElementAt(1).Character.Name">@Model.Participants.ElementAt(1).Character.Name</a></span>
     </div>
+    @if (Model.BattleStatus == BattleStatus.BattleOver)
+    {
+        <div>
+            <input type="button" value="View Result" data-battleguid="@Model.BattleGuid.ToString()" />
+        </div>
+    }
     @if (Model.BattleStatus == BattleStatus.NotStarted && Model.BattleMode == BattleMode.ComputerVsComputer)
     {
-        <div class="">
+        <div>
             @using (Html.BeginForm("WatchMatch", "Tournament", new { battleGuid = Model.BattleGuid }))
             {
                 <button type="submit">Watch</button>

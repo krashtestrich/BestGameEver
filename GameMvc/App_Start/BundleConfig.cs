@@ -25,6 +25,7 @@ namespace GameMvc
                         "~/Scripts/Game/PlayerAnimations.js",
                         "~/Scripts/Game/Arena.js",
                         "~/Scripts/Game/Character.js",
+                        "~/Scripts/Game/Tournament.js",
                         "~/Scripts/Game/Game.js",
                         "~/Scripts/Game/SkillTree.js"));
 

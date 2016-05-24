@@ -3,5 +3,6 @@
     public interface IBot
     {
         int Worth { get; }
+        int Aggression { get; }
     }
 }

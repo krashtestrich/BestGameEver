@@ -1,6 +1,6 @@
 ﻿var SkillTree;
 (function (SkillTree) {
-    var dialogSelector = '#skillTreeDialog';
+    var dialogSelector = '#skillTreeDialogContent';
     var $dialog;
     var availablePathSelector = 'div.skillTreePathContainerAvailable';
     var availablePathHoverClass = 'skillTreePathContainerHover';
@@ -52,7 +52,9 @@
     }
 
     function chooseSkillSuccess(result) {
-        $(dialogSelector).html(result);
+        var $dlg = $(dialogSelector);
+        $dlg.html(result);
+        $dlg.dialog("widget").find(".ui-dialog-titlebar-close").show();
         $.unblockUI();
     }
 

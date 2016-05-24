@@ -2,9 +2,11 @@
 using GameLogic.Actions.Spells.Damage;
 using GameLogic.Arena;
 using GameLogic.Characters.Bots;
+using GameLogic.Characters.Bots.BotTypes;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Game;
+using GameLogic.SkillTree.Paths.WizardPath;
 using GameLogic.Tournament;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -26,6 +28,8 @@ namespace GameUnitTest.ActionTests.Spells.Attacks
                 },
                 Player = new Player()
             };
+            g.Player.LevelUp();
+            g.Player.ChooseSkill(new PathOfTheWizard());
             g.Player.AddAction(new SpellSpear());
             g.CurrentBattleDetails.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
             var c = new Dumbass();
@@ -68,6 +72,8 @@ namespace GameUnitTest.ActionTests.Spells.Attacks
                 },
                 Player = new Player()
             };
+            g.Player.LevelUp();
+            g.Player.ChooseSkill(new PathOfTheWizard());
             g.CurrentBattleDetails.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
             g.Player.AddAction(new SpellSpear());
             var c = new Dumbass();
@@ -91,6 +97,8 @@ namespace GameUnitTest.ActionTests.Spells.Attacks
                 Player = new Player()
             };
             g.Player.SetName("Player");
+            g.Player.LevelUp();
+            g.Player.ChooseSkill(new PathOfTheWizard());
             g.CurrentBattleDetails.Participants.Add(new Participant
             {
                 Status = ParticipantStatus.InBattle,
@@ -127,6 +135,8 @@ namespace GameUnitTest.ActionTests.Spells.Attacks
                 },
                 Player = new Player()
             };
+            g.Player.LevelUp();
+            g.Player.ChooseSkill(new PathOfTheWizard());
             g.Player.SetName("Player");
             g.CurrentBattleDetails.Participants.Add(new Participant
             {

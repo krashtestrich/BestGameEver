@@ -11,6 +11,7 @@ using GameLogic.Modifiers;
 using GameLogic.Modifiers.Character.Armor;
 using GameLogic.Modifiers.Character.Block;
 using GameLogic.Modifiers.Character.Health;
+using GameLogic.Modifiers.Character.HealthRegeneration;
 using GameLogic.Modifiers.Character.MagicDamage;
 using GameLogic.Modifiers.Character.Mana;
 using GameLogic.Modifiers.Character.PhysicalDamage;
@@ -35,19 +36,35 @@ namespace GameLogic.Characters
 
         #region Health
         private int _currentHealth;
+        private int _currentHealthRegeneration;
 
         public int BonusHealth { get; protected set; }
+        public int BonusHealthRegeneration { get; protected set; }
 
         public void AddBonusHealth(int amount)
         {
             BonusHealth += amount;
         }
+        public int HealthRegen { get; protected set; }
+
+        public void AddBonusHealthRegeneration(int amount)
+        {
+            BonusHealthRegeneration += amount;
+        }
+
         public int Health
         {
             get { return _currentHealth; }
         }
 
+        public int HealthRegeneration
+        {
+
+            get { return _currentHealthRegeneration; }
+        }
+
         public abstract int BaseHealth { get; }
+        public abstract int BaseHealthRegeneration { get; }
 
         public void SetHealth()
         {
@@ -57,6 +74,16 @@ namespace GameLogic.Characters
                 m.Apply(this);
             }
             _currentHealth = BonusHealth + BaseHealth;
+        }
+
+        public void SetHealthRegeneration()
+        {
+            BonusHealthRegeneration = 0;
+            foreach (var m in _modifiers.Where(i => i is HealthRegenerationBase))
+            {
+                m.Apply(this);
+            }
+            _currentHealthRegeneration = BonusHealthRegeneration + BaseHealthRegeneration;
         }
 
         public void LoseHealth(int amount)
@@ -79,6 +106,13 @@ namespace GameLogic.Characters
         public void AddBonusMana(int amount)
         {
             BonusMana += amount;
+        }
+
+        public int ManaRegen { get; protected set; }
+
+        public void AddManaRegen(int amount)
+        {
+            ManaRegen += amount;
         }
         public int Mana
         {
@@ -410,7 +444,7 @@ namespace GameLogic.Characters
         public virtual void LevelUp()
         {
             _level++;
-            AddSkillPoints(_level);
+            AddSkillPoints(1);
         }
         #endregion
 

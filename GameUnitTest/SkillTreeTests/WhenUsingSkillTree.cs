@@ -23,20 +23,12 @@ namespace GameUnitTest.SkillTreeTests
         }
 
         [TestMethod]
-        public void ShouldAddSkillPointEqualToPlayerLevel()
+        public void ShouldAddSkillPoints()
         {
             var p = new Player();
             Assert.IsTrue(p.SkillPoints == 1);
             p.LevelUp();
-            Assert.IsTrue(p.SkillPoints == 3);
-        }
-
-        [TestMethod]
-        public void ShouldAddSkillPointsWhenLevelAssigned()
-        {
-            var p = new Player();
-            p.SetLevel(3);
-            Assert.IsTrue(p.SkillPoints == 6);
+            Assert.IsTrue(p.SkillPoints == 2);
         }
 
         [TestMethod]

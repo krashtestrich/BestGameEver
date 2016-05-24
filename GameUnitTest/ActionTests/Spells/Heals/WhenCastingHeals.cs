@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using GameLogic.Actions.Spells.Heals;
 using GameLogic.Characters.Bots;
+using GameLogic.Characters.Bots.BotTypes;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Game;
+using GameLogic.SkillTree.Paths.WizardPath;
 using GameLogic.Tournament;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -25,6 +27,8 @@ namespace GameUnitTest.ActionTests.Spells.Heals
                 },
                 Player = new Player()
             };
+            g.Player.LevelUp();
+            g.Player.ChooseSkill(new PathOfTheWizard());
             g.Player.AddAction(new LittleHeal());
             g.CurrentBattleDetails.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
             var c = new Dumbass();
@@ -46,6 +50,8 @@ namespace GameUnitTest.ActionTests.Spells.Heals
                 },
                 Player = new Player()
             };
+            g.Player.LevelUp();
+            g.Player.ChooseSkill(new PathOfTheWizard());
             g.CurrentBattleDetails.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
             g.Player.AddAction(new LittleHeal());
             var c = new Dumbass();
@@ -68,13 +74,15 @@ namespace GameUnitTest.ActionTests.Spells.Heals
                 },
                 Player = new Player()
             };
+            g.Player.LevelUp();
+            g.Player.ChooseSkill(new PathOfTheWizard());
             g.CurrentBattleDetails.Arena.AddCharacterToArena(g.Player, Alliance.TeamOne);
             g.Player.AddAction(new LittleHeal());
             var c = new Dumbass();
             g.CurrentBattleDetails.Arena.AddCharacterToArena(c, Alliance.TeamTwo);
             var actions = g.Player.TargetTileAndSelectActions(g.Player.ArenaLocation);
             g.PerformPlayerAction(actions.First(i => i is LittleHeal));
-            Assert.IsTrue(g.Player.Mana < 50);
+            Assert.IsTrue(g.Player.Mana < 100);
         }
     }
 }

@@ -4,11 +4,11 @@
 }
 
 <div id="battleLogContent borderedContainer">
-    @foreach (var l in Model.TurnDetails)
+    @for (var i =0; i < Model.TurnDetails.Count; i++)
     {
         <div class="">
-            <span class="emphasiseText">Turn: </span>
-            @l
+            <span class="emphasiseText">Turn @i: </span>
+            @Model.TurnDetails[i]
         </div>
     }
 </div>

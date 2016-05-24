@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using GameLogic.Characters.Bots;
+using GameLogic.Characters.Bots.BotTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GameUnitTest.BotTests

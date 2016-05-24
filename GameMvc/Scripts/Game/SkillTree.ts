@@ -1,5 +1,5 @@
 ﻿module SkillTree {
-    var dialogSelector: string = '#skillTreeDialog';
+    var dialogSelector: string = '#skillTreeDialogContent';
     var $dialog: JQuery;
     var availablePathSelector: string = 'div.skillTreePathContainerAvailable';
     var availablePathHoverClass: string = 'skillTreePathContainerHover';
@@ -49,8 +49,12 @@
         });
     }
 
-    function chooseSkillSuccess(result: any) : void {
-        $(dialogSelector).html(result);
+    function chooseSkillSuccess(result: any): void {
+        var $dlg = $(dialogSelector);
+        $dlg.html(result);
+        $dlg.dialog("widget")
+            .find(".ui-dialog-titlebar-close")
+            .show();
         $.unblockUI();
     }
 

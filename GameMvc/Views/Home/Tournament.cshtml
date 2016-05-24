@@ -8,6 +8,11 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Tournament.initialize();
+        });
+    </script>
     <title>Tournament</title>
 </head>
 <body>
@@ -26,9 +31,16 @@
         }
         else
         {
-            <div>
+            <div id="tournamentBattleDetails">
                 <span class="labelTextContainer">Tournament Round <span class="emphasisePositiveText">@Model.Round.ToString(CultureInfo.InvariantCulture)</span></span>
-                
+                @if (Model.BattlesByRound[Model.Round].Any(b => b.BattleMode == BattleMode.ComputerVsComputer && b.BattleStatus == BattleStatus.NotStarted))
+                {
+                    using (Html.BeginForm("SimulateAll", "Tournament"))
+                    {
+                        <button type="submit">Simulate All</button>
+                    }
+                }
+
                 @foreach (var battle in Model.BattlesByRound[Model.Round])
                 {
                     Html.RenderPartial("~/Views/Home/Tournament/VersusContainer.cshtml", battle);
@@ -36,5 +48,7 @@
             </div>
         }
     </div>
+    <div id="tournamentBattleDetailsDialog"></div>
+    <div id="tournamentCharacterDetailsDialog"></div>
 </body>
 </html>

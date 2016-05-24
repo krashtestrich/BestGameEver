@@ -40,7 +40,7 @@ namespace GameLogic.Equipment.Weapons
 
         public override int BonusDamage
         {
-            get { return 2; }
+            get { return 5; }
         }
 
         public override int Price
@@ -54,7 +54,7 @@ namespace GameLogic.Equipment.Weapons
             {
                 return new List<IAction>
                 {
-                    new Swing
+                    new Shoot
                     {
                         PerformedWith = this
                     }

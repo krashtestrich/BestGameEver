@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using GameLogic.Characters;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
 using GameLogic.Game;
@@ -44,6 +45,22 @@ namespace GameMvc.Controllers
         {
             var g = (Game)Session["Game"];
             return View("~/Views/Home/Arena.cshtml", g.Tournament.BattlesByRound[g.Tournament.Round].ElementAt(0));
+        }
+
+        [HttpPost]
+        public ActionResult GetBattleResult(Guid battleGuid)
+        {
+            var g = (Game)Session["Game"];
+            var battleDetails = g.Tournament.GetBattleByGuid(battleGuid);
+            return View("~/Views/Game/Arena/BattleLog.cshtml", battleDetails);
+        }
+
+        [HttpPost]
+        public ActionResult GetCharacterDetails(string characterName)
+        {
+            var g = (Game) Session["Game"];
+            var characterDetails = g.Tournament.Participants.First(p => p.Character.Name == characterName).Character as Character;
+            return View("~/Views/Home/Character/CharacterDetails.cshtml", characterDetails);
         }
     }
 }

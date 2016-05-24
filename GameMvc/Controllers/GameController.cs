@@ -79,7 +79,7 @@ namespace GameMvc.Controllers
             {
                 throw new Exception("THAT OPPONENT DOESNT EXIST WHAT ARE YOU DOING");
             }
-            EquipmentHelper.EquipEquipment(opponent, new PieceofFoil());
+            EquipmentHelper.EquipEquipment(opponent, new BlessedCardboard());
             EquipmentHelper.EquipEquipment(opponent, new Sword());
             game.ChooseOpponent(opponent);
             Session["Game"] = game;

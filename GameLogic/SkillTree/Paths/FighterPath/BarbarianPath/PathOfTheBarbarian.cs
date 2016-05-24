@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using GameLogic.Actions.Attacks;
 using GameLogic.Characters;
 using GameLogic.Enums;
 using GameLogic.Modifiers;

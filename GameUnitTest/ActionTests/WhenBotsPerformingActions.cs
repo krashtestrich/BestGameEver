@@ -1,4 +1,5 @@
 ﻿using GameLogic.Characters.Bots;
+using GameLogic.Characters.Bots.BotTypes;
 using GameLogic.Characters.CharacterHelpers;
 using GameLogic.Characters.Player;
 using GameLogic.Enums;
@@ -59,6 +60,7 @@ namespace GameUnitTest.ActionTests
         [TestMethod]
         public void ShouldPerformAttackActionWhenInAttackRange()
         {
+            const int playerStartingHealth = 150;
             var g = new Game
             {
                 CurrentBattleDetails = new BattleDetails
@@ -77,7 +79,7 @@ namespace GameUnitTest.ActionTests
             g.PerformAITurn();
             var endPosition = b.ArenaLocation.GetTileLocation();
             Assert.IsTrue(endPosition.XCoord == 0 && endPosition.YCoord == 1);
-            Assert.IsTrue(g.Player.Health < 100);
+            Assert.IsTrue(g.Player.Health < playerStartingHealth);
         }
     }
 }
